@@ -1,0 +1,7 @@
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC # JWT를 암호화 하기 위한 암호화 키
+    tokenExpirationMsec: 864000000  # token 만료 기간 (24h * 60min * 60s * 1000ms)
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect

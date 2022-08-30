@@ -1,0 +1,8 @@
+spring:
+  config:
+    import:
+      - profiles/application-app.yml
+      - profiles/application-datasource.yml
+
+
+# import
