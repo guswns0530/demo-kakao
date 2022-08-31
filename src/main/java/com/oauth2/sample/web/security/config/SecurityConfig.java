@@ -8,6 +8,7 @@ import com.oauth2.sample.web.security.oauth2.handler.OAuth2AuthenticationFailure
 import com.oauth2.sample.web.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.oauth2.sample.web.security.oauth2.CustomOAuth2UserService;
 import com.oauth2.sample.web.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.oauth2.sample.web.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,10 +35,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    @Bean
+    public CustomUserDetailsService userDetailsService(UserRepository userRepository ){
+        return new CustomUserDetailsService(userRepository);
+    }
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -66,7 +72,6 @@ public class SecurityConfig {
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
-        authenticationConfiguration.
         return authenticationConfiguration.getAuthenticationManager();
     }
 
