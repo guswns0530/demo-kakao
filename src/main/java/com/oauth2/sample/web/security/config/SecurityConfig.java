@@ -21,16 +21,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true,
         prePostEnabled = true
 )
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -48,12 +49,14 @@ public class SecurityConfig {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 
-    @Bean
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-        authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
+//        return authenticationManagerBuilder
+//                .userDetailsService(customUserDetailsService)
+//                .passwordEncoder(passwordEncoder())
+//                .and()
+//                .build();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,11 +66,13 @@ public class SecurityConfig {
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
+        authenticationConfiguration.
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+
     @Bean
-    public void configure(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
             .cors()
                 .and()
@@ -88,9 +93,12 @@ public class SecurityConfig {
                 .and()
             .oauth2Login()
                 .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-                .and()
+                    .baseUri("/oauth2/authorization")
+                    .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+                    .and()
+                .redirectionEndpoint()
+                    .baseUri("/oauth2/callback/*")
+                    .and()
             .userInfoEndpoint()
                 .userService(customOAuth2UserService)
                 .and()
@@ -99,6 +107,8 @@ public class SecurityConfig {
 
         http.addFilterBefore(tokenAuthenticationFilter()
                 , UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }
 
