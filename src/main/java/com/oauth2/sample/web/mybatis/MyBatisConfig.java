@@ -1,4 +1,4 @@
-package com.oauth2.sample.web.config.mybatis;
+package com.oauth2.sample.web.mybatis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;

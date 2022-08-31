@@ -1,6 +1,13 @@
-package com.oauth2.sample.web.config.security;
+package com.oauth2.sample.web.security.config;
 
-import com.oauth2.sample.domain.user.dto.Role;
+import com.oauth2.sample.web.security.dto.Role;
+import com.oauth2.sample.web.security.CustomUserDetailsService;
+import com.oauth2.sample.web.security.RestAuthenticationEntryPoint;
+import com.oauth2.sample.web.security.TokenAuthenticationFilter;
+import com.oauth2.sample.web.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.oauth2.sample.web.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.oauth2.sample.web.security.oauth2.CustomOAuth2UserService;
+import com.oauth2.sample.web.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +37,6 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
@@ -49,7 +55,6 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder());
     }
 
-    // 암호화 방식
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -64,34 +69,36 @@ public class SecurityConfig {
     @Bean
     public void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-            .and()
-                .sessionManagement()
+            .cors()
+                .and()
+            .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-                .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .authorizeRequests()
+                .and()
+            .csrf().disable()
+            .formLogin().disable()
+            .httpBasic().disable()
+            .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .and()
+            .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/**").hasAnyRole(Role.GUEST.name(), Role.USER.name())
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
                 .anyRequest().authenticated()
-            .and()
-                .oauth2Login()
+                .and()
+            .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorization")
                 .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-            .and()
-                .userInfoEndpoint()
+                .and()
+            .userInfoEndpoint()
                 .userService(customOAuth2UserService)
-            .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                .and()
+            .successHandler(oAuth2AuthenticationSuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler);
 
         http.addFilterBefore(tokenAuthenticationFilter()
                 , UsernamePasswordAuthenticationFilter.class);
     }
 }
 
-//https://ozofweird.tistory.com/entry/Spring-Boot-Spring-Boot-JWT-OAuth2-2?category=892873

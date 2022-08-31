@@ -1,4 +1,4 @@
-package com.oauth2.sample.web.config.security;
+package com.oauth2.sample.web.security.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

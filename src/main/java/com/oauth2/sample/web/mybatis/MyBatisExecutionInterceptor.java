@@ -1,4 +1,4 @@
-package com.oauth2.sample.web.config.mybatis;
+package com.oauth2.sample.web.mybatis;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

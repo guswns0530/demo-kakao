@@ -1,4 +1,4 @@
-package com.oauth2.sample.domain.user.dto;
+package com.oauth2.sample.web.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
