@@ -30,18 +30,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
-        UUID uuid = UUID.randomUUID();
-        log.info("[{}]CustomOAuth2UserService start", uuid);
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
 
-        System.out.println("oAuth2User = " + oAuth2User);
-
         try {
-            log.info("[{}]CustomOAuth2UserService end", uuid);
             return processOAuth2User(oAuth2UserRequest, oAuth2User);
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }

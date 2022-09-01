@@ -19,9 +19,8 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Optional<User> findByEmail(String email) {
-
+        System.out.println("실행");
         Map<String, String> map = sqlSession.selectOne("user.findByEmail", email);
-
         User user = UserFactory.getUser(map);
 
         return Optional.of(user);
@@ -36,7 +35,6 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Optional<User> findById(String id) {
-//        sqlSession.selectOne("", id);
         return Optional.empty();
     }
 

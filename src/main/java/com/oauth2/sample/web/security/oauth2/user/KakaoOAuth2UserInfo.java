@@ -21,16 +21,19 @@ properties=
         email_needs_agreement=false,
         is_email_valid=true,
         is_email_verified=true,
-        email=ury0530@naver.com}}]
+        email=ury0530@naver.com
+        }
+    ]
  */
 
 @Slf4j
 public class KakaoOAuth2UserInfo extends OAuth2UserInfo{
-
     private Integer id;
 
     public KakaoOAuth2UserInfo(Map<String, Object> attributes) {
-        super((Map<String, Object> ) attributes.get("kakao_account"));
+        super((Map<String, Object> ) attributes.get("properties"));
+
+        id = (Integer) attributes.get("id");
     }
 
     @Override
@@ -40,25 +43,23 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo{
 
     @Override
     public String getId() {
-        return id.toString();
+        return String.valueOf(id);
     }
 
     @Override
     public String getName() {
-        return (String) attributes.get("name");
+        return (String) attributes.get("nickname");
     }
 
     @Override
     public String getEmail() {
-        return (String)((Map<String, Object>) attributes.get("properties")).get("email");
+        return (String)((Map<String, Object>) attributes.get("kakao_account")).get("email");
     }
 
     @Override
     public String getImageUrl() {
         try {
-            Map<String, Object> profileObj = (Map<String, Object>) attributes.get("profile");
-
-            String thumbnail_image_url = (String) profileObj.get("thumbnail_image_url");
+            String thumbnail_image_url = (String) attributes.get("thumbnail_image_url");
 
             return thumbnail_image_url;
         } catch(ClassCastException ex) {
