@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /*@Service*/
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -31,8 +32,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDetails loadUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserDetails loadUserById(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
 

@@ -41,11 +41,6 @@ public class SecurityConfig {
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
-    public CustomUserDetailsService userDetailsService(UserRepository userRepository ){
-        return new CustomUserDetailsService(userRepository);
-    }
-
-    @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
         return new TokenAuthenticationFilter();
     }

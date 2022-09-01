@@ -8,6 +8,7 @@ import com.oauth2.sample.web.security.oauth2.user.OAuth2UserInfo;
 import com.oauth2.sample.web.security.oauth2.user.OAuth2UserInfoFactory;
 import com.oauth2.sample.web.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -18,30 +19,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
+        UUID uuid = UUID.randomUUID();
+        log.info("[{}]CustomOAuth2UserService start", uuid);
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
 
+        System.out.println("oAuth2User = " + oAuth2User);
+
         try {
+            log.info("[{}]CustomOAuth2UserService end", uuid);
             return processOAuth2User(oAuth2UserRequest, oAuth2User);
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
-            // Throwing an instance of AuthenticationException will trigger the OAuth2AuthenticationFailureHandler
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(), oAuth2User.getAttributes());
-        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) {
+        String registrationId = oAuth2UserRequest.getClientRegistration().getRegistrationId(); // provider
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, oAuth2User.getAttributes()); // 팩토리를 통해 OAuth2UserInfo 생성
+
+        if(StringUtils.isEmpty(oAuth2UserInfo.getEmail())) { // 이메일 존재 여부
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
@@ -79,5 +88,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 oAuth2UserInfo.getImageUrl()
         ));
     }
-
 }
