@@ -16,6 +16,19 @@
         where EMAIL = #{email}
     </select>
 
+    <select id="findById" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select USER_ID,
+               PROVIDER,
+               PROVIDER_ID,
+               PROFILE_IMAGE_URL,
+               EMAIL,
+               NAME,
+               PASSWORD,
+               to_char(STATUS) as STATUS
+        from kakao_users
+        where user_id = #{id}
+    </select>
+
     <insert id="save" parameterType="com.oauth2.sample.web.security.dto.User">
         insert into
         kakao_users (

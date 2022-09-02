@@ -34,7 +34,10 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Optional<User> findById(String id) {
-        return Optional.empty();
+        Map<String, String> map = sqlSession.selectOne("user.findById", id);
+        User user = UserFactory.getUser(map);
+
+        return Optional.ofNullable(user);
     }
 
     @Override
@@ -60,9 +63,6 @@ public class UserRepositoryImpl implements UserRepository{
 
         map.put("id", id);
         map.put("token", token);
-
-        System.out.println("id = " + id);
-        System.out.println("token = " + token);
 
         sqlSession.update("user.updateRefreshToken", map);
     }

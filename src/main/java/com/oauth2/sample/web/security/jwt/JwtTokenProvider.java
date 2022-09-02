@@ -119,7 +119,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJwt(authToken);
+            Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(authToken);
 
             return true;
         } catch (SignatureException ex) {
@@ -138,7 +138,7 @@ public class JwtTokenProvider {
     public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getKey()).build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
 
         return claims.getSubject();

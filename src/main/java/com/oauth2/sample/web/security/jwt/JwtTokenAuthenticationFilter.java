@@ -33,22 +33,20 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         UUID uuid = UUID.randomUUID();
 
-        log.info("[{}] JwtTokenAuthenticationFilter start", uuid);
         try {
             String jwt = getJwtFromRequest(request);
-            System.out.println("jwt = " + jwt);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 String userId = tokenProvider.getUserIdFromToken(jwt);
 
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
-                System.out.println("userDetails.getUsername() = " + userDetails.getUsername());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             logger.error("Security Context에서 사용자 인증을 설정할 수 없습니다.", ex);
         }
 
