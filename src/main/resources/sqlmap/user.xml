@@ -4,17 +4,55 @@
 <mapper namespace="user">
 
     <select id="findByEmail" parameterType="java.lang.String" resultType="java.util.HashMap">
-        select
-            USER_ID,
-            PROVIDER,
-            PROVIDER_ID,
-            PROFILE_IMAGE_URL,
-            EMAIL,
-            NAME,
-            PASSWORD,
-            to_char(STATUS) as STATUS
-        from
-            kakao_users
+        select USER_ID,
+               PROVIDER,
+               PROVIDER_ID,
+               PROFILE_IMAGE_URL,
+               EMAIL,
+               NAME,
+               PASSWORD,
+               to_char(STATUS) as STATUS
+        from kakao_users
         where EMAIL = #{email}
     </select>
+
+    <insert id="save" parameterType="com.oauth2.sample.web.security.dto.User">
+        insert into
+        kakao_users (
+        USER_ID,
+        PROVIDER,
+        NAME,
+        PROFILE_IMAGE_URL,
+        STATUS,
+        CREATEAT,
+        PROVIDER_ID,
+        EMAIL,
+        REFRESH_TOKEN
+        )
+        values (
+        #{id},
+        #{provider},
+        #{name},
+        #{imageUrl},
+        1,
+        sysdate,
+        #{providerId},
+        #{email}
+        )
+    </insert>
+
+    <select id="getRefreshTokenById" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+            REFRESH_TOKEN
+        from kakao_users
+        where id = #{id}
+    </select>
+
+    <update id="updateRefreshToken" parameterType="java.util.Map">
+        update
+            kakao_users
+        set
+            REFRESH_TOKEN = #{token}
+        where user_id = #{id}
+    </update>
 </mapper>

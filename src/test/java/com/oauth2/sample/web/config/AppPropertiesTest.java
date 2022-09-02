@@ -18,13 +18,15 @@ class AppPropertiesTest {
         AppProperties.Auth auth = appProperties.getAuth();
 
         System.out.println("auth.getTokenSecret() = " + auth.getTokenSecret());
-        System.out.println("auth.tokenExpirationMsec() = " + auth.getTokenExpirationMsec());
+        System.out.println("auth.tokenExpirationMsec() = " + auth.getAccessTokenExpireLength());
+        System.out.println("auth.tokenExpirationMsec() = " + auth.getRefreshTokenExpireLength());
+        System.out.println("auth = " + auth.getRefreshCookieKey());
     }
 
     @Test
     void getOauth2() {
         AppProperties.OAuth2 oauth2 = appProperties.getOauth2();
 
-        System.out.println("oauth2.getAuthorizedRedirectUris() = " + oauth2.getAuthorizedRedirectUris());
+        System.out.println("oauth2.getAuthorizedRedirectUris() = " + oauth2.getAuthorizedRedirectUri());
     }
 }

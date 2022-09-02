@@ -1,11 +1,13 @@
-package com.oauth2.sample.web.security;
+package com.oauth2.sample.web.security.jwt;
 
+import com.oauth2.sample.web.security.CustomUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,10 +19,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Slf4j
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+@Component
+public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private  TokenProvider tokenProvider;
+    private JwtTokenProvider tokenProvider;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -29,14 +32,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         UUID uuid = UUID.randomUUID();
-        log.info("[{}]TokenAuthenticationFilter start", uuid);
+
+        log.info("[{}] JwtTokenAuthenticationFilter start", uuid);
         try {
             String jwt = getJwtFromRequest(request);
+            System.out.println("jwt = " + jwt);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 String userId = tokenProvider.getUserIdFromToken(jwt);
 
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                System.out.println("userDetails.getUsername() = " + userDetails.getUsername());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -47,15 +53,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-
-        log.info("[{}]TokenAuthenticationFilter end", uuid);
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.substring(7);
         }
 
         return null;

@@ -3,13 +3,13 @@ package com.oauth2.sample.web.security.repository;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.dto.UserFactory;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.session.SqlSessionException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.SQLException;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Repository
@@ -19,11 +19,10 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Optional<User> findByEmail(String email) {
-        System.out.println("실행");
         Map<String, String> map = sqlSession.selectOne("user.findByEmail", email);
         User user = UserFactory.getUser(map);
 
-        return Optional.of(user);
+        return Optional.ofNullable(user);
     }
 
     @Override
@@ -40,7 +39,31 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public User save(User user) {
-        return null;
+        if(!StringUtils.hasText(user.getId())) {
+            String uuid = UUID.randomUUID().toString();
+            user.setId(user.getProvider() + ":" + uuid + "_" + new Date().toString());
+        }
+
+        int result = sqlSession.insert("user.save", user);
+
+        return user;
     }
 
+    @Override
+    public String getRefreshTokenById(String id) {
+        return sqlSession.selectOne("user.getRefreshTokenById", id);
+    }
+
+    @Override
+    public void updateRefreshToken(String id, String token) {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("id", id);
+        map.put("token", token);
+
+        System.out.println("id = " + id);
+        System.out.println("token = " + token);
+
+        sqlSession.update("user.updateRefreshToken", map);
+    }
 }

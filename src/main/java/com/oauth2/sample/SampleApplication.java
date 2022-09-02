@@ -13,5 +13,6 @@ public class SampleApplication {
 }
 
 //https://theheydaze.tistory.com/477
+//https://ozofweird.tistory.com/586
 //https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter
 //https://docs.spring.io/spring-security/reference/servlet/getting-started.html

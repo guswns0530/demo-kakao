@@ -34,6 +34,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
 
         CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, CookieUtils.serialize(authorizationRequest), cookieExpireSeconds);
         String redirctUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+
         if(StringUtils.isNotBlank(redirctUriAfterLogin)) {
             CookieUtils.addCookie(response,REDIRECT_URI_PARAM_COOKIE_NAME, redirctUriAfterLogin, cookieExpireSeconds);
         }
@@ -44,14 +45,14 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         return this.loadAuthorizationRequest(request);
     }
 
+    @Override
+    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
+        return this.loadAuthorizationRequest(request);
+    }
+
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
         CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
     }
 
-    @Deprecated
-    @Override
-    public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
-        return null;
-    }
 }

@@ -1,19 +1,16 @@
 package com.oauth2.sample.web.security.dto;
 
-import io.jsonwebtoken.lang.Strings;
-import org.springframework.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class UserFactory {
     public static User getUser(Map<String, String> map) {
+        if(map == null) {
+            return null;
+        }
+
         UserStatus status = null;
         AuthProvider authProvider = null;
-
-        System.out.println("map = " + map);
 
         switch (Optional.ofNullable(map.get("STATUS")).orElse("")) {
             case "1":
@@ -38,9 +35,11 @@ public class UserFactory {
                 .password(map.get("PASSWORD"))
                 .email(map.get("EMAIL"))
                 .imageUrl(map.get("PROFILE_IMAGE_URL"))
-                .status(status).provider(authProvider)
+                .status(status)
+                .provider(authProvider)
                 .providerId(map.get("PROVIDER_ID"))
                 .name(map.get("NAME"))
+                .refreshToken(map.get("REFRESH_TOKEN"))
                 .build();
     }
 }

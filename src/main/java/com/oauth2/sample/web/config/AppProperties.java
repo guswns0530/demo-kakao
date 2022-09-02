@@ -21,19 +21,14 @@ public class AppProperties {
     @Setter
     public static class Auth {
         private String tokenSecret;
-        private long tokenExpirationMsec;
+        private Long accessTokenExpireLength ;
+        private Long refreshTokenExpireLength;
+        private String refreshCookieKey;
     }
 
     @Getter
     @Setter
     public static final class OAuth2 {
-//        private String authorizedRedirectUris;
-        private List<String> authorizedRedirectUris = new ArrayList<>();
-
-        public OAuth2 authorizedRedirectUris(List<String> authorizedRedirectUris) {
-            this.authorizedRedirectUris = authorizedRedirectUris;
-
-            return this;
-        }
+        private String authorizedRedirectUri;
     }
 }

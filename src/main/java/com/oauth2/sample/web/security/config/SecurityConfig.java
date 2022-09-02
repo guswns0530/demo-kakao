@@ -1,20 +1,18 @@
 package com.oauth2.sample.web.security.config;
 
-import com.oauth2.sample.web.security.dto.Role;
 import com.oauth2.sample.web.security.CustomUserDetailsService;
-import com.oauth2.sample.web.security.RestAuthenticationEntryPoint;
-import com.oauth2.sample.web.security.TokenAuthenticationFilter;
+import com.oauth2.sample.web.security.jwt.JwtAuthenticationEntryPoint;
+import com.oauth2.sample.web.security.jwt.JwtTokenAuthenticationFilter;
+import com.oauth2.sample.web.security.jwt.JwtAccessDeniedHandler;
 import com.oauth2.sample.web.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.oauth2.sample.web.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.oauth2.sample.web.security.oauth2.CustomOAuth2UserService;
 import com.oauth2.sample.web.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.oauth2.sample.web.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,11 +37,9 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter();
-    }
+    private final JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
@@ -83,12 +79,23 @@ public class SecurityConfig {
             .formLogin().disable()
             .httpBasic().disable()
             .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
             .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/api/**").hasAnyRole(Role.GUEST.name(), Role.USER.name())
+                .antMatchers("/",
+                        "/error",
+                        "/favicon.ico",
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js")
+                .permitAll()
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
+//                .antMatchers("/api/**").hasAnyRole(Role.GUEST.name(), Role.USER.name())
                 .anyRequest().authenticated()
                 .and()
             .oauth2Login()
@@ -105,7 +112,7 @@ public class SecurityConfig {
             .successHandler(oAuth2AuthenticationSuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler);
 
-        http.addFilterBefore(tokenAuthenticationFilter()
+        http.addFilterBefore(jwtTokenAuthenticationFilter
                 , UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
