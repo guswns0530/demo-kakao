@@ -3,6 +3,7 @@ package com.oauth2.sample.web.security.jwt;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.UserPrincipal;
 import com.oauth2.sample.web.security.repository.UserRepository;
+import com.oauth2.sample.web.security.util.CookieUtils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -15,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -106,11 +108,13 @@ public class JwtTokenProvider {
     }
 
     private Claims parseClaims(String accessToken) {
+
+
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getKey())
                     .build()
-                    .parseClaimsJwt(accessToken)
+                    .parseClaimsJws(accessToken)
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();

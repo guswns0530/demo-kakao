@@ -33,7 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserById(String id) {
-        System.out.println(id);
         User user = userRepository.findById(id)
                 .orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
@@ -42,3 +41,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserPrincipal.create(user);
     }
 }
+
+// 로그아웃 구현

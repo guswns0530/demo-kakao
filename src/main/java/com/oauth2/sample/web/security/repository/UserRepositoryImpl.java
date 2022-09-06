@@ -39,7 +39,9 @@ public class UserRepositoryImpl implements UserRepository{
 
         return Optional.ofNullable(user);
     }
-
+    
+    // 수정 필요
+    @Deprecated
     @Override
     public User save(User user) {
         if(!StringUtils.hasText(user.getId())) {

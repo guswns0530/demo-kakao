@@ -1,5 +1,6 @@
 package com.oauth2.sample.domain.auth.controller;
 
+import com.oauth2.sample.web.security.CurrentUser;
 import com.oauth2.sample.web.security.UserPrincipal;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.repository.UserRepository;
@@ -21,7 +22,7 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@AuthenticationPrincipal UserPrincipal user) {
+    public User getCurrentUser(@CurrentUser UserPrincipal user) {
         return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalStateException("not found user"));
     }
 }

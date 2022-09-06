@@ -58,7 +58,7 @@
         select
             REFRESH_TOKEN
         from kakao_users
-        where id = #{id}
+        where user_id = #{id}
     </select>
 
     <update id="updateRefreshToken" parameterType="java.util.Map">

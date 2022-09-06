@@ -40,6 +40,7 @@ public class SecurityConfig {
     private final JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
@@ -78,10 +79,6 @@ public class SecurityConfig {
             .csrf().disable()
             .formLogin().disable()
             .httpBasic().disable()
-            .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
-                .and()
             .authorizeRequests()
                 .antMatchers("/",
                         "/error",
@@ -95,13 +92,13 @@ public class SecurityConfig {
                         "/**/*.js")
                 .permitAll()
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
-//                .antMatchers("/api/**").hasAnyRole(Role.GUEST.name(), Role.USER.name())
                 .anyRequest().authenticated()
                 .and()
             .oauth2Login()
                 .authorizationEndpoint()
                     .baseUri("/oauth2/authorization")
-                    .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository
+                    )
                     .and()
                 .redirectionEndpoint()
                     .baseUri("/oauth2/callback/*")
@@ -110,7 +107,11 @@ public class SecurityConfig {
                 .userService(customOAuth2UserService)
                 .and()
             .successHandler(oAuth2AuthenticationSuccessHandler)
-            .failureHandler(oAuth2AuthenticationFailureHandler);
+            .failureHandler(oAuth2AuthenticationFailureHandler)
+                .and()
+            .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler);
 
         http.addFilterBefore(jwtTokenAuthenticationFilter
                 , UsernamePasswordAuthenticationFilter.class);
