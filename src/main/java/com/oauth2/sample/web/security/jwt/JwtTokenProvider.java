@@ -131,7 +131,7 @@ public class JwtTokenProvider {
         } catch (MalformedJwtException ex) {
             log.error("유효하지 않은 JWT 토큰");
         } catch (ExpiredJwtException ex) {
-            log.error("지원하지 않는 JWT 토큰");
+            log.error("만료된 JWT 토큰");
         } catch (IllegalArgumentException ex) {
             log.error("비어있는 JWT");
         }
