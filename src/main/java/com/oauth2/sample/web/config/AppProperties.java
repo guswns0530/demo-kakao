@@ -1,9 +1,6 @@
 package com.oauth2.sample.web.config;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,8 +14,9 @@ public class AppProperties {
     private final Auth auth = new Auth();
     private final OAuth2 oauth2 = new OAuth2();
 
-    @Getter
-    @Setter
+    @Data
+
+    @RequiredArgsConstructor
     public static class Auth {
         private String tokenSecret;
         private Long accessTokenExpireLength ;
@@ -26,9 +24,9 @@ public class AppProperties {
         private String refreshCookieKey;
     }
 
-    @Getter
-    @Setter
+    @Data
+    @RequiredArgsConstructor
     public static final class OAuth2 {
-        private String authorizedRedirectUri;
+        private List<String> authorizedRedirectUris = new ArrayList<>();
     }
 }

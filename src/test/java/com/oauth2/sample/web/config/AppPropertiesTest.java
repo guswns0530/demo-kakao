@@ -27,6 +27,6 @@ class AppPropertiesTest {
     void getOauth2() {
         AppProperties.OAuth2 oauth2 = appProperties.getOauth2();
 
-        System.out.println("oauth2.getAuthorizedRedirectUris() = " + oauth2.getAuthorizedRedirectUri());
+        System.out.println("oauth2.getAuthorizedRedirectUris() = " + oauth2.getAuthorizedRedirectUris());
     }
 }
