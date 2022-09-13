@@ -1,5 +1,7 @@
 package com.oauth2.sample.web.socket.handler;
 
+import com.oauth2.sample.web.security.CustomUserDetailsService;
+import com.oauth2.sample.web.security.UserPrincipal;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.jwt.JwtTokenProvider;
 import com.oauth2.sample.web.security.repository.UserRepository;
@@ -10,9 +12,16 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.swing.text.html.Option;
+import java.security.Principal;
 import java.util.Optional;
 
 
@@ -21,14 +30,14 @@ import java.util.Optional;
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
     private final JwtTokenProvider tokenProvider;
-    private final UserRepository userRepository;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        if(StompCommand.CONNECT == accessor.getCommand()) {
-            String jwt = accessor.getFirstNativeHeader("Authorization");
+        if(StompCommand.CONNECT == accessor.getCommand()) { // 연결일때만
+            String jwt = accessor.getFirstNativeHeader("Authorization"); //header 파싱
 
             if(StringUtils.hasText(jwt) && jwt.startsWith("Bearer")) {
                 jwt = jwt.substring(7);
@@ -36,13 +45,11 @@ public class StompHandler implements ChannelInterceptor {
             String userId = tokenProvider.getUserIdFromToken(jwt);
 
             if(userId != null) {
-                Optional<User> user = userRepository.findById(userId);
+                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                if(!user.isPresent()) {
-                    throw new IllegalArgumentException();
-                } else {
-                    return message;
-                }
+                accessor.setUser(authentication);
             }
         }
 

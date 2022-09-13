@@ -39,8 +39,7 @@
         STATUS,
         CREATEAT,
         PROVIDER_ID,
-        EMAIL,
-        REFRESH_TOKEN
+        EMAIL
         )
         values (
         #{id},
