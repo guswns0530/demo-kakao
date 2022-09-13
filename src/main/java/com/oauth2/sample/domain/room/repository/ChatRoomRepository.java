@@ -14,6 +14,7 @@ public class ChatRoomRepository {
     private void init() {
         chatRoomMap = new LinkedHashMap<>();
 
+        createChatRoom("전체방");
         createChatRoom("1번방");
         createChatRoom("2번방");
         createChatRoom("3번방");

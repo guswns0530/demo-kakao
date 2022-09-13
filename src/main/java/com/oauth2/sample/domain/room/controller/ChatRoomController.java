@@ -2,15 +2,18 @@ package com.oauth2.sample.domain.room.controller;
 
 import com.oauth2.sample.domain.room.dto.ChatRoom;
 import com.oauth2.sample.domain.room.repository.ChatRoomRepository;
+import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/chat")
+@RequestMapping(value = "/chat", produces = "application/json")
 @Slf4j
 public class ChatRoomController {
 
@@ -21,6 +24,7 @@ private final ChatRoomRepository chatRoomRepository;
     public Object rooms(){
         log.info("# All Chat Rooms");
         List<ChatRoom> allRooms = chatRoomRepository.findAllRooms();
+        Collections.reverse(allRooms);
 
         return allRooms;
     }
