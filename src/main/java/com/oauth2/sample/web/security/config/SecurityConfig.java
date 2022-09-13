@@ -43,20 +43,6 @@ public class SecurityConfig {
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
-    public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
-    }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-//        return authenticationManagerBuilder
-//                .userDetailsService(customUserDetailsService)
-//                .passwordEncoder(passwordEncoder())
-//                .and()
-//                .build();
-//    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -80,7 +66,8 @@ public class SecurityConfig {
             .formLogin().disable()
             .httpBasic().disable()
             .authorizeRequests()
-                .antMatchers("/",
+                .antMatchers(
+                        "/",
                         "/error",
                         "/favicon.ico",
                         "/**/*.png",
@@ -89,7 +76,8 @@ public class SecurityConfig {
                         "/**/*.jpg",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js")
+                        "/**/*.js",
+                        "/ws/**/**")
                 .permitAll()
                 .antMatchers("/auth/**", "/oauth2/**").permitAll()
                 .anyRequest().authenticated()
