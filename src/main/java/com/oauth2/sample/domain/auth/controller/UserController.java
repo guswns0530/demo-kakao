@@ -20,7 +20,7 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    @GetMapping("/me")
+    @("/me")
     @PreAuthorize("hasRole('USER')")
     public User getCurrentUser(@CurrentUser UserPrincipal user) {
         return userRepository.findById(user.getId()).orElseThrow(() -> new IllegalStateException("not found user"));

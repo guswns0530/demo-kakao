@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="./js/app.js"></script>
+    <title>Document</title>
+    
+    <style>
+        * {
+            padding: 0;
+        }
+        ul {
+            list-style-type: none;
+        }
+        ul li > div {
+            margin-top: 2px;
+            padding: 3px;
+            border: 1px solid #000;
+            font-size: 14px;
+            line-height: 14px;
+            min-height: 14px;
+        }
+
+        .box {
+            margin-top: 20px;
+            border: 1px solid #ddd; 
+            padding: 15px;
+
+            position: relative;
+
+            display: inline-block;
+        }
+
+        .box h4{
+            margin: 0;
+            padding: 3px;
+            position: absolute;
+            background-color: #fff;
+            top: 0;
+            transform: translate(0, -50%);
+        }
+    </style>
+</head>
+<body>
+    <form class="box" id="roomForm">
+        <h4>
+            채팅방
+        </h4>
+        <select name="text">
+        </select>>
+        <button id="submit">참가</button>
+    </form>
+    <form class="box" id="chatForm">
+        <h4>
+            메시지
+        </h4>
+        <input type="text" name="text">
+        <button id="submit">보내기</button>
+    </form>
+    <ul>
+        <li>
+        </li>
+    </ul>
+</body>
+</html>
