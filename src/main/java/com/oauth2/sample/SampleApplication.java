@@ -12,6 +12,7 @@ public class SampleApplication {
 
 }
 
+//https://beemiel.tistory.com/11
 //https://theheydaze.tistory.com/477
 //https://ozofweird.tistory.com/586
 //https://europani.github.io/spring/2022/01/15/036-oauth2-jwt.html#h-oauth2authenticationsuccesshandler
