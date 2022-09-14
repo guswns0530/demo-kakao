@@ -2,9 +2,7 @@ package com.oauth2.sample.web.socket.handler;
 
 import com.oauth2.sample.web.security.CustomUserDetailsService;
 import com.oauth2.sample.web.security.UserPrincipal;
-import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.jwt.JwtTokenProvider;
-import com.oauth2.sample.web.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -14,16 +12,13 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.swing.text.html.Option;
 import java.security.Principal;
-import java.util.Optional;
-
 
 @Component
 @RequiredArgsConstructor
@@ -46,10 +41,11 @@ public class StompHandler implements ChannelInterceptor {
 
             if(userId != null) {
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                accessor.setUser(authentication);
+                accessor.setUser((Principal) authentication.getPrincipal());
             }
         }
 
