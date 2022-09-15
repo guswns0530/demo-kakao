@@ -202,12 +202,14 @@ public class MyBatisExecutionInterceptor implements Interceptor{
                     	
 	                    Class<?> javaType = mapping.getJavaType();
 
-	                    if(String.class == javaType){
-	                    	sql = sql.replaceFirst("\\?", "'" + o + "'");
-	                    } else {
-	                    	if(o == null) o = "''";
-	                    	sql = sql.replaceFirst("\\?", o.toString());
-	                    }
+						if(!propValue.equalsIgnoreCase("password")) {
+							if(String.class == javaType){
+								sql = sql.replaceFirst("\\?", "'" + o + "'");
+							} else {
+								if(o == null) o = "''";
+								sql = sql.replaceFirst("\\?", o.toString());
+							}
+						}
 	                }
 				}
 			}

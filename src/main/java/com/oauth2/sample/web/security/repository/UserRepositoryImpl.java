@@ -27,8 +27,6 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Boolean existByEmail(String email) {
-//        Object o = sqlSession.selectOne("", email);
-
         return sqlSession.selectList("user.findByEmail", email).size() > 0 ? true : false;
     }
 
@@ -40,7 +38,7 @@ public class UserRepositoryImpl implements UserRepository{
         return Optional.ofNullable(user);
     }
     
-    // 수정 필요
+    // 수정 필요: 임시 아이디 발급
     @Deprecated
     @Override
     public User save(User user) {
@@ -49,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository{
             user.setId(user.getProvider() + ":" + uuid + "_" + new Date().toString());
         }
 
-        int result = sqlSession.insert("user.save", user);
+        sqlSession.insert("user.save", user);
 
         return user;
     }

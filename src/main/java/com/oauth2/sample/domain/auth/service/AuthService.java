@@ -1,13 +1,22 @@
 package com.oauth2.sample.domain.auth.service;
 
+import com.oauth2.sample.domain.auth.request.LoginRequest;
+import com.oauth2.sample.domain.auth.request.SignUpRequest;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.UserPrincipal;
+import com.oauth2.sample.web.security.dto.AuthProvider;
+import com.oauth2.sample.web.security.dto.User;
+import com.oauth2.sample.web.security.exception.BadRequestException;
 import com.oauth2.sample.web.security.jwt.JwtTokenProvider;
 import com.oauth2.sample.web.security.repository.UserRepository;
 import com.oauth2.sample.web.security.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -23,6 +32,8 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider tokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     public String refreshTokenToAccessToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
         String oldRefreshToken = CookieUtils.getCookie(request, appProperties.getAuth().getRefreshCookieKey())
@@ -51,5 +62,36 @@ public class AuthService {
         tokenProvider.createRefreshToken(authentication, response);
 
         return accessToken;
+    }
+
+    public String authenticationUser(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = tokenProvider.createAccessToken(authentication);
+
+        return token;
+    }
+
+    public User registerUser(SignUpRequest signUpRequest) {
+        if(userRepository.existByEmail(signUpRequest.getEmail())) {
+            throw new BadRequestException("이미 사용중인 이메일입니다.");
+        }
+
+        User result = userRepository.save(User.builder()
+                .name(signUpRequest.getName())
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .provider(AuthProvider.local)
+                .build()
+        );
+
+        return result;
     }
 }

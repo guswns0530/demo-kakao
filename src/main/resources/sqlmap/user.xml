@@ -39,17 +39,19 @@
         STATUS,
         CREATEAT,
         PROVIDER_ID,
-        EMAIL
+        EMAIL,
+        PASSWORD
         )
         values (
-        #{id},
-        #{provider},
-        #{name},
-        #{imageUrl},
+        #{id, jdbcType=VARCHAR},
+        #{provider, jdbcType=VARCHAR},
+        #{name, jdbcType=VARCHAR},
+        #{imageUrl, jdbcType=VARCHAR},
         1,
         sysdate,
-        #{providerId},
-        #{email}
+        #{providerId, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{password, jdbcType=VARCHAR}
         )
     </insert>
 
