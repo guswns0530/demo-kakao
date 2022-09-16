@@ -51,7 +51,7 @@ public class SecurityControllerAdvice {
 
     private ApiException getApiException(String message) {
         return ApiException.builder()
-                .status(HttpStatus.FORBIDDEN)
+                .code(HttpStatus.FORBIDDEN)
                 .message(message)
                 .build();
     }

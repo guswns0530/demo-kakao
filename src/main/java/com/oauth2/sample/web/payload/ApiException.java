@@ -6,12 +6,12 @@ import org.springframework.http.HttpStatus;
 
 @Data
 public class ApiException {
-    private int status;
+    private int code;
     private String message;
 
     @Builder
-    public ApiException(HttpStatus status, String message) {
-        this.status = status.value();
+    public ApiException(HttpStatus code, String message) {
+        this.code = code.value();
         this.message = message;
     }
 }

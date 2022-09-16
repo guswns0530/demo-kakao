@@ -66,6 +66,6 @@ public class AuthController {
                 .data(user)
                 .build();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(response);
     }
 }
