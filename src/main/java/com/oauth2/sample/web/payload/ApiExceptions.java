@@ -7,13 +7,15 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-public class ApiException {
+public class ApiExceptions<T> {
     private int code;
     private String message;
+    private T errors;
 
     @Builder
-    public ApiException(HttpStatus code, String message) {
+    public ApiExceptions(HttpStatus code, String message, T errors) {
         this.code = code.value();
         this.message = message;
+        this.errors = errors;
     }
 }
