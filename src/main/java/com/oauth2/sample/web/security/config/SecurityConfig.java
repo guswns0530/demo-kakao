@@ -96,10 +96,12 @@ public class SecurityConfig {
                 .and()
             .successHandler(oAuth2AuthenticationSuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler)
-                .and()
+            .and()
             .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler);
+
+
 
         http.addFilterBefore(jwtTokenAuthenticationFilter
                 , UsernamePasswordAuthenticationFilter.class);

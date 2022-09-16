@@ -64,7 +64,7 @@ public class AuthService {
         return accessToken;
     }
 
-    public String authenticationUser(LoginRequest loginRequest) {
+    public String authenticationUser(LoginRequest loginRequest, HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -75,6 +75,7 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.createAccessToken(authentication);
+        tokenProvider.createRefreshToken(authentication, response);
 
         return token;
     }

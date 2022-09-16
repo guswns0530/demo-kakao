@@ -19,7 +19,10 @@ public class User implements Serializable {
     @JsonIgnore
     private String password;
     private AuthProvider provider;
+    @JsonIgnore
     private String providerId;
+    @JsonIgnore
     private UserStatus status;
+    @JsonIgnore
     private String refreshToken;
 }
