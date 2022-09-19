@@ -1,7 +1,7 @@
 package com.oauth2.sample.web.security;
 
+import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.security.dto.User;
-import com.oauth2.sample.web.security.repository.UserRepository;
 import com.oauth2.sample.web.security.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public UserDetails loadUserById(String id) {
-        User user = userRepository.findById(id)
+    public UserDetails loadUserById(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id)
+                () -> new ResourceNotFoundException("User", "email", email)
         );
 
         return UserPrincipal.create(user);

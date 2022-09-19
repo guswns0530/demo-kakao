@@ -1,9 +1,8 @@
 package com.oauth2.sample.web.security.jwt;
 
+import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.UserPrincipal;
-import com.oauth2.sample.web.security.repository.UserRepository;
-import com.oauth2.sample.web.security.util.CookieUtils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -16,13 +15,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -40,7 +37,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getAccessTokenExpireLength());
 
-        String userId = userPrincipal.getId();
+        String email = userPrincipal.getEmail();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -48,7 +45,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setSubject(userId)
+                .setSubject(email)
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
@@ -61,7 +58,7 @@ public class JwtTokenProvider {
 
         UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
 
-        String userId = user.getId();
+        String email = user.getEmail();
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -69,7 +66,7 @@ public class JwtTokenProvider {
 
         String refreshToken = Jwts.builder()
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setSubject(userId)
+                .setSubject(email)
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
@@ -90,9 +87,9 @@ public class JwtTokenProvider {
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
         UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
-        String id = user.getId();
+        String email = user.getEmail();
 
-        userRepository.updateRefreshToken(id, refreshToken);
+        userRepository.updateRefreshToken(email, refreshToken);
     }
 
     public Authentication getAuthentication(String accessToken) {
@@ -102,7 +99,7 @@ public class JwtTokenProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-        UserPrincipal principal = new UserPrincipal(String.valueOf(claims.getSubject()), "", "", authorities);
+        UserPrincipal principal = new UserPrincipal(String.valueOf(claims.getSubject()), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
@@ -137,7 +134,7 @@ public class JwtTokenProvider {
         return false;
     }
 
-    public String getUserIdFromToken(String token) {
+    public String getEmailFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getKey()).build()
                 .parseClaimsJws(token)

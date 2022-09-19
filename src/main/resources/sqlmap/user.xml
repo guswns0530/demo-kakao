@@ -55,11 +55,11 @@
         )
     </insert>
 
-    <select id="getRefreshTokenById" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="getRefreshTokenByEmail" parameterType="java.lang.String" resultType="java.lang.String">
         select
             REFRESH_TOKEN
         from kakao_users
-        where user_id = #{id}
+        where email = #{email}
     </select>
 
     <update id="updateRefreshToken" parameterType="java.util.Map">
@@ -67,6 +67,16 @@
             kakao_users
         set
             REFRESH_TOKEN = #{token}
-        where user_id = #{id}
+        where email = #{email}
+    </update>
+
+    <update id="deleteUser" parameterType="java.lang.String">
+        update
+            kakao_users
+        set
+            status = 2,
+            updateAt = sysdate
+        where
+            email = ${email};
     </update>
 </mapper>

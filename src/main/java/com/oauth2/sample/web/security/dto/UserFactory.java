@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class UserFactory {
-    public static User getUser(Map<String, String> map) {
+    public static User
+    getUser(Map<String, String> map) {
         if(map == null) {
             return null;
         }

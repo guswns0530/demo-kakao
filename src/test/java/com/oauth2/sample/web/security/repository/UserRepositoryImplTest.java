@@ -1,5 +1,6 @@
 package com.oauth2.sample.web.security.repository;
 
+import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.security.dto.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

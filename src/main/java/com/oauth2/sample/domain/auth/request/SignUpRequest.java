@@ -1,12 +1,13 @@
 package com.oauth2.sample.domain.auth.request;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 
-@Data
+@Getter
+@Setter
 public class SignUpRequest {
 
     @NotBlank
@@ -14,7 +15,7 @@ public class SignUpRequest {
     private String email;
 
     @NotBlank
-    @Max(50)
+    @Size(min = 1, max = 20)
     private String name;
 
     @NotBlank

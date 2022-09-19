@@ -10,9 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +28,11 @@ public class AuthController {
     // 토큰 재발급
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody String oldAccessToken) {
+
+        if(StringUtils.hasText(oldAccessToken) && oldAccessToken.startsWith("Bearer ")) {
+            oldAccessToken = oldAccessToken.substring(7);
+        }
+
         String accessToken = authService.refreshTokenToAccessToken(request, response, oldAccessToken);
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.OK)

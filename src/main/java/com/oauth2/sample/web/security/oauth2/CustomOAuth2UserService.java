@@ -1,12 +1,12 @@
 package com.oauth2.sample.web.security.oauth2;
 
+import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.security.UserPrincipal;
 import com.oauth2.sample.web.security.dto.AuthProvider;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.OAuth2AuthenticationProcessingException;
 import com.oauth2.sample.web.security.oauth2.user.OAuth2UserInfo;
 import com.oauth2.sample.web.security.oauth2.user.OAuth2UserInfoFactory;
-import com.oauth2.sample.web.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

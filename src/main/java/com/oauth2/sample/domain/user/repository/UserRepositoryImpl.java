@@ -1,19 +1,19 @@
-package com.oauth2.sample.web.security.repository;
+package com.oauth2.sample.domain.user.repository;
 
+import com.oauth2.sample.domain.user.request.UpdateUserRequest;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.dto.UserFactory;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.session.SqlSessionException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.sql.SQLException;
+import javax.swing.text.html.Option;
 import java.util.*;
 
 @RequiredArgsConstructor
 @Repository
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
 
     private final SqlSessionTemplate sqlSession;
 
@@ -53,17 +53,37 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public String getRefreshTokenById(String id) {
-        return sqlSession.selectOne("user.getRefreshTokenById", id);
+    public String getRefreshTokenByEmail(String email) {
+        return sqlSession.selectOne("user.getRefreshTokenByEmail", email);
     }
 
     @Override
-    public void updateRefreshToken(String id, String token) {
+    public boolean updateRefreshToken(String email, String token) {
         Map<String, String> map = new HashMap<>();
 
-        map.put("id", id);
+        map.put("email", email);
         map.put("token", token);
 
-        sqlSession.update("user.updateRefreshToken", map);
+        int result = sqlSession.update("user.updateRefreshToken", map);
+
+        return result <= 0 ? false : true;
+    }
+
+    @Override
+    public boolean deleteUser(String email) {
+        int result = sqlSession.update("", email);
+
+        return result <= 0 ? false : true;
+    }
+
+    @Override
+    public Optional<User> updateUser(UpdateUserRequest user) {
+        int result = sqlSession.update("", user);
+
+        if(result <= 0) {
+            return Optional.empty();
+        }
+
+        return findByEmail(user.getEmail());
     }
 }
