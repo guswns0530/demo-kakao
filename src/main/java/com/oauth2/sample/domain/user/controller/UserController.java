@@ -2,11 +2,14 @@ package com.oauth2.sample.domain.user.controller;
 
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.domain.user.request.UpdateUserRequest;
+import com.oauth2.sample.domain.user.service.UserService;
+import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.CurrentUser;
 import com.oauth2.sample.web.security.UserPrincipal;
-import com.oauth2.sample.web.security.dto.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,25 +20,24 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@CurrentUser UserPrincipal user) {
-        return userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new IllegalStateException("not found user"));
+    public ResponseEntity<?> getCurrentUser(@CurrentUser UserPrincipal user) {
+        ApiResponse apiResponse = userService.selectUserToEmail(user.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
-    public User getUser(@PathVariable String id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalStateException("not found user"));
+    public ResponseEntity<?> getUser(@PathVariable String id) {
+        ApiResponse apiResponse = userService.selectUserToId(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
     @PutMapping("/")
-    public User updateUser(@CurrentUser UserPrincipal user, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
-        updateUserRequest.setEmail(user.getEmail());
-
-        return userRepository.updateUser(updateUserRequest).orElseThrow(() -> new IllegalStateException("not found user"));
+    public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal user, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("aa");
     }
 }
