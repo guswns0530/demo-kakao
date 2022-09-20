@@ -11,7 +11,8 @@
                EMAIL,
                NAME,
                PASSWORD,
-               to_char(STATUS) as STATUS
+               to_char(STATUS) as STATUS,
+               MESSAGE
         from kakao_users
         where EMAIL = #{email}
     </select>
@@ -24,7 +25,8 @@
                EMAIL,
                NAME,
                PASSWORD,
-               to_char(STATUS) as STATUS
+               to_char(STATUS) as STATUS,
+               MESSAGE
         from kakao_users
         where ID = #{id}
           and status = 1
@@ -98,6 +100,9 @@
             </if>
             <if test="backgroundImage != '' and backgroundImage != null">
                 background_image = #{backgroundImage, jdbcType=VARCHAR},
+            </if>
+            <if test="message != '' and message != null">
+                message = #{message, jdbcType=VARCHAR},
             </if>
             updateAt = sysdate
         where

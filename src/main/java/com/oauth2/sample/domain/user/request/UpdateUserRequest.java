@@ -16,6 +16,8 @@ public class UpdateUserRequest {
 
     private String backgroundImage;
 
+    private String message;
+
     @Null( message = "잘못된 접근입니다.")
     private String email;
 }

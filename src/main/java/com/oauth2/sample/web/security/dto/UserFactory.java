@@ -36,6 +36,7 @@ public class UserFactory {
                 .password(map.get("PASSWORD"))
                 .email(map.get("EMAIL"))
                 .imageUrl(map.get("PROFILE_IMAGE_URL"))
+                .message(map.get("MESSAGE"))
                 .status(status)
                 .provider(authProvider)
                 .providerId(map.get("PROVIDER_ID"))
