@@ -1,4 +1,4 @@
-package com.oauth2.sample.domain.auth.request;
+package com.oauth2.sample.domain.auth.response;
 
 import lombok.Builder;
 import lombok.Getter;

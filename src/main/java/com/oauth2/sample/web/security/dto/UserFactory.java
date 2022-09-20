@@ -32,7 +32,7 @@ public class UserFactory {
         }
 
         return User.builder()
-                .id(map.get("USER_ID"))
+                .id(map.get("ID"))
                 .password(map.get("PASSWORD"))
                 .email(map.get("EMAIL"))
                 .imageUrl(map.get("PROFILE_IMAGE_URL"))

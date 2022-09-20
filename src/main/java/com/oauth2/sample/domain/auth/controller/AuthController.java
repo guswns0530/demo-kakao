@@ -1,6 +1,6 @@
 package com.oauth2.sample.domain.auth.controller;
 
-import com.oauth2.sample.domain.auth.request.AuthResponse;
+import com.oauth2.sample.domain.auth.response.AuthResponse;
 import com.oauth2.sample.domain.auth.request.LoginRequest;
 import com.oauth2.sample.domain.auth.request.SignUpRequest;
 import com.oauth2.sample.domain.auth.service.AuthService;

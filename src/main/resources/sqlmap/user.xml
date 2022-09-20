@@ -4,7 +4,7 @@
 <mapper namespace="user">
 
     <select id="findByEmail" parameterType="java.lang.String" resultType="java.util.HashMap">
-        select USER_ID,
+        select ID,
                PROVIDER,
                PROVIDER_ID,
                PROFILE_IMAGE_URL,
@@ -17,7 +17,7 @@
     </select>
 
     <select id="findById" parameterType="java.lang.String" resultType="java.util.HashMap">
-        select USER_ID,
+        select ID,
                PROVIDER,
                PROVIDER_ID,
                PROFILE_IMAGE_URL,
@@ -26,14 +26,14 @@
                PASSWORD,
                to_char(STATUS) as STATUS
         from kakao_users
-        where user_id = #{id}
+        where ID = #{id}
           and status = 1
     </select>
 
     <insert id="save" parameterType="com.oauth2.sample.web.security.dto.User">
         insert into
         kakao_users (
-        USER_ID,
+        ID,
         PROVIDER,
         NAME,
         PROFILE_IMAGE_URL,
@@ -87,8 +87,8 @@
         update
             kakao_users
         set
-            <if test="userId != '' and userId != null">
-                userId = #{userId, jdbcType=VARCHAR},
+            <if test="id != '' and id != null">
+                id = #{id, jdbcType=VARCHAR},
             </if>
             <if test="name != '' and name != null">
                 name = #{name, jdbcType=VARCHAR},

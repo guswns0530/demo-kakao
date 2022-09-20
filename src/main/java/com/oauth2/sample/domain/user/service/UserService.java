@@ -3,9 +3,11 @@ package com.oauth2.sample.domain.user.service;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.domain.user.request.UpdateUserRequest;
 import com.oauth2.sample.web.security.dto.User;
+import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
@@ -35,8 +37,13 @@ public class UserService {
 
     public User updateUserToEmail(String email, UpdateUserRequest updateUserRequest) {
         updateUserRequest.setEmail(email);
+        boolean result = false;
 
-        boolean result = userRepository.updateUserToEmail(updateUserRequest);
+        try {
+            result = userRepository.updateUserToEmail(updateUserRequest);
+        } catch (DuplicateKeyException ex) {
+            throw new BadRequestException("이미 사용중인 아이디입니다.");
+        }
         Optional<User> user = Optional.empty();
 
         if(result) {

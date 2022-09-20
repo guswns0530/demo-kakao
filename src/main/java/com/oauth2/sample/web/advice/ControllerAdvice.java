@@ -4,6 +4,7 @@ import com.oauth2.sample.web.payload.ApiException;
 import com.oauth2.sample.web.payload.ApiExceptions;
 import com.oauth2.sample.web.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity defaultExceptionHandler(Exception exception) {
+        System.out.println("exception = " + exception);
 
         return ResponseEntity.badRequest().body(
                 ApiException.builder()

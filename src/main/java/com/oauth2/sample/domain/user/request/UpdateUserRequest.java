@@ -8,7 +8,7 @@ import javax.validation.constraints.Null;
 @Getter
 @Setter
 public class UpdateUserRequest {
-    private String userId;
+    private String id;
 
     private String name;
 

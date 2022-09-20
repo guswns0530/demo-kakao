@@ -14,6 +14,4 @@ public interface UserRepository {
     boolean updateRefreshToken(String id, String token);
     boolean deleteUser(String email);
     boolean updateUserToEmail(UpdateUserRequest user);
-
-
 }

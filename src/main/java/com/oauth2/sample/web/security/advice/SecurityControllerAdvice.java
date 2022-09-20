@@ -1,4 +1,4 @@
-package com.oauth2.sample.web.security.exception;
+package com.oauth2.sample.web.security.advice;
 
 
 import com.oauth2.sample.web.payload.ApiException;
