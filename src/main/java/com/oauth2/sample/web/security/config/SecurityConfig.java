@@ -1,6 +1,6 @@
 package com.oauth2.sample.web.security.config;
 
-import com.oauth2.sample.web.security.CustomUserDetailsService;
+import com.oauth2.sample.web.security.provider.LocaleAuthenticationProvider;
 import com.oauth2.sample.web.security.jwt.JwtAuthenticationEntryPoint;
 import com.oauth2.sample.web.security.jwt.JwtTokenAuthenticationFilter;
 import com.oauth2.sample.web.security.jwt.JwtAccessDeniedHandler;
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,7 +32,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService userDetailsService;
+    private final LocaleAuthenticationProvider localeAuthenticationProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
@@ -42,17 +41,16 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    // static 붙은 이유: 순환참조 일어남
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean(BeanIds.AUTHENTICATION_MANAGER)
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -85,8 +83,7 @@ public class SecurityConfig {
             .oauth2Login()
                 .authorizationEndpoint()
                     .baseUri("/oauth2/authorization")
-                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository
-                    )
+                    .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
                     .and()
                 .redirectionEndpoint()
                     .baseUri("/oauth2/callback/*")
@@ -105,6 +102,9 @@ public class SecurityConfig {
 
         http.addFilterBefore(jwtTokenAuthenticationFilter
                 , UsernamePasswordAuthenticationFilter.class);
+
+        http.authenticationProvider(localeAuthenticationProvider);
+
 
         return http.build();
     }

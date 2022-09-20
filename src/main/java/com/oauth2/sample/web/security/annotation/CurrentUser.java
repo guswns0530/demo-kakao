@@ -1,4 +1,4 @@
-package com.oauth2.sample.web.security;
+package com.oauth2.sample.web.security.annotation;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

@@ -27,6 +27,7 @@
                to_char(STATUS) as STATUS
         from kakao_users
         where user_id = #{id}
+          and status = 1
     </select>
 
     <insert id="save" parameterType="com.oauth2.sample.web.security.dto.User">
@@ -60,6 +61,7 @@
             REFRESH_TOKEN
         from kakao_users
         where email = #{email}
+        and status = 1
     </select>
 
     <update id="updateRefreshToken" parameterType="java.util.Map">
@@ -68,6 +70,7 @@
         set
             REFRESH_TOKEN = #{token}
         where email = #{email}
+        and status = 1
     </update>
 
     <update id="deleteUser" parameterType="java.lang.String">
@@ -77,6 +80,28 @@
             status = 2,
             updateAt = sysdate
         where
-            email = ${email};
+            email = #{email}
+    </update>
+
+    <update id="updateUserToEmail" parameterType="com.oauth2.sample.domain.user.request.UpdateUserRequest">
+        update
+            kakao_users
+        set
+            <if test="userId != '' and userId != null">
+                userId = #{userId, jdbcType=VARCHAR},
+            </if>
+            <if test="name != '' and name != null">
+                name = #{name, jdbcType=VARCHAR},
+            </if>
+            <if test="profileImage != '' and profileImage != null">
+                profile_image = #{profileImage, jdbcType=VARCHAR},
+            </if>
+            <if test="backgroundImage != '' and backgroundImage != null">
+                background_image = #{backgroundImage, jdbcType=VARCHAR},
+            </if>
+            updateAt = sysdate
+        where
+            email = #{email}
+            and status = 1
     </update>
 </mapper>

@@ -1,6 +1,7 @@
 package com.oauth2.sample.web.advice;
 
 import com.oauth2.sample.web.payload.ApiException;
+import com.oauth2.sample.web.payload.ApiExceptions;
 import com.oauth2.sample.web.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
@@ -20,14 +22,15 @@ public class ControllerAdvice {
 
     private MessageMapping messageMapping;
 
-    @ExceptionHandler( { Exception.class })
+    @ExceptionHandler(Exception.class)
     public ResponseEntity defaultExceptionHandler(Exception exception) {
-        ApiException apiResponse = ApiException.builder()
-                .code(HttpStatus.BAD_REQUEST)
-                .message(exception.getMessage())
-                .build();
 
-        return ResponseEntity.ok().body(apiResponse);
+        return ResponseEntity.badRequest().body(
+                ApiException.builder()
+                        .errorCode(HttpStatus.BAD_REQUEST)
+                        .errorDescription(exception.getMessage())
+                        .build()
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -35,17 +38,16 @@ public class ControllerAdvice {
         BindingResult bindingResult = exception.getBindingResult();
         List<FieldError> result = bindingResult.getFieldErrors();
         
-        result.stream().forEach(error -> {
-            System.out.println("error.getDefaultMessage() = " + error.getDefaultMessage());
-            System.out.println("error.getField() = " + error.getField());
-            System.out.println("error.getRejectedValue() = " + error.getRejectedValue());
-        });
-        
+//        result.stream().forEach(error -> {
+//            System.out.println("error.getDefaultMessage() = " + error.getDefaultMessage());
+//            System.out.println("error.getField() = " + error.getField());
+//            System.out.println("error.getRejectedValue() = " + error.getRejectedValue());
+//        });
 
         return ResponseEntity.ok().body(
-                ApiException.builder()
-                        .code(HttpStatus.BAD_REQUEST)
-                        .message(result.toString())
+                ApiExceptions.builder()
+                        .errorCode(HttpStatus.BAD_REQUEST)
+                        .errorDescriptions(Collections.singletonList(result))
                         .build()
         );
     }

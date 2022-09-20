@@ -2,7 +2,8 @@ package com.oauth2.sample.web.security.jwt;
 
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
-import com.oauth2.sample.web.security.UserPrincipal;
+import com.oauth2.sample.web.security.dto.UserStatus;
+import com.oauth2.sample.web.security.principal.UserPrincipal;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -99,7 +100,7 @@ public class JwtTokenProvider {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-        UserPrincipal principal = new UserPrincipal(String.valueOf(claims.getSubject()), "", authorities);
+        UserPrincipal principal = new UserPrincipal(String.valueOf(claims.getSubject()), "", UserStatus.ACCOUNT, authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

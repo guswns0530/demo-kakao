@@ -1,6 +1,7 @@
-package com.oauth2.sample.web.security;
+package com.oauth2.sample.web.security.principal;
 
 import com.oauth2.sample.web.security.dto.User;
+import com.oauth2.sample.web.security.dto.UserStatus;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,13 +18,16 @@ import java.util.Map;
 public class UserPrincipal implements OAuth2User, UserDetails, Principal {
     private String email;
     private String password;
+    private UserStatus userStatus;
+
     private Collection<? extends GrantedAuthority> authorities;
 
     private Map<String, Object> attributes;
 
-    public UserPrincipal(String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(String email, String password, UserStatus userStatus, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.password = password;
+        this.userStatus = userStatus;
         this.authorities = authorities;
     }
 
@@ -33,6 +37,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, Principal {
         return new UserPrincipal(
                 user.getEmail(),
                 user.getPassword(),
+                user.getStatus(),
                 authorities
         );
     }

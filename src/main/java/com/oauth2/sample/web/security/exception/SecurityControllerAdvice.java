@@ -25,34 +25,42 @@ public class SecurityControllerAdvice {
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity authenticationExceptionHandle(AuthenticationException exception) {
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 getApiException(exception.getLocalizedMessage())
         );
     }
 
-    @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
+    @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity badCredentialsExceptionHandle(AuthenticationException exception) {
         String message = messageSource.getMessage("AuthenticationException.badCredentials", null, exception.getLocalizedMessage(), null);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 getApiException(message)
         );
     }
 
+    @ExceptionHandler({UsernameNotFoundException.class})
+    public ResponseEntity usernameNotFoundExceptionHandle(AuthenticationException exception) {
+        String message = messageSource.getMessage("AuthenticationException.usernameNotFound", null, exception.getLocalizedMessage(), null);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                getApiException(message)
+        );
+    }
 
     @ExceptionHandler({InsufficientAuthenticationException.class})
     public ResponseEntity insufficientAuthenticationExceptionHandle(AuthenticationException exception) {
         String message = messageSource.getMessage("AuthenticationException.Insufficient", null, exception.getLocalizedMessage(), null);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 getApiException(message)
         );
     }
 
     private ApiException getApiException(String message) {
         return ApiException.builder()
-                .code(HttpStatus.FORBIDDEN)
-                .message(message)
+                .errorCode(HttpStatus.UNAUTHORIZED)
+                .errorDescription(message)
                 .build();
     }
 }

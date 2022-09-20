@@ -1,8 +1,10 @@
 package com.oauth2.sample.web.security.jwt;
 
-import com.oauth2.sample.web.security.CustomUserDetailsService;
+import com.oauth2.sample.web.security.principal.UserPrincipal;
+import com.oauth2.sample.web.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,24 +27,25 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider tokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwt) && tokenProvider.  validateToken(jwt)) {
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 String email = tokenProvider.getEmailFromToken(jwt);
 
-                UserDetails userDetails = customUserDetailsService.loadUserById(email);
+                UserPrincipal userDetails = (UserPrincipal)customUserDetailsService.loadUserById(email);
+                if(userDetails.getUserStatus().getStatusCode() == 2) {
+                    throw new DisabledException("");
+                }
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error("Security Context에서 사용자 인증을 설정할 수 없습니다.", ex);
+            logger.error("Security Context에서 사용자 인증을 설정할 수 없습니다.");
         }
 
         filterChain.doFilter(request, response);

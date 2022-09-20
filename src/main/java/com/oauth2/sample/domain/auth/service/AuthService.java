@@ -4,7 +4,7 @@ import com.oauth2.sample.domain.auth.request.LoginRequest;
 import com.oauth2.sample.domain.auth.request.SignUpRequest;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
-import com.oauth2.sample.web.security.UserPrincipal;
+import com.oauth2.sample.web.security.principal.UserPrincipal;
 import com.oauth2.sample.web.security.dto.AuthProvider;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;

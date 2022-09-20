@@ -71,19 +71,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean deleteUser(String email) {
-        int result = sqlSession.update("", email);
+        int result = sqlSession.update("deleteUser", email);
 
         return result <= 0 ? false : true;
     }
 
     @Override
-    public Optional<User> updateUser(UpdateUserRequest user) {
-        int result = sqlSession.update("", user);
+    public boolean updateUserToEmail(UpdateUserRequest user) {
+        int result = sqlSession.update("updateUserToEmail", user);
 
-        if(result <= 0) {
-            return Optional.empty();
-        }
-
-        return findByEmail(user.getEmail());
+        return result <= 0 ? false : true;
     }
 }

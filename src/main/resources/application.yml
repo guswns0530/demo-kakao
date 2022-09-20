@@ -4,3 +4,5 @@ spring:
       - profiles/application-app.yml
       - profiles/application-datasource.yml
       - profiles/application-oauth2.yml
+  jackson:
+    property-naming-strategy: SNAKE_CASE

@@ -1,6 +1,7 @@
-package com.oauth2.sample.web.security;
+package com.oauth2.sample.web.security.service;
 
 import com.oauth2.sample.domain.user.repository.UserRepository;
+import com.oauth2.sample.web.security.principal.UserPrincipal;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with email : " + email)
+                        new UsernameNotFoundException("유저를 찾을수 없습니다. : " + email)
                 );
 
         return UserPrincipal.create(user);
@@ -35,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserById(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                () -> new ResourceNotFoundException("User", "email", email)
+                () -> new ResourceNotFoundException("유저를 찾을수 없습니다. :" + email)
         );
 
         return UserPrincipal.create(user);

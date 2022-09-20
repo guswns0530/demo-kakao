@@ -1,7 +1,7 @@
 package com.oauth2.sample.web.security.oauth2;
 
 import com.oauth2.sample.domain.user.repository.UserRepository;
-import com.oauth2.sample.web.security.UserPrincipal;
+import com.oauth2.sample.web.security.principal.UserPrincipal;
 import com.oauth2.sample.web.security.dto.AuthProvider;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.OAuth2AuthenticationProcessingException;
@@ -38,7 +38,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }

@@ -29,6 +29,7 @@ class SampleApplicationTests {
 
 	@Test
 	void passwordEncoderTest() {
-		System.out.println("passwordEncoder = " + passwordEncoder.encode("1234"));
+		String encode = passwordEncoder.encode("1234");
+
 	}
 }

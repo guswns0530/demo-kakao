@@ -5,17 +5,23 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ApiExceptions<T> {
-    private int code;
-    private String message;
-    private T errors;
+    private int errorCode;
+    private String error;
+    private List<T> errorDescriptions;
 
     @Builder
-    public ApiExceptions(HttpStatus code, String message, T errors) {
-        this.code = code.value();
-        this.message = message;
-        this.errors = errors;
+    public ApiExceptions(HttpStatus errorCode, String error, List<T> errorDescriptions) {
+        this.errorCode = errorCode.value();
+        if(error == null) {
+            this.error = errorCode.getReasonPhrase();
+        } else {
+            this.error = error;
+        }
+        this.errorDescriptions = errorDescriptions;
     }
 }

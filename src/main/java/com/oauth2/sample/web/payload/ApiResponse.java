@@ -2,6 +2,8 @@ package com.oauth2.sample.web.payload;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 //{
@@ -11,7 +13,8 @@ import org.springframework.http.HttpStatus;
 //        }
 //}
 
-@Data
+@Getter
+@Setter
 public class ApiResponse<T> {
     private int code;
     private String message;
@@ -26,9 +29,5 @@ public class ApiResponse<T> {
             this.message = message;
         }
         this.data = data;
-    }
-
-    public void setCode(HttpStatus code) {
-        this.code = code.value();
     }
 }

@@ -1,6 +1,6 @@
 package com.oauth2.sample.web.socket.handler;
 
-import com.oauth2.sample.web.security.CustomUserDetailsService;
+import com.oauth2.sample.web.security.service.CustomUserDetailsService;
 import com.oauth2.sample.web.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.security.Principal;
 
 @Component
 @RequiredArgsConstructor

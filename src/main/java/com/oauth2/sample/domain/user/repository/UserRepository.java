@@ -13,7 +13,7 @@ public interface UserRepository {
     String getRefreshTokenByEmail(String id);
     boolean updateRefreshToken(String id, String token);
     boolean deleteUser(String email);
-    Optional<User> updateUser(UpdateUserRequest user);
+    boolean updateUserToEmail(UpdateUserRequest user);
 
 
 }

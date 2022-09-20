@@ -8,18 +8,14 @@ import javax.validation.constraints.Null;
 @Getter
 @Setter
 public class UpdateUserRequest {
-    @Null
     private String userId;
 
-    @Null
     private String name;
 
-    @Null
     private String profileImage;
 
-    @Null
     private String backgroundImage;
 
-    @Null
+    @Null( message = "잘못된 접근입니다.")
     private String email;
 }
