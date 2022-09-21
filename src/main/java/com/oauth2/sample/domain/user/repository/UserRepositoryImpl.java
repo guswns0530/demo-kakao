@@ -66,7 +66,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         int result = sqlSession.update("user.updateRefreshToken", map);
 
-        return result <= 0 ? false : true;
+            return result <= 0 ? false : true;
     }
 
     @Override
