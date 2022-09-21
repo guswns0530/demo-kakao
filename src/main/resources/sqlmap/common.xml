@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--https://maivve.tistory.com/348-->
+
+<mapper namespace="common">
+    <!-- from_id || to_id 의 차단 여부 -->
+    <!-- CUTOFF_RS 1: 친구, 2: 차단      -->
+    <sql id="CUTOFF_RS">
+        WITH CUTOFF_RS AS (select FR.*,
+        case when (select count(*)
+        from kakao_friends
+        where STATUS = 2
+        <choose>
+            <when test='"${who}".equals("from")'>
+                AND from_id = FR.from_id
+                AND to_id = FR.to_id
+            </when>
+            <when test='"${who}".equals("to")'>
+                AND from_id =FR.to_id
+                AND to_id = FR.from_id
+            </when>
+            <when test='"${who}".equals("any")'>
+                AND ((from_id =FR.to_id and to_id = FR.from_id)
+                or
+                (from_id =FR.from_id and to_id = FR.to_id))
+            </when>
+        </choose>
+        ) &lt;= 0 then '1'
+        else '2' END AS CUTOFF_RS
+        from kakao_friends FR
+        where
+        <choose>
+            <when test='"${target}".equals("from")'>
+                from_id = #{email})
+            </when>
+            <when test='"${target}".equals("to")'>
+                to_id = #{email})
+            </when>
+        </choose>
+    </sql>
+</mapper>

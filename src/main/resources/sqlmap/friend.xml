@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--https://maivve.tistory.com/348-->
+
+<mapper namespace="friend">
+    <select id="selectFriendList" parameterType="java.lang.String" resultMap="dto.user">
+        <include refid="common.CUTOFF_RS">
+            <property name="email" value="email"/>
+            <property name="target" value="from"/>
+            <property name="who" value="to"/>
+        </include>
+        select
+        A.ID AS ID,
+        A.EMAIL AS EMAIL,
+        decode(B.NICKNAME, null, A.NAME, B.NICKNAME) AS NAME,
+        DECODE(B.CUTOFF_RS,'1' , A.MESSAGE , null) AS MESSAGE,
+        DECODE(B.CUTOFF_RS,'1' , A.PROVIDER , null) AS PROVIDER,
+        DECODE(B.CUTOFF_RS,'1' , A.PROFILE_IMAGE_URL, null) AS PROFILE_IMAGE,
+        DECODE(B.CUTOFF_RS,'1' , A.BACKGROUND_IMAGE_URL , null) AS BACKGROUND_IMAGE,
+        to_char(B.STATUS) AS STATUS
+        from kakao_users A
+        JOIN CUTOFF_RS B
+        ON A.email = B.TO_ID
+        where B.status = 1
+        and A.status = 1
+    </select>
+
+<!--    &lt;!&ndash; 나를 추가한 친구 ( -나는 추가하지 않은 친구 ) &ndash;&gt;-->
+<!--    <select id="selectAddedMeFriendList" parameterType="java.util.HashMap" resultType="java.lang.String">-->
+<!--        <include refid="common.CUTOFF_RS">-->
+<!--            <property name="email" value="email"/>-->
+<!--            <property name="target" value="to"/>-->
+<!--            <property name="who" value="from"/>-->
+<!--        </include>-->
+<!--        select-->
+<!--        A.USER_ID,-->
+<!--        A.NAME,-->
+<!--        DECODE(B.CUTOFF_RS,'1' , A.PROVIDER , null) AS PROVIDER,-->
+<!--        DECODE(B.CUTOFF_RS,'1' , A.PROFILE_IMAGE , null) AS PROFILE_IMAGE,-->
+<!--        DECODE(B.CUTOFF_RS,'1' , A.BACKGROUND_IMAGE , null) AS BACKGROUND_IMAGE-->
+<!--        from kakao_users A-->
+<!--        join CUTOFF_RS B-->
+<!--        on B.from_id = A.email-->
+<!--        where A.status = 1-->
+<!--        and B.status = 1-->
+<!--        and from_id not in-->
+<!--        (select to_id-->
+<!--        from kakao_friends-->
+<!--        where from_id = #{email} )-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;  차단 목록  &ndash;&gt;-->
+<!--    <select id="selectDeleteList" resultType="java.util.HashMap" parameterType="java.util.HashMap">-->
+<!--        <include refid="common.CUTOFF_RS">-->
+<!--            <property name="email" value="email"/>-->
+<!--            <property name="target" value="from"/>-->
+<!--            <property name="who" value="to"/>-->
+<!--        </include>-->
+<!--        select-->
+<!--        A.USER_ID,-->
+<!--        A.NAME,-->
+<!--        DECODE(B.CUTOFF_RS,'1' , A.PROVIDER , null) AS PROVIDER,-->
+<!--        DECODE(B.CUTOFF_RS,'1' , A.PROFILE_IMAGE , null) AS PROFILE_IMAGE,-->
+<!--        DECODE(B.CUTOFF_RS,'1' , A.BACKGROUND_IMAGE , null) AS BACKGROUND_IMAGE,-->
+<!--        from kakao_users A-->
+<!--        join CUTOFF_RS B-->
+<!--        on A.email = B.to_id-->
+<!--        where B.status = 2-->
+<!--        and A.status = 1-->
+<!--    </select>-->
+
+
+<!--    &lt;!&ndash;    <select id="selectRoom" resultType="java.util.HashMap" parameterType="java.util.HashMap">&ndash;&gt;-->
+<!--    &lt;!&ndash;        select A.room_id as room_id&ndash;&gt;-->
+<!--    &lt;!&ndash;        from kakao_join_users A&ndash;&gt;-->
+<!--    &lt;!&ndash;                 join kakao_join_users B&ndash;&gt;-->
+<!--    &lt;!&ndash;                      on A.room_id = B.room_id and A.email &lt;&gt; B.email&ndash;&gt;-->
+<!--    &lt;!&ndash;                 join kakao_rooms R&ndash;&gt;-->
+<!--    &lt;!&ndash;                      on R.room_id = B.room_id&ndash;&gt;-->
+<!--    &lt;!&ndash;        where R.type = 1&ndash;&gt;-->
+<!--    &lt;!&ndash;          and (A.email, B.email) in (select from_id, to_id&ndash;&gt;-->
+<!--    &lt;!&ndash;                                     from kakao_friends&ndash;&gt;-->
+<!--    &lt;!&ndash;                                     where friend_id = #{friendId})&ndash;&gt;-->
+<!--    &lt;!&ndash;    </select>&ndash;&gt;-->
+
+<!--    &lt;!&ndash;  유저 입력  &ndash;&gt;-->
+<!--    <insert id="insert" parameterType="com.oauth2.sample.domain.friend.request.InsertFriendRequest">-->
+<!--        insert into kakao_friends-->
+<!--        (friend_id,-->
+<!--         from_id,-->
+<!--         to_id,-->
+<!--         status,-->
+<!--         createAt)-->
+<!--        values (kakao_friends_seq.nextval,-->
+<!--                #{fromId},-->
+<!--                #{toId},-->
+<!--                1,-->
+<!--                sysdate)-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash;  유저 별명 설정   &ndash;&gt;-->
+<!--    <update id="update" parameterType="com.oauth2.sample.domain.friend.request.InsertFriendRequest">-->
+<!--        update kakao_friends-->
+<!--        <if test="nickname != '' and nickname != null">-->
+<!--            set nickname = #{nickname},-->
+<!--        </if>-->
+<!--        <if test="status != '' and status != null">-->
+<!--            status = #{status, jdbcType=INTEGER},-->
+<!--        </if>-->
+<!--        updateAt = sysdate-->
+<!--        where friend_id = #{friendId}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash;  삭제  ( 수정 ) &ndash;&gt;-->
+<!--    <update id="delete" parameterType="com.demo.kakao.domain.vo.FriendVO">-->
+<!--        update kakao_friends-->
+<!--        set status   = 3,-->
+<!--            updateAt = sysdate-->
+<!--        where friend_id = #{friendId}-->
+<!--    </update>-->
+</mapper>

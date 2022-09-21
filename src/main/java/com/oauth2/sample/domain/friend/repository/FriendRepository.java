@@ -2,8 +2,10 @@ package com.oauth2.sample.domain.friend.repository;
 
 import com.oauth2.sample.web.security.dto.User;
 
+import java.util.List;
+
 public interface FriendRepository {
-    void selectFriendList(String email);
+    List<User> selectFriendList(String email);
 
     void selectAddedMeFriendList(String email);
 
