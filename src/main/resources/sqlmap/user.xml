@@ -2,111 +2,115 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="user">
-
-    <select id="findByEmail" parameterType="java.lang.String" resultType="java.util.HashMap">
+    <resultMap id="User" type="com.oauth2.sample.web.security.dto.User">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="MESSAGE" property="message" jdbcType="VARCHAR"/>
+        <result column="PROFILE_IMAGE_URL" property="imageUrl" jdbcType="VARCHAR"/>
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="PROVIDER" property="provider" jdbcType="VARCHAR"/>
+        <result column="PROVIDER_ID" property="providerId" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="REFRESH_TOKEN" property="refreshToken" jdbcType="VARCHAR"/>
+    </resultMap>
+    
+    <select id="findByEmail" parameterType="java.lang.String" resultMap="User">
         select ID,
-               PROVIDER,
                PROVIDER_ID,
+               PROVIDER,
                PROFILE_IMAGE_URL,
-               EMAIL,
-               NAME,
                PASSWORD,
-               to_char(STATUS) as STATUS,
-               MESSAGE
+               NAME,
+               MESSAGE,
+               EMAIL,
+               to_char(STATUS) as STATUS
         from kakao_users
         where EMAIL = #{email}
     </select>
 
-    <select id="findById" parameterType="java.lang.String" resultType="java.util.HashMap">
+    <select id="findById" parameterType="java.lang.String" resultMap="User">
         select ID,
-               PROVIDER,
-               PROVIDER_ID,
-               PROFILE_IMAGE_URL,
-               EMAIL,
-               NAME,
+               MESSAGE,
                PASSWORD,
-               to_char(STATUS) as STATUS,
-               MESSAGE
+               PROFILE_IMAGE_URL,
+               PROVIDER,
+               NAME,
+               PROVIDER_ID,
+               EMAIL,
+               to_char(STATUS) as STATUS
         from kakao_users
         where ID = #{id}
           and status = 1
     </select>
 
     <insert id="save" parameterType="com.oauth2.sample.web.security.dto.User">
-        insert into
-        kakao_users (
-        ID,
-        PROVIDER,
-        NAME,
-        PROFILE_IMAGE_URL,
-        STATUS,
-        CREATEAT,
-        PROVIDER_ID,
-        EMAIL,
-        PASSWORD
-        )
-        values (
-        #{id, jdbcType=VARCHAR},
-        #{provider, jdbcType=VARCHAR},
-        #{name, jdbcType=VARCHAR},
-        #{imageUrl, jdbcType=VARCHAR},
-        1,
-        sysdate,
-        #{providerId, jdbcType=VARCHAR},
-        #{email, jdbcType=VARCHAR},
-        #{password, jdbcType=VARCHAR}
-        )
+        insert into kakao_users (ID,
+                                 PROVIDER,
+                                 NAME,
+                                 PROFILE_IMAGE_URL,
+                                 STATUS,
+                                 CREATEAT,
+                                 PROVIDER_ID,
+                                 EMAIL,
+                                 PASSWORD)
+        values (#{id, jdbcType=VARCHAR},
+                #{provider, jdbcType=VARCHAR},
+                #{name, jdbcType=VARCHAR},
+                #{imageUrl, jdbcType=VARCHAR},
+                1,
+                sysdate,
+                #{providerId, jdbcType=VARCHAR},
+                #{email, jdbcType=VARCHAR},
+                #{password, jdbcType=VARCHAR})
     </insert>
 
     <select id="getRefreshTokenByEmail" parameterType="java.lang.String" resultType="java.lang.String">
-        select
-            REFRESH_TOKEN
+        select REFRESH_TOKEN
         from kakao_users
         where email = #{email}
-        and status = 1
+          and status = 1
     </select>
 
     <update id="updateRefreshToken" parameterType="java.util.Map">
         update
             kakao_users
-        set
-            REFRESH_TOKEN = #{token}
+        set REFRESH_TOKEN = #{token}
         where email = #{email}
-        and status = 1
+          and status = 1
     </update>
 
     <update id="deleteUser" parameterType="java.lang.String">
         update
             kakao_users
-        set
-            status = 2,
+        set status   = 2,
             updateAt = sysdate
-        where
-            email = #{email}
+        where email = #{email}
     </update>
 
     <update id="updateUserToEmail" parameterType="com.oauth2.sample.domain.user.request.UpdateUserRequest">
         update
-            kakao_users
+        kakao_users
         set
-            <if test="id != '' and id != null">
-                id = #{id, jdbcType=VARCHAR},
-            </if>
-            <if test="name != '' and name != null">
-                name = #{name, jdbcType=VARCHAR},
-            </if>
-            <if test="profileImage != '' and profileImage != null">
-                profile_image = #{profileImage, jdbcType=VARCHAR},
-            </if>
-            <if test="backgroundImage != '' and backgroundImage != null">
-                background_image = #{backgroundImage, jdbcType=VARCHAR},
-            </if>
-            <if test="message != '' and message != null">
-                message = #{message, jdbcType=VARCHAR},
-            </if>
-            updateAt = sysdate
+        <if test="id != '' and id != null">
+            id = #{id, jdbcType=VARCHAR},
+        </if>
+        <if test="name != '' and name != null">
+            name = #{name, jdbcType=VARCHAR},
+        </if>
+        <if test="profileImage != '' and profileImage != null">
+            profile_image = #{profileImage, jdbcType=VARCHAR},
+        </if>
+        <if test="backgroundImage != '' and backgroundImage != null">
+            background_image = #{backgroundImage, jdbcType=VARCHAR},
+        </if>
+        <if test="message != '' and message != null">
+            message = #{message, jdbcType=VARCHAR},
+        </if>
+        updateAt = sysdate
         where
-            email = #{email}
-            and status = 1
+        email = #{email}
+        and status = 1
+
     </update>
 </mapper>

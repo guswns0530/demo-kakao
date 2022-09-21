@@ -64,6 +64,7 @@ public class MyBatisConfig {
         factoryBean.setMapperLocations(res);
         factoryBean.setDataSource(jdbcTemplate.getDataSource());
         factoryBean.setPlugins(new Interceptor[] {new MyBatisExecutionInterceptor()});
+        factoryBean.setTypeHandlersPackage("com.oauth2.sample.web.mybatis.handler");
 
         return factoryBean.getObject();
     }

@@ -1,5 +1,6 @@
 package com.oauth2.sample.web.security.provider;
 
+import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

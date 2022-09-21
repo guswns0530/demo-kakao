@@ -87,7 +87,7 @@ public class AuthService {
                 .name(signUpRequest.getName())
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .provider(AuthProvider.local)
+                .provider(AuthProvider.LOCAL)
                 .build()
         );
 

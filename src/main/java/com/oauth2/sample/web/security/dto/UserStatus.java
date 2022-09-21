@@ -2,8 +2,6 @@ package com.oauth2.sample.web.security.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.type.EnumTypeHandler;
-import org.apache.ibatis.type.MappedTypes;
 
 @Getter
 @RequiredArgsConstructor
@@ -12,4 +10,14 @@ public enum UserStatus {
     WITHDRAWAL(2);
 
     private final int statusCode;
+
+    public static UserStatus lookup(int code) {
+        for(UserStatus element : UserStatus.values()) {
+            if(element.getStatusCode() == code) {
+                return element;
+            }
+        }
+
+        return null;
+    }
 }

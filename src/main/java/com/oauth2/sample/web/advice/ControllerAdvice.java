@@ -27,7 +27,7 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity defaultExceptionHandler(Exception exception) {
-        System.out.println("exception = " + exception);
+        exception.printStackTrace();
 
         return ResponseEntity.badRequest().body(
                 ApiException.builder()

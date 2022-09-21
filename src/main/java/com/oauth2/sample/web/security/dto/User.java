@@ -1,22 +1,21 @@
 package com.oauth2.sample.web.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
     private String id;
     private String name;
     private String email;
     private String imageUrl;
     private String message;
-    private Role role;
     @JsonIgnore
     private String password;
     private AuthProvider provider;
@@ -26,4 +25,5 @@ public class User implements Serializable {
     private UserStatus status;
     @JsonIgnore
     private String refreshToken;
+    private Role role;
 }

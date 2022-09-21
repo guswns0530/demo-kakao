@@ -2,13 +2,11 @@ package com.oauth2.sample.domain.user.repository;
 
 import com.oauth2.sample.domain.user.request.UpdateUserRequest;
 import com.oauth2.sample.web.security.dto.User;
-import com.oauth2.sample.web.security.dto.UserFactory;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -19,8 +17,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        Map<String, String> map = sqlSession.selectOne("user.findByEmail", email);
-        User user = UserFactory.getUser(map);
+        User user = sqlSession.selectOne("user.findByEmail", email);
+
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public Optional<User> findById(String id) {
+        User user = sqlSession.selectOne("user.findById", id);
+        ;
 
         return Optional.ofNullable(user);
     }
@@ -30,26 +35,23 @@ public class UserRepositoryImpl implements UserRepository {
         return sqlSession.selectList("user.findByEmail", email).size() > 0 ? true : false;
     }
 
-    @Override
-    public Optional<User> findById(String id) {
-        Map<String, String> map = sqlSession.selectOne("user.findById", id);
-        User user = UserFactory.getUser(map);
 
-        return Optional.ofNullable(user);
-    }
-    
     // 수정 필요: 임시 아이디 발급
     @Deprecated
     @Override
     public User save(User user) {
-        if(!StringUtils.hasText(user.getId())) {
+        if (!StringUtils.hasText(user.getId())) {
             String uuid = UUID.randomUUID().toString();
             user.setId(user.getProvider() + ":" + uuid + "_" + new Date().toString());
         }
 
-        sqlSession.insert("user.save", user);
+        int result = sqlSession.insert("user.save", user);
 
-        return user;
+        if(result >= 1) {
+            return user;
+        }
+
+        return null;
     }
 
     @Override
@@ -66,19 +68,19 @@ public class UserRepositoryImpl implements UserRepository {
 
         int result = sqlSession.update("user.updateRefreshToken", map);
 
-            return result <= 0 ? false : true;
+        return result <= 0 ? false : true;
     }
 
     @Override
     public boolean deleteUser(String email) {
-        int result = sqlSession.update("deleteUser", email);
+        int result = sqlSession.update("user.deleteUser", email);
 
         return result <= 0 ? false : true;
     }
 
     @Override
     public boolean updateUserToEmail(UpdateUserRequest user) {
-        int result = sqlSession.update("updateUserToEmail", user);
+        int result = sqlSession.update("user.updateUserToEmail", user);
 
         return result <= 0 ? false : true;
     }
