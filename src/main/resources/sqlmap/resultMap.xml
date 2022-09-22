@@ -15,6 +15,12 @@
         <result column="REFRESH_TOKEN" property="refreshToken" jdbcType="VARCHAR"/>
     </resultMap>
 
-<!--    <resultMap id="friend" type="com.oauth2.sample.domain.friend.dto">-->
-<!--    </resultMap>-->
+    <resultMap id="friend" type="com.oauth2.sample.domain.friend.dto.Friend">
+        <result column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="MESSAGE" property="message" jdbcType="VARCHAR"/>
+        <result column="PROFILE_IMAGE_URL" property="imageUrl" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
 </mapper>

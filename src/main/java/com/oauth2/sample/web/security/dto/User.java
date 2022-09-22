@@ -13,8 +13,8 @@ import java.io.Serializable;
 @ToString
 public class User implements Serializable {
     private String id;
-    private String name;
     private String email;
+    private String name;
     private String imageUrl;
     private String message;
     @JsonIgnore

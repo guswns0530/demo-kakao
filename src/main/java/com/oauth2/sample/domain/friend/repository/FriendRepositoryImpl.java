@@ -1,12 +1,15 @@
 package com.oauth2.sample.domain.friend.repository;
 
-import com.oauth2.sample.web.security.dto.User;
+import com.oauth2.sample.domain.friend.dto.Friend;
+import com.oauth2.sample.domain.friend.request.UpdateFriendRequest;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,34 +18,72 @@ public class FriendRepositoryImpl implements FriendRepository{
     private final SqlSessionTemplate sqlSession;
 
     @Override
-    public List<User> selectFriendList(String email) {
-        List<User> selectFriendList = sqlSession.selectList("selectFriendList", email);
+    public Optional<Friend> selectFriend(String fromId, String toId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("fromId", fromId);
+        map.put("toId", toId);
+
+        Friend selectFriend = sqlSession.selectOne("selectFriend", map);
+        return Optional.ofNullable(selectFriend);
+    }
+
+    @Override
+    public List<Friend> selectFriendList(String email) {
+        List<Friend> selectFriendList = sqlSession.selectList("selectFriendList", email);
 
         return selectFriendList;
     }
 
     @Override
-    public void selectAddedMeFriendList(String email) {
-        List<User> selectAddedMeFriendList = sqlSession.selectList("selectAddedMeFriendList", email);
+    public List<Friend> selectAddedMeFriendList(String email) {
+        Map<String, String> map = new HashMap<>();
+        map.put("email", email);
+        List<Friend> selectAddedMeFriendList = sqlSession.selectList("selectAddedMeFriendList", map);
+
+        return selectAddedMeFriendList;
     }
 
     @Override
-    public void selectBlockList(String email) {
+    public List<Friend> selectBlockList(String email) {
+        List<Friend> selectBlockList = sqlSession.selectList("selectBlockList", email);
 
+        return selectBlockList;
     }
 
     @Override
-    public void insert(String email, User user) {
+    public boolean insertFriend(String fromId, String toId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("fromId", fromId);
+        map.put("toId", toId);
+        boolean result = sqlSession.update("insertFriend", map) >= 1 ? true : false;
 
+        return result;
     }
 
     @Override
-    public void update(String email) {
+    public boolean updateFriendNickname(UpdateFriendRequest updateFriendRequest) {
+        boolean result = sqlSession.update("updateFriendNickname", updateFriendRequest) >= 1 ? true : false;
 
+        return result;
     }
 
     @Override
-    public void block(String email, String targetEmail) {
+    public boolean blockFriend(String fromId, String toId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("fromId", fromId);
+        map.put("toId", toId);
+        boolean result = sqlSession.update("blockFriend", map) >= 1 ? true : false;
 
+        return result;
+    }
+
+    @Override
+    public boolean removeFriend(String fromId, String toId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("fromId", fromId);
+        map.put("toId", toId);
+        boolean result = sqlSession.update("removeFriend", map) >= 1 ? true : false;
+
+        return result;
     }
 }

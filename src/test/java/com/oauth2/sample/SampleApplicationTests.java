@@ -6,6 +6,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 @SpringBootTest
 class SampleApplicationTests {
 	@Autowired

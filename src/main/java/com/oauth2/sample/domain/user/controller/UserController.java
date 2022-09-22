@@ -17,11 +17,11 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getCurrentUser(@CurrentUser UserPrincipal user) {
         User selectUser = userService.selectUserToEmail(user.getEmail());
 
@@ -45,7 +45,7 @@ public class UserController {
         );
     }
 
-    @PutMapping("/")
+    @PutMapping
     public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal user, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User updateUser = userService.updateUserToEmail(user.getEmail(), updateUserRequest);
 
@@ -57,7 +57,7 @@ public class UserController {
         );
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<?> deleteUser(@CurrentUser UserPrincipal user) {
         userService.deleteUserToEmail(user.getEmail());
 

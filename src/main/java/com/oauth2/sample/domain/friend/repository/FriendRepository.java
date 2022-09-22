@@ -1,19 +1,24 @@
 package com.oauth2.sample.domain.friend.repository;
 
-import com.oauth2.sample.web.security.dto.User;
+import com.oauth2.sample.domain.friend.dto.Friend;
+import com.oauth2.sample.domain.friend.request.UpdateFriendRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FriendRepository {
-    List<User> selectFriendList(String email);
+    Optional<Friend> selectFriend(String fromId, String toId);
+    List<Friend> selectFriendList(String email);
 
-    void selectAddedMeFriendList(String email);
+    List<Friend> selectAddedMeFriendList(String email);
 
-    void selectBlockList(String email);
+    List<Friend> selectBlockList(String email);
 
-    void insert(String email, User user);
+    boolean insertFriend(String fromId, String toId);
 
-    void update(String email);
+    boolean updateFriendNickname(UpdateFriendRequest updateFriendRequest);
 
-    void block(String email, String targetEmail);
+    boolean blockFriend(String fromId, String toId);
+
+    boolean removeFriend(String fromId, String toId);
 }

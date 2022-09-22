@@ -1,16 +1,21 @@
 package com.oauth2.sample.domain.friend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.oauth2.sample.web.security.dto.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Friend {
-    private User user;
-    private String nickname;
+    private String id;
+    private String email;
+    private String name;
+    private String imageUrl;
+    private String message;
+    @JsonIgnore
+    private FriendStatus status;
 }
