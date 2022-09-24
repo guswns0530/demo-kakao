@@ -62,7 +62,7 @@ public class AuthController {
         User user = authService.registerUser(signUpRequest);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/user/me")
+                .fromCurrentContextPath().path("/user")
                 .buildAndExpand(user.getId()).toUri();
 
         ApiResponse<Object> response = ApiResponse.builder()

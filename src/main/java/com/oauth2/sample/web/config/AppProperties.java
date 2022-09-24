@@ -15,7 +15,6 @@ public class AppProperties {
     private final OAuth2 oauth2 = new OAuth2();
 
     @Data
-
     @RequiredArgsConstructor
     public static class Auth {
         private String tokenSecret;

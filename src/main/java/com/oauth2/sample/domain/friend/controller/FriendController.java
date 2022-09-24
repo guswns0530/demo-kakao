@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -59,5 +58,26 @@ public class FriendController {
     }
 
     @PostMapping
-    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user)
+    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody String id) {
+        boolean result = friendService.insertFriend(user.getEmail(), id);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(HttpStatus.CREATED)
+                .data(result)
+                .build();
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/user")
+                .buildAndExpand("id").toUri();
+
+        return ResponseEntity.created(location).body(
+                apiResponse
+        );
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteFriend(@CurrentUser UserPrincipal user, @RequestBody String ) {
+
+        return ResponseEntity.ok().body("");
+    }
 }

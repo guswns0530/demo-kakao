@@ -1,6 +1,5 @@
 package com.oauth2.sample.domain.auth.request;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
