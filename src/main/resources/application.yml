@@ -12,5 +12,3 @@ mybatis:
 #  level:
 #    com.oauth2.sample.web.mybatis: debug
 
-server:
-  port: 8090

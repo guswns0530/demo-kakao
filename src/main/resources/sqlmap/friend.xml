@@ -125,6 +125,14 @@
         and to_id = #{toId}
     </update>
 
+    <update id="updateFriendStatus" parameterType="java.util.Map">
+        update kakao_friends
+            set status = 1,
+        updateAt = sysdate
+        where from_id = #{fromId}
+        and to_id = #{toId}
+    </update>
+
     <!-- 유저 차단 -->
     <update id="blockFriend" parameterType="java.util.Map">
         update kakao_friends
@@ -135,7 +143,7 @@
     </update>
 
     <!--  삭제  -->
-    <update id="deleteFriend" parameterType="java.util.Map">
+    <update id="removeFriend" parameterType="java.util.Map">
         update kakao_friends
         set status   = 3,
             updateAt = sysdate

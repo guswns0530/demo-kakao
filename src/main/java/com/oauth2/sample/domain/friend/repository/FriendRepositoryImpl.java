@@ -1,5 +1,6 @@
 package com.oauth2.sample.domain.friend.repository;
 
+import com.nimbusds.jose.crypto.impl.MACProvider;
 import com.oauth2.sample.domain.friend.dto.Friend;
 import com.oauth2.sample.domain.friend.request.UpdateFriendRequest;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,16 @@ public class FriendRepositoryImpl implements FriendRepository{
         boolean result = sqlSession.update("updateFriendNickname", updateFriendRequest) >= 1 ? true : false;
 
         return result;
+    }
+
+    @Override
+    public boolean updateFriendStatus(String fromId, String toId) {
+        Map<Object, Object> map = new HashMap<>();
+        map.put("fromId", fromId);
+        map.put("toId", toId);
+
+        boolean result = sqlSession.update("updateFriendStatus", map) >= 1 ? true : false;
+        return false;
     }
 
     @Override

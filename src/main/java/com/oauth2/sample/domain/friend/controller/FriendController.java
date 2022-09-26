@@ -4,11 +4,12 @@ import com.oauth2.sample.domain.friend.dto.Friend;
 import com.oauth2.sample.domain.friend.service.FriendService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
+import com.oauth2.sample.web.security.exception.BadRequestException;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -58,12 +59,24 @@ public class FriendController {
     }
 
     @PostMapping
-    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody String id) {
-        boolean result = friendService.insertFriend(user.getEmail(), id);
+    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody String param, @RequestParam("option") String option) {
+
+        if(!StringUtils.hasText(option)) {
+            throw new BadRequestException("옵션을 지정해주세요");
+        }
+
+        if(option.equalsIgnoreCase("email")) {
+            friendService.insertFriendToEmail(user.getEmail(), param);
+        } else if(option.equalsIgnoreCase("id")) {
+            friendService.insertFriendToId(user.getEmail(), param);
+        } else {
+            throw new BadRequestException("옵션을 지정해주세요");
+        }
+
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(HttpStatus.CREATED)
-                .data(result)
+                .data(true)
                 .build();
 
         URI location = ServletUriComponentsBuilder
@@ -76,8 +89,26 @@ public class FriendController {
     }
 
     @DeleteMapping
-    public ResponseEntity deleteFriend(@CurrentUser UserPrincipal user, @RequestBody String ) {
+    public ResponseEntity deleteFriend(@CurrentUser UserPrincipal user, @RequestBody String email, @RequestParam("mod") String mod) {
+        if(!StringUtils.hasText(mod)) {
+            throw new BadRequestException("옵션을 지정해주세요");
+        }
 
-        return ResponseEntity.ok().body("");
+        boolean result = false;
+
+        if(mod.equalsIgnoreCase("block")) {
+            result = friendService.blockFriend(user.getEmail(), email);
+        } else if(mod.equalsIgnoreCase("remove")) {
+            result = friendService.removeFriend(user.getEmail(), email);
+        } else {
+            throw new BadRequestException("모드를 지정해주세요");
+        }
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(result)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 }

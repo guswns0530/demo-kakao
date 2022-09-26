@@ -1,11 +1,9 @@
-package com.oauth2.sample.domain.room.controller;
+package com.oauth2.sample.domain.socketroom.controller;
 
-import com.oauth2.sample.domain.room.dto.ChatRoom;
-import com.oauth2.sample.domain.room.repository.ChatRoomRepository;
-import jdk.jfr.ContentType;
+import com.oauth2.sample.domain.socketroom.dto.ChatRoom;
+import com.oauth2.sample.domain.socketroom.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;

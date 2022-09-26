@@ -1,6 +1,6 @@
-package com.oauth2.sample.domain.room.repository;
+package com.oauth2.sample.domain.socketroom.repository;
 
-import com.oauth2.sample.domain.room.dto.ChatRoom;
+import com.oauth2.sample.domain.socketroom.dto.ChatRoom;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;

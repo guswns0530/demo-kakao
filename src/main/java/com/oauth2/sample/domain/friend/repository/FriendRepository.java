@@ -18,6 +18,8 @@ public interface FriendRepository {
 
     boolean updateFriendNickname(UpdateFriendRequest updateFriendRequest);
 
+    boolean updateFriendStatus(String fromId, String toId);
+
     boolean blockFriend(String fromId, String toId);
 
     boolean removeFriend(String fromId, String toId);

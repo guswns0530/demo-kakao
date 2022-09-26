@@ -1,4 +1,4 @@
-package com.oauth2.sample.domain.room.dto;
+package com.oauth2.sample.domain.socketroom.dto;
 
 import lombok.Builder;
 import lombok.Data;

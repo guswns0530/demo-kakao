@@ -1,16 +1,17 @@
 package com.oauth2.sample.domain.user.service;
 
+import com.oauth2.sample.domain.friend.dto.Friend;
+import com.oauth2.sample.domain.friend.dto.FriendStatus;
+import com.oauth2.sample.domain.friend.repository.FriendRepository;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.domain.user.request.UpdateUserRequest;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FriendRepository friendRepository;
 
     public User selectUserToEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
@@ -27,12 +29,21 @@ public class UserService {
         return user.get();
     }
 
-    public User selectUserToId(String id) {
-        Optional<User> user = userRepository.findById(id);
+    public User selectUserToId(String email, String id)  {
+        Optional<User> userOf = userRepository.findById(id);
+        userOf.orElseThrow(() ->  { throw new IllegalStateException("유저를 찾지 못하였습니다."); });
 
-        user.orElseThrow(() ->  { throw new IllegalStateException("유저를 찾지 못하였습니다."); });
+        User user = userOf.get();
 
-        return user.get();
+        Optional<Friend> friendOf = friendRepository.selectFriend(email, user.getEmail());
+        friendOf.ifPresent(friend -> {
+            if(friend.getStatus() == FriendStatus.BLOCK) {
+                user.setMessage(friend.getMessage());
+                user.setImageUrl(friend.getImageUrl());
+            }
+        });
+
+        return user;
     }
 
     public User updateUserToEmail(String email, UpdateUserRequest updateUserRequest) {

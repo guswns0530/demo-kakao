@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable String id) {
-        User selectUser = userService.selectUserToId(id);
+    public ResponseEntity<?> getUser(@CurrentUser UserPrincipal user, @PathVariable String id) {
+        User selectUser = userService.selectUserToId(user.getEmail(), id);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
