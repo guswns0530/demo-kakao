@@ -58,9 +58,8 @@ public class FriendController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
-    @PostMapping
-    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody String param, @RequestParam("option") String option) {
-
+    @PostMapping("/{param}")
+    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @PathVariable String param, @RequestParam("option") String option) {
         if(!StringUtils.hasText(option)) {
             throw new BadRequestException("옵션을 지정해주세요");
         }
@@ -88,21 +87,22 @@ public class FriendController {
         );
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteFriend(@CurrentUser UserPrincipal user, @RequestBody String email, @RequestParam("mod") String mod) {
-        if(!StringUtils.hasText(mod)) {
-            throw new BadRequestException("옵션을 지정해주세요");
-        }
+    @DeleteMapping("/{email}/remove")
+    public ResponseEntity removeFriend(@CurrentUser UserPrincipal user, @PathVariable String email) {
+        boolean result = friendService.removeFriend(user.getEmail(), email);
 
-        boolean result = false;
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(result)
+                .build();
 
-        if(mod.equalsIgnoreCase("block")) {
-            result = friendService.blockFriend(user.getEmail(), email);
-        } else if(mod.equalsIgnoreCase("remove")) {
-            result = friendService.removeFriend(user.getEmail(), email);
-        } else {
-            throw new BadRequestException("모드를 지정해주세요");
-        }
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @DeleteMapping("/{email}/block")
+    public ResponseEntity blockFriend(@CurrentUser UserPrincipal user, @PathVariable String email) {
+
+        boolean result = friendService.blockFriend(user.getEmail(), email);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(HttpStatus.OK)

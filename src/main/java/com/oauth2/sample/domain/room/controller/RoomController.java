@@ -5,9 +5,7 @@ import com.oauth2.sample.web.security.annotation.CurrentUser;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rooms")
@@ -18,7 +16,11 @@ public class RoomController {
 
     @GetMapping
     public ResponseEntity<?> selectRooms(@CurrentUser UserPrincipal user) {
+        return ResponseEntity.ok().body("");
+    }
 
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<?> leaveRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
         return ResponseEntity.ok().body("");
     }
 }
