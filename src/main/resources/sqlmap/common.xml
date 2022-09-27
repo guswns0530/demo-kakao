@@ -21,8 +21,7 @@
             </when>
             <when test='"${who}".equals("any")'>
                 AND ((from_id =FR.to_id and to_id = FR.from_id)
-                or
-                (from_id =FR.from_id and to_id = FR.to_id))
+                or (from_id =FR.from_id and to_id = FR.to_id))
             </when>
         </choose>
         ) &lt;= 0 then '1'

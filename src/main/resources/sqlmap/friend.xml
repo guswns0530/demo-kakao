@@ -88,18 +88,18 @@
     </select>
 
 
-    <!--            <select id="selectRoom" resultType="java.util.HashMap" parameterType="java.util.HashMap">-->
-    <!--                select A.room_id as room_id-->
-    <!--                from kakao_join_users A-->
-    <!--                         join kakao_join_users B-->
-    <!--                              on A.room_id = B.room_id and A.email &lt;&gt; B.email-->
-    <!--                         join kakao_rooms R-->
-    <!--                              on R.room_id = B.room_id-->
-    <!--                where R.type = 1-->
-    <!--                  and (A.email, B.email) in (select from_id, to_id-->
-    <!--                                             from kakao_friends-->
-    <!--                                             where friend_id = #{friendId})-->
-    <!--            </select>-->
+<!--    <select id="selectRoom" resultType="java.util.HashMap" parameterType="java.util.HashMap">-->
+<!--        select A.room_id as room_id-->
+<!--        from kakao_join_users A-->
+<!--                 join kakao_join_users B-->
+<!--                      on A.room_id = B.room_id and A.email &lt;&gt; B.email-->
+<!--                 join kakao_rooms R-->
+<!--                      on R.room_id = B.room_id-->
+<!--        where R.type = 1-->
+<!--          and (A.email, B.email) in (select from_id, to_id-->
+<!--                                     from kakao_friends-->
+<!--                                     where friend_id = #{friendId})-->
+<!--    </select>-->
 
     <!--  유저 입력  -->
     <insert id="insertFriend" parameterType="java.util.Map">
@@ -127,10 +127,10 @@
 
     <update id="updateFriendStatus" parameterType="java.util.Map">
         update kakao_friends
-            set status = 1,
-        updateAt = sysdate
+        set status   = 1,
+            updateAt = sysdate
         where from_id = #{fromId}
-        and to_id = #{toId}
+          and to_id = #{toId}
     </update>
 
     <!-- 유저 차단 -->

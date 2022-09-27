@@ -58,8 +58,8 @@ public class FriendController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
-    @PostMapping("/{param}")
-    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @PathVariable String param, @RequestParam("option") String option) {
+    @PostMapping
+    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody String param, @RequestParam("option") String option) {
         if(!StringUtils.hasText(option)) {
             throw new BadRequestException("옵션을 지정해주세요");
         }
@@ -87,9 +87,9 @@ public class FriendController {
         );
     }
 
-    @DeleteMapping("/{email}/remove")
-    public ResponseEntity removeFriend(@CurrentUser UserPrincipal user, @PathVariable String email) {
-        boolean result = friendService.removeFriend(user.getEmail(), email);
+    @DeleteMapping("/{param}/remove")
+    public ResponseEntity removeFriend(@CurrentUser UserPrincipal user, @PathVariable String param) {
+        boolean result = friendService.removeFriend(user.getEmail(), param);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(HttpStatus.OK)
@@ -99,10 +99,10 @@ public class FriendController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
-    @DeleteMapping("/{email}/block")
-    public ResponseEntity blockFriend(@CurrentUser UserPrincipal user, @PathVariable String email) {
+    @DeleteMapping("/{param}/block")
+    public ResponseEntity blockFriend(@CurrentUser UserPrincipal user, @PathVariable String param) {
 
-        boolean result = friendService.blockFriend(user.getEmail(), email);
+        boolean result = friendService.blockFriend(user.getEmail(), param);
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(HttpStatus.OK)

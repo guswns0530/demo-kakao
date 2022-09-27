@@ -6,14 +6,14 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum RoomStatus {
-    EXIST(1),
-    REMOVE(2);
+public enum JoinUserStatus {
+    JOIN(1),
+    LEAVE(2);
 
     private final int statusCode;
 
-    public static RoomStatus lookUp(int statusCode) {
-        for(RoomStatus element : RoomStatus.values()) {
+    public static JoinUserStatus lookUp(int statusCode) {
+        for(JoinUserStatus element : JoinUserStatus.values()) {
             if(element.statusCode == statusCode) {
                 return element;
             }

@@ -180,6 +180,9 @@ commit;
 
 
 
+-- 1. 지금 현재 참가하고 있는 룸 조회
+-- 2. 마지막에 전달된 채팅조회 ( 메시지 , FILE ) 첫메시지가 없으면 조회안되게
+
 with CUTOFF_RS as (select FR.*,
                           case
                               when (select count(*)
@@ -296,3 +299,32 @@ from KAKAO_ROOMS A
          left outer join KAKAO_USERS D on B.EMAIL = D.EMAIL
 where B.EMAIL != 'y2010212@naver.com'
   and A.STATUS = 1;
+
+select E.ROOM_ID,
+       max(E.CONTENT) keep (
+           DENSE_RANK last
+           order by
+               E.CREATEAT,
+               E.CHAT_ID
+           ) CHAT_CONTENT,
+       max(E.type) keep (
+           DENSE_RANK last
+           order by
+               E.CREATEAT,
+               E.CHAT_ID
+           ) CHAT_TYPE,
+       max(E.STATUS) keep (
+           DENSE_RANK last
+           order by
+               E.CREATEAT,
+               E.CHAT_ID
+           ) CHAT_STATUS,
+       max(E.CREATEAT) keep (
+           DENSE_RANK last
+           order by
+               E.CREATEAT,
+               E.CHAT_ID
+           ) CHAT_CREATEAT
+from KAKAO_CHATS E
+where E.TYPE in (1, 2)
+group by E.ROOM_ID;

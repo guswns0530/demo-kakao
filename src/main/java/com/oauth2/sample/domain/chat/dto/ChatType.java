@@ -11,4 +11,14 @@ public enum ChatType {
     NOTICE(3);
 
     private final int typeCode;
+
+    public static ChatType lookUp(int statusCode) {
+        for(ChatType element : ChatType.values()) {
+            if(element.typeCode == statusCode) {
+                return element;
+            }
+        }
+
+        return null;
+    }
 }

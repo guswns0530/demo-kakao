@@ -161,10 +161,13 @@ INSERT INTO KAKAO_JOIN_USERS(EMAIL, ROOM_ID, STATUS, CREATEAT)
 VALUES ('y2010212@naver.com', 4, 1, SYSDATE);
 commit;
 
-INSERT INTO KAKAO_READ_USERS(email, room_id, chat_id, createAt) values ('y2010213@naver.com', 3, 2, sysdate);
-INSERT INTO KAKAO_READ_USERS(email, room_id, chat_id, createAt) values ('y2010214@naver.com', 3, 2, sysdate);
+INSERT INTO KAKAO_READ_USERS(email, room_id, chat_id, createAt)
+values ('y2010213@naver.com', 3, 2, sysdate);
+INSERT INTO KAKAO_READ_USERS(email, room_id, chat_id, createAt)
+values ('y2010214@naver.com', 3, 2, sysdate);
 commit;
 
+-- start
 with CUTOFF_RS as (select FR.*,
                           case
                               when (select count(*)
@@ -176,14 +179,18 @@ with CUTOFF_RS as (select FR.*,
                               end as CUTOFF_RS
                    from kakao_friends FR
                    where from_id = 'y2010214@naver.com')
-select C.room_id                                                                       as ROOM_ID,
-       nvl(C.NAME, LISTAGG(nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME), ', ')
-                           within group ( order by E.nickname, F.NAME))                as ROOM_NAME,
-       nvl(C.NAME, LISTAGG(D.EMAIL, ', ') within group ( order by E.nickname, F.NAME)) as EMAILS,
-       count(D.EMAIL) + 1                                                              as JOIN_USER_CNT,
-       DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null)                                  as CHAT_CONTENT,
-       G.CHAT_TYPE,
-       G.CHAT_STATUS,
+select C.room_id                                                       as ROOM_ID,
+       '[' || nvl(C.NAME, LISTAGG(
+                   '{' ||
+                   ' ''name'' : ''' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || ''',' ||
+                   ' ''email'' : ''' || D.EMAIL || ''',' ||
+                   ' ''imageUrl'' : ''' || F.profile_image_url || '''' ||
+                   '}', ', ')
+                   within group ( order by E.nickname, F.NAME)) || ']' as USERS,
+       count(D.EMAIL) + 1                                              as JOIN_USER_CNT,
+       DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null)                  as CHAT_CONTENT,
+       to_char(G.CHAT_TYPE)                                            as CHAT_TYPE,
+       to_char(G.CHAT_STATUS)                                          as CHAT_STATUS,
        G.CHAT_CREATEAT,
        (select count(*)
         from kakao_chats G
@@ -192,7 +199,7 @@ select C.room_id                                                                
                            from KAKAO_READ_USERS
                            where room_id = G.room_id
                              and EMAIL = 'y2010214@naver.com'
-                             and status in (1, 2)))                                    as UNREAD_CNT
+                             and status in (1, 2)))                    as UNREAD_CNT
 from kakao_join_users B
          join kakao_rooms C on B.ROOM_ID = C.ROOM_ID
          left outer join (select E.ROOM_ID,
@@ -222,17 +229,13 @@ from kakao_join_users B
                                      ) CHAT_CREATEAT
                           from KAKAO_CHATS E
                           where E.TYPE in (1, 2)
-                            and chat_id >= (select chat_id
-                                            from kakao_read_users
-                                            where room_id = E.ROOM_ID
-                                            and email = 'y2010214@naver.com')
                           group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
          join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
          left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
          join KAKAO_USERS F on D.EMAIl = F.EMAIL
 where B.EMAIL = 'y2010214@naver.com'
   and D.EMAIL != B.EMAIL
-  and G.CHAT_CONTENT != null
+  and G.room_id is not null
 group by C.ROOM_ID,
          C.NAME,
          G.CHAT_CONTENT,
@@ -240,3 +243,4 @@ group by C.ROOM_ID,
          G.CHAT_STATUS,
          G.CHAT_CREATEAT
 order by CHAT_CREATEAT desc;
+

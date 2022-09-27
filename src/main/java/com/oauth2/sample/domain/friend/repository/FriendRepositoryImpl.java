@@ -37,9 +37,7 @@ public class FriendRepositoryImpl implements FriendRepository{
 
     @Override
     public List<Friend> selectAddedMeFriendList(String email) {
-        Map<String, String> map = new HashMap<>();
-        map.put("email", email);
-        List<Friend> selectAddedMeFriendList = sqlSession.selectList("selectAddedMeFriendList", map);
+        List<Friend> selectAddedMeFriendList = sqlSession.selectList("selectAddedMeFriendList", email);
 
         return selectAddedMeFriendList;
     }

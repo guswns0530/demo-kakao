@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,7 +25,7 @@ class SampleApplicationTests {
 
 	@Test
 	void passwordEncoderTest() {
-		String encode = passwordEncoder.encode("1234");
+		System.out.println("new Date() = " + new Date().getTime());
 	}
 
 }
