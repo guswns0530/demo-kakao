@@ -26,5 +26,6 @@ public class User implements Serializable {
     private UserStatus status;
     @JsonIgnore
     private String refreshToken;
+    @JsonIgnore
     private Role role;
 }

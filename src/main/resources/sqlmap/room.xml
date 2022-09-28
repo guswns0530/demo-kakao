@@ -4,19 +4,23 @@
 <mapper namespace="room">
     <select id="selectRoomList" parameterType="java.util.Map" resultMap="dto.roomInfo">
         <include refid="common.CUTOFF_RS">
-            <property name="email" value="email"/>
+            <property name="email" value="${email}"/>
             <property name="target" value="from"/>
             <property name="who" value="from"/>
         </include>
 
         select C.room_id as ROOM_ID,
-        '[' || nvl(C.NAME, LISTAGG(
+        nvl(C.NAME, '') as ROOM_NAME,
+        '[' || LISTAGG(
         '{' ||
-        ' ''name'' : ''' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || ''',' ||
-        ' ''email'' : ''' || D.EMAIL || ''',' ||
-        ' ''imageUrl'' : ''' || F.profile_image_url || '''' ||
+        ' "id" : "' || F.ID || '",' ||
+        ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+        ' "email" : "' || D.EMAIL || '",' ||
+        ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+        ' "provider" : "' || F.PROVIDER || '",' ||
+        ' "imageUrl" : "' || F.profile_image_url || '"' ||
         '}', ', ')
-        within group ( order by E.nickname, F.NAME)) || ']' as USERS,
+        within group ( order by E.nickname, F.NAME) || ']' as USERS,
         count(D.EMAIL) + 1 as JOIN_USER_CNT,
         DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null) as CHAT_CONTENT,
         G.CHAT_TYPE,
@@ -71,4 +75,46 @@
         G.CHAT_CREATEAT
         order by CHAT_CREATEAT desc
     </select>
+
+    <select id="selectRoom" parameterType="java.util.Map" resultMap="dto.roomInfo">
+        <include refid="common.CUTOFF_RS">
+            <property name="email" value="${email}"/>
+            <property name="target" value="from"/>
+            <property name="who" value="from"/>
+        </include>
+        select C.room_id as ROOM_ID,
+        nvl(C.NAME, '') as ROOM_NAME,
+        '[' || LISTAGG(
+        '{' ||
+        ' "id" : "' || F.ID || '",' ||
+        ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+        ' "email" : "' || D.EMAIL || '",' ||
+        ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+        ' "provider" : "' || F.PROVIDER || '",' ||
+        ' "imageUrl" : "' || F.profile_image_url || '"' ||
+        '}', ', ')
+        within group ( order by E.nickname, F.NAME) || ']' as USERS,
+        count(D.EMAIL) + 1 as JOIN_USER_CNT
+        from kakao_join_users B
+        join kakao_rooms C
+        on B.ROOM_ID = C.ROOM_ID
+        join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+        left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
+        join KAKAO_USERS F on D.EMAIl = F.EMAIL
+        where B.EMAIL = #{email}
+        and D.EMAIL != B.EMAIL
+        and C.ROOM_ID = #{roomId}
+        group by C.ROOM_ID,
+        C.NAME
+    </select>
+
+    <update id="updateRoom" parameterType="com.oauth2.sample.domain.room.request.UpdateRoomRequest">
+        update KAKAO_ROOMS
+        set name = #{roomName}
+        where ROOM_ID = #{roomId}
+    </update>
+
+<!--    <select id="">-->
+
+<!--    </select>-->
 </mapper>

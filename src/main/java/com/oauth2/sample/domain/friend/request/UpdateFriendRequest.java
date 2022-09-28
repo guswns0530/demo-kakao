@@ -14,8 +14,9 @@ public class UpdateFriendRequest {
     @Null(message = "잘못된 접근입니다.")
     private String fromId;
 
-    @NotBlank(message = "필수값이 비어있습니다.")
+    @Null(message = "잘못된 접근입니다.")
     private String toId;
 
+    @NotBlank(message = "필수값이 비어있습니다.")
     private String nickname;
 }

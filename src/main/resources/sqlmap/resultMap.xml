@@ -26,10 +26,12 @@
 
     <resultMap id="roomInfo" type="com.oauth2.sample.domain.room.dto.RoomInfo">
         <result column="ROOM_ID" property="roomId" jdbcType="VARCHAR" />
+        <result column="ROOM_NAME" property="roomName" jdbcType="VARCHAR" />
         <result column="USERS" property="users" jdbcType="VARCHAR" />
         <result column="CHAT_CONTENT" property="chatContent" jdbcType="VARCHAR" />
         <result column="CHAT_TYPE" property="chatType" jdbcType="VARCHAR" />
         <result column="CHAT_STATUS" property="chatStatus" jdbcType="VARCHAR" />
         <result column="CHAT_CREATEAT" property="chatCreateAt" jdbcType="DATE" />
     </resultMap>
+
 </mapper>

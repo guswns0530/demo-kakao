@@ -1,9 +1,11 @@
 package com.oauth2.sample.domain.friend.controller;
 
 import com.oauth2.sample.domain.friend.dto.Friend;
+import com.oauth2.sample.domain.friend.request.UpdateFriendRequest;
 import com.oauth2.sample.domain.friend.service.FriendService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
+import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -64,10 +67,12 @@ public class FriendController {
             throw new BadRequestException("옵션을 지정해주세요");
         }
 
+        Friend friend = null;
+
         if(option.equalsIgnoreCase("email")) {
-            friendService.insertFriendToEmail(user.getEmail(), param);
+            friend = friendService.insertFriendToEmail(user.getEmail(), param);
         } else if(option.equalsIgnoreCase("id")) {
-            friendService.insertFriendToId(user.getEmail(), param);
+            friend = friendService.insertFriendToId(user.getEmail(), param);
         } else {
             throw new BadRequestException("옵션을 지정해주세요");
         }
@@ -75,7 +80,7 @@ public class FriendController {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(HttpStatus.CREATED)
-                .data(true)
+                .data(friend)
                 .build();
 
         URI location = ServletUriComponentsBuilder
@@ -85,6 +90,21 @@ public class FriendController {
         return ResponseEntity.created(location).body(
                 apiResponse
         );
+    }
+
+    @PutMapping("/{param}")
+    public ResponseEntity<?> updateFriendNickname(@CurrentUser UserPrincipal user, @PathVariable String param, @Valid @RequestBody UpdateFriendRequest updateFriendRequest) {
+        updateFriendRequest.setFromId(user.getEmail());
+        updateFriendRequest.setToId(param);
+
+        Friend friend = friendService.updateFriendNickname(updateFriendRequest);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(friend)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 
     @DeleteMapping("/{param}/remove")

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class FriendRepositoryImpl implements FriendRepository{
+public class FriendRepositoryImpl implements FriendRepository {
 
     private final SqlSessionTemplate sqlSession;
 

@@ -30,10 +30,10 @@
         where
         <choose>
             <when test='"${target}".equals("from")'>
-                from_id = #{email})
+                from_id = '${email}')
             </when>
             <when test='"${target}".equals("to")'>
-                to_id = #{email})
+                to_id = '${email}')
             </when>
         </choose>
     </sql>

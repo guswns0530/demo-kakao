@@ -1,7 +1,7 @@
 package com.oauth2.sample.domain.room.controller;
 
-import com.oauth2.sample.domain.room.dto.RoomInfo;
 import com.oauth2.sample.domain.room.dto.RoomInfoResponse;
+import com.oauth2.sample.domain.room.request.UpdateRoomRequest;
 import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -32,8 +34,30 @@ public class RoomController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
+    @GetMapping("/{roomId}")
+    public ResponseEntity<?> selectRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
+        RoomInfoResponse roomInfoResponse = roomService.selectRoom(user.getEmail(), roomId);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(roomInfoResponse)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> inviteRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId, @RequestBody String body) {
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/{roomId}")
-    public ResponseEntity<?> updateRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
+    public ResponseEntity<?> updateRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId, @Valid @RequestBody UpdateRoomRequest updateRoomRequest) {
+        updateRoomRequest.setEmail(user.getEmail());
+        updateRoomRequest.setRoomId(roomId);
+
+        roomService.updateRoom(updateRoomRequest);
+
         return ResponseEntity.ok().build();
     }
 

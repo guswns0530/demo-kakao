@@ -11,6 +11,8 @@ import java.sql.Date;
 public class RoomInfo {
     private String roomId;
 
+    private String roomName;
+
     private String users;
 
     private String chatContent;

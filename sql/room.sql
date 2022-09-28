@@ -54,29 +54,29 @@ select A.ROOM_ID,
               and G.chat_id > F.chat_id))             as UNREAD_CNT
 from kakao_rooms A
          left outer join (select E.ROOM_ID,
-                      max(E.CONTENT) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT
-                          ) CHAT_CONTENT,
-                      max(E.type) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT
-                          ) CHAT_TYPE,
-                      max(E.STATUS) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT
-                          ) CHAT_STATUS,
-                      max(E.CREATEAT) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT
-                          ) CHAT_CREATEAT
-               from KAKAO_CHATS E
-               group by E.ROOM_ID) E
-              on A.ROOM_ID = E.ROOM_ID
+                                 max(E.CONTENT) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT
+                                     ) CHAT_CONTENT,
+                                 max(E.type) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT
+                                     ) CHAT_TYPE,
+                                 max(E.STATUS) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT
+                                     ) CHAT_STATUS,
+                                 max(E.CREATEAT) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT
+                                     ) CHAT_CREATEAT
+                          from KAKAO_CHATS E
+                          group by E.ROOM_ID) E
+                         on A.ROOM_ID = E.ROOM_ID
          join kakao_join_users B on A.ROOM_ID = B.ROOM_ID
          left outer join CUTOFF_RS C on B.EMAIL = C.TO_ID
          left outer join kakao_users D on B.EMAIL = D.EMAIL
@@ -124,33 +124,33 @@ select A.room_id                                                                
                              and status in (1, 2)))                                    as UNREAD_CNT
 from KAKAO_ROOMS A
          left outer join (select E.ROOM_ID,
-                      max(E.CONTENT) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT,
-                              E.CHAT_ID
-                          ) CHAT_CONTENT,
-                      max(E.type) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT,
-                              E.CHAT_ID
-                          ) CHAT_TYPE,
-                      max(E.STATUS) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT,
-                              E.CHAT_ID
-                          ) CHAT_STATUS,
-                      max(E.CREATEAT) keep (
-                          DENSE_RANK last
-                          order by
-                              E.CREATEAT,
-                              E.CHAT_ID
-                          ) CHAT_CREATEAT
-               from KAKAO_CHATS E
-               where E.TYPE in (1, 2)
-               group by E.ROOM_ID) E on A.ROOM_ID = E.ROOM_ID
+                                 max(E.CONTENT) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT,
+                                         E.CHAT_ID
+                                     ) CHAT_CONTENT,
+                                 max(E.type) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT,
+                                         E.CHAT_ID
+                                     ) CHAT_TYPE,
+                                 max(E.STATUS) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT,
+                                         E.CHAT_ID
+                                     ) CHAT_STATUS,
+                                 max(E.CREATEAT) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT,
+                                         E.CHAT_ID
+                                     ) CHAT_CREATEAT
+                          from KAKAO_CHATS E
+                          where E.TYPE in (1, 2)
+                          group by E.ROOM_ID) E on A.ROOM_ID = E.ROOM_ID
          join KAKAO_JOIN_USERS B on A.ROOM_ID = B.ROOM_ID
          left outer join CUTOFF_RS C on B.EMAIL = C.TO_ID
          left outer join KAKAO_USERS D on B.EMAIL = D.EMAIL
@@ -179,10 +179,8 @@ commit;
 -- where ROOM_ID = ?;
 
 
-
 -- 1. 지금 현재 참가하고 있는 룸 조회
 -- 2. 마지막에 전달된 채팅조회 ( 메시지 , FILE ) 첫메시지가 없으면 조회안되게
-
 with CUTOFF_RS as (select FR.*,
                           case
                               when (select count(*)
@@ -193,25 +191,33 @@ with CUTOFF_RS as (select FR.*,
                               else '2'
                               end as CUTOFF_RS
                    from kakao_friends FR
-                   where from_id = 'y2010212@naver.com')
-select A.room_id                                                                       as ROOM_ID,
-       nvl(A.NAME, LISTAGG(nvl(DECODE(C.CUTOFF_RS, 1, C.nickname, null), D.NAME),
-                           ', ') within group ( order by C.nickname, D.NAME))          as ROOM_NAME,
-       nvl(A.NAME, LISTAGG(D.EMAIL, ', ') within group ( order by C.nickname, D.NAME)) as EMAILS,
-       count(B.EMAIL) + 1                                                              as JOIN_USER_CNT,
-       DECODE(E.CHAT_STATUS, 1, E.CHAT_CONTENT, null)                                  as CHAT_CONTENT,
-       E.CHAT_TYPE,
-       E.CHAT_STATUS,
-       E.CHAT_CREATEAT,
+                   where from_id = 'y2010214@naver.com')
+select C.room_id                                                       as ROOM_ID,
+       '[' || nvl(C.NAME, LISTAGG(
+                   '{' ||
+                   ' "id" : "' || F.ID || '",' ||
+                   ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+                   ' "email" : "' || D.EMAIL || '",' ||
+                   ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+                   ' "provider" : "' || F.PROVIDER || '",' ||
+                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   '}', ', ')
+                   within group ( order by E.nickname, F.NAME)) || ']' as USERS,
+       count(D.EMAIL) + 1                                              as JOIN_USER_CNT,
+       DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null)                  as CHAT_CONTENT,
+       to_char(G.CHAT_TYPE)                                            as CHAT_TYPE,
+       to_char(G.CHAT_STATUS)                                          as CHAT_STATUS,
+       G.CHAT_CREATEAT,
        (select count(*)
         from kakao_chats G
-        where G.room_id = A.room_Id
+        where G.room_id = C.room_Id
           and G.CHAT_ID > (select chat_id
                            from KAKAO_READ_USERS
                            where room_id = G.room_id
-                             and EMAIL = 'y2010212@naver.com'
-                             and status in (1, 2)))                                    as UNREAD_CNT
-from KAKAO_ROOMS A
+                             and EMAIL = 'y2010214@naver.com'
+                             and status in (1, 2)))                    as UNREAD_CNT
+from kakao_join_users B
+         join kakao_rooms C on B.ROOM_ID = C.ROOM_ID
          left outer join (select E.ROOM_ID,
                                  max(E.CONTENT) keep (
                                      DENSE_RANK last
@@ -239,19 +245,21 @@ from KAKAO_ROOMS A
                                      ) CHAT_CREATEAT
                           from KAKAO_CHATS E
                           where E.TYPE in (1, 2)
-                          group by E.ROOM_ID) E on A.ROOM_ID = E.ROOM_ID
-         join KAKAO_JOIN_USERS B on A.ROOM_ID = B.ROOM_ID
-         left outer join CUTOFF_RS C on B.EMAIL = C.TO_ID
-         left outer join KAKAO_USERS D on B.EMAIL = D.EMAIL
-where B.EMAIL != 'y2010212@naver.com'
-  and A.STATUS = 1
-group by A.ROOM_ID,
-         A.NAME,
-         E.CHAT_CONTENT,
-         E.CHAT_TYPE,
-         E.CHAT_STATUS,
-         E.CHAT_CREATEAT
+                          group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
+         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
+         join KAKAO_USERS F on D.EMAIl = F.EMAIL
+where B.EMAIL = 'y2010214@naver.com'
+  and D.EMAIL != B.EMAIL
+  and G.room_id is not null
+group by C.ROOM_ID,
+         C.NAME,
+         G.CHAT_CONTENT,
+         G.CHAT_TYPE,
+         G.CHAT_STATUS,
+         G.CHAT_CREATEAT
 order by CHAT_CREATEAT desc;
+
 
 with CUTOFF_RS as (select FR.*,
                           case
@@ -263,68 +271,32 @@ with CUTOFF_RS as (select FR.*,
                               else '2'
                               end as CUTOFF_RS
                    from kakao_friends FR
-                   where from_id = 'y2010212@naver.com')
-select *
-from KAKAO_ROOMS A
-         left outer join (select E.ROOM_ID,
-                                 max(E.CONTENT) keep (
-                                     DENSE_RANK last
-                                     order by
-                                         E.CREATEAT,
-                                         E.CHAT_ID
-                                     ) CHAT_CONTENT,
-                                 max(E.type) keep (
-                                     DENSE_RANK last
-                                     order by
-                                         E.CREATEAT,
-                                         E.CHAT_ID
-                                     ) CHAT_TYPE,
-                                 max(E.STATUS) keep (
-                                     DENSE_RANK last
-                                     order by
-                                         E.CREATEAT,
-                                         E.CHAT_ID
-                                     ) CHAT_STATUS,
-                                 max(E.CREATEAT) keep (
-                                     DENSE_RANK last
-                                     order by
-                                         E.CREATEAT,
-                                         E.CHAT_ID
-                                     ) CHAT_CREATEAT
-                          from KAKAO_CHATS E
-                          where E.TYPE in (1, 2)
-                          group by E.ROOM_ID) E on A.ROOM_ID = E.ROOM_ID
-         join KAKAO_JOIN_USERS B on A.ROOM_ID = B.ROOM_ID
-         left outer join CUTOFF_RS C on B.EMAIL = C.TO_ID
-         left outer join KAKAO_USERS D on B.EMAIL = D.EMAIL
-where B.EMAIL != 'y2010212@naver.com'
-  and A.STATUS = 1;
+                   where from_id = 'y2010214@naver.com')
+select C.room_id                                                      as ROOM_ID,
+       nvl(C.NAME, '')                                                as ROOM_NAME,
+       '[' || LISTAGG(
+                   '{' ||
+                   ' "id" : "' || F.ID || '",' ||
+                   ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+                   ' "email" : "' || D.EMAIL || '",' ||
+                   ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+                   ' "provider" : "' || F.PROVIDER || '",' ||
+                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   '}', ', ')
+                   within group ( order by E.nickname, F.NAME) || ']' as USERS,
+       count(D.EMAIL) + 1                                             as JOIN_USER_CNT
+from kakao_join_users B
+         join kakao_rooms C
+              on B.ROOM_ID = C.ROOM_ID
+         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
+         join KAKAO_USERS F on D.EMAIl = F.EMAIL
+where B.EMAIL = 'y2010214@naver.com'
+  and D.EMAIL != B.EMAIL
+  and C.ROOM_ID = 3
+group by C.ROOM_ID,
+         C.NAME;
+update KAKAO_ROOMS
+set name = 'test'
+where ROOM_ID = 3;
 
-select E.ROOM_ID,
-       max(E.CONTENT) keep (
-           DENSE_RANK last
-           order by
-               E.CREATEAT,
-               E.CHAT_ID
-           ) CHAT_CONTENT,
-       max(E.type) keep (
-           DENSE_RANK last
-           order by
-               E.CREATEAT,
-               E.CHAT_ID
-           ) CHAT_TYPE,
-       max(E.STATUS) keep (
-           DENSE_RANK last
-           order by
-               E.CREATEAT,
-               E.CHAT_ID
-           ) CHAT_STATUS,
-       max(E.CREATEAT) keep (
-           DENSE_RANK last
-           order by
-               E.CREATEAT,
-               E.CHAT_ID
-           ) CHAT_CREATEAT
-from KAKAO_CHATS E
-where E.TYPE in (1, 2)
-group by E.ROOM_ID;

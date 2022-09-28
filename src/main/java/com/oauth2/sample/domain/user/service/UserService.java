@@ -19,28 +19,20 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final FriendRepository friendRepository;
 
     public User selectUserToEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<User> userOf = userRepository.findByEmail(email);
+        User user = userOf.orElseThrow(() -> {
+            throw new IllegalStateException("유저를 찾지 못하였습니다.");
+        });
 
-        user.orElseThrow(() ->  { throw new IllegalStateException("유저를 찾지 못하였습니다."); });
-
-        return user.get();
+        return user;
     }
 
-    public User selectUserToId(String email, String id)  {
+    public User selectUserToId(String email, String id) {
         Optional<User> userOf = userRepository.findById(id);
-        userOf.orElseThrow(() ->  { throw new IllegalStateException("유저를 찾지 못하였습니다."); });
-
-        User user = userOf.get();
-
-        Optional<Friend> friendOf = friendRepository.selectFriend(email, user.getEmail());
-        friendOf.ifPresent(friend -> {
-            if(friend.getStatus() == FriendStatus.BLOCK) {
-                user.setMessage(friend.getMessage());
-                user.setImageUrl(friend.getImageUrl());
-            }
+        User user = userOf.orElseThrow(() -> {
+            throw new IllegalStateException("유저를 찾지 못하였습니다.");
         });
 
         return user;
@@ -57,7 +49,7 @@ public class UserService {
         }
         Optional<User> user = Optional.empty();
 
-        if(result) {
+        if (result) {
             user = userRepository.findByEmail(email);
         } else {
             throw new DataAccessResourceFailureException("정보 업데이트에 실패하였습니다.");
@@ -74,7 +66,7 @@ public class UserService {
     public void deleteUserToEmail(String email) {
         boolean result = userRepository.deleteUser(email);
 
-        if(!result) {
+        if (!result) {
             throw new DataAccessResourceFailureException("탈퇴 처리를 실패하였습니다.");
         }
     }

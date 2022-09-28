@@ -15,7 +15,9 @@ import java.util.Map;
 public class RoomInfoResponse {
     private String roomId;
 
-    private List<Map> users;
+    private String roomName;
+
+    private List<User> users;
 
     private String chatContent;
 
@@ -23,5 +25,5 @@ public class RoomInfoResponse {
 
     private String chatStatus;
 
-    private long chatCreateAt;
+    private Long chatCreateAt;
 }
