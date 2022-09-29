@@ -406,3 +406,5 @@ group by C.ROOM_ID,
          G.CHAT_TYPE,
          G.CHAT_STATUS,
          G.CHAT_CREATEAT
+
+select KAKAO_ROOMS_SEQ.nextval from dual;

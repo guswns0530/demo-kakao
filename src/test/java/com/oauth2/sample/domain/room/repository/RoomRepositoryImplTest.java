@@ -28,4 +28,35 @@ class RoomRepositoryImplTest {
     @Test
     void existUser() {
     }
+
+    @Test
+    void testSelectRoomList() {
+    }
+
+    @Test
+    void selectRoom() {
+    }
+
+    @Test
+    void insertRoom() {
+        String n = roomRepository.insertRoom();
+
+        System.out.println("n = " + n);
+    }
+
+    @Test
+    void updateRoom() {
+    }
+
+    @Test
+    void testExistUser() {
+    }
+
+    @Test
+    void inviteUserToRoom() {
+    }
+
+    @Test
+    void removeJoinUser() {
+    }
 }

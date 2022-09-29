@@ -3,6 +3,7 @@ package com.oauth2.sample.web.mybatis.handler;
 import com.oauth2.sample.domain.room.dto.RoomType;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.util.StringUtils;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -19,16 +20,34 @@ public class RoomTypeHandler extends BaseTypeHandler<RoomType> {
 
     @Override
     public RoomType getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return RoomType.lookUp(Integer.parseInt(rs.getString(columnName)));
+        String string = rs.getString(columnName);
+
+        if (!StringUtils.hasText(string)) {
+            return null;
+        }
+
+        return RoomType.lookUp(Integer.parseInt(string));
     }
 
     @Override
     public RoomType getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return RoomType.lookUp(Integer.parseInt(rs.getNString(columnIndex)));
+        String string = rs.getNString(columnIndex);
+
+        if (!StringUtils.hasText(string)) {
+            return null;
+        }
+
+        return RoomType.lookUp(Integer.parseInt(string));
     }
 
     @Override
     public RoomType getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        return RoomType.lookUp(Integer.parseInt(cs.getNString(columnIndex)));
+        String string = cs.getNString(columnIndex);
+
+        if (!StringUtils.hasText(string)) {
+            return null;
+        }
+
+        return RoomType.lookUp(Integer.parseInt(string));
     }
 }

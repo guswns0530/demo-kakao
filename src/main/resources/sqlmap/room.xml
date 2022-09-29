@@ -161,10 +161,13 @@
         values (#{email}, #{roomId}, 1, sysdate)
     </insert>
 
-<!--    <insert id="insertRoom" parameterType="">-->
-<!--        insert into KAKAO_ROOMS (ROOM_ID, NAME, TYPE, STATUS, CREATEAT)-->
-<!--        values (KAKAO_ROOMS_SEQ.nextval, null, 2, 1, sysdate);-->
-<!--    </insert>-->
+    <insert id="insertRoom">
+        <selectKey keyProperty="roomId" resultType="long" order="BEFORE">
+            select KAKAO_ROOMS_SEQ.nextval from dual
+        </selectKey>
+        insert into KAKAO_ROOMS (ROOM_ID, NAME, TYPE, STATUS, CREATEAT)
+        values (#{roomId}, null, 2, 1, sysdate);
+    </insert>
 
     <update id="removeJoinUser" parameterType="java.util.Map">
         update KAKAO_JOIN_USERS

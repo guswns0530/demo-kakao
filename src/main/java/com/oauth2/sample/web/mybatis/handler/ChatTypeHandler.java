@@ -3,6 +3,7 @@ package com.oauth2.sample.web.mybatis.handler;
 import com.oauth2.sample.domain.chat.dto.ChatType;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.util.StringUtils;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -18,16 +19,34 @@ public class ChatTypeHandler extends BaseTypeHandler<ChatType> {
 
     @Override
     public ChatType getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return ChatType.lookUp(Integer.parseInt(rs.getString(columnName)));
+        String string = rs.getString(columnName);
+
+        if(!StringUtils.hasText(string)) {
+            return null;
+        }
+
+        return ChatType.lookUp(Integer.parseInt(string));
     }
 
     @Override
     public ChatType getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return ChatType.lookUp(Integer.parseInt(rs.getNString(columnIndex)));
+        String string = rs.getNString(columnIndex);
+
+        if(!StringUtils.hasText(string)) {
+            return null;
+        }
+
+        return ChatType.lookUp(Integer.parseInt(string));
     }
 
     @Override
     public ChatType getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        return ChatType.lookUp(Integer.parseInt(cs.getNString(columnIndex)));
+        String string = cs.getNString(columnIndex);
+
+        if(!StringUtils.hasText(string)) {
+            return null;
+        }
+
+        return ChatType.lookUp(Integer.parseInt(string));
     }
 }

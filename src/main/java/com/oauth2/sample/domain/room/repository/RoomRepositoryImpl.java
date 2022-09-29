@@ -38,6 +38,14 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
+    public String insertRoom() {
+        Integer n =  sqlSession.insert("insertRoom");
+        System.out.println("n = " + n);
+
+        return "";
+    }
+
+    @Override
     public boolean updateRoom(UpdateRoomRequest request) {
         boolean result = sqlSession.update("updateRoom", request) >= 1 ? true : false;
         return result;

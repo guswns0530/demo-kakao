@@ -11,10 +11,9 @@ import java.util.Optional;
 public interface RoomRepository {
     List<RoomInfo> selectRoomList(String email);
     Optional<RoomInfo> selectRoom(String email, String roomId);
+    String insertRoom();
     boolean updateRoom(UpdateRoomRequest request);
     boolean existUser(String roomId, String email);
-
     boolean inviteUserToRoom(InviteRoomRequest inviteRoomRequest);
-
     boolean removeJoinUser(String roomId, String email);
 }
