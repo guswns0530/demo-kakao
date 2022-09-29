@@ -1,7 +1,8 @@
 package com.oauth2.sample.domain.room.controller;
 
-import com.oauth2.sample.domain.room.dto.RoomInfoResponse;
+import com.oauth2.sample.domain.room.request.InviteRoomRequest;
 import com.oauth2.sample.domain.room.request.UpdateRoomRequest;
+import com.oauth2.sample.domain.room.response.RoomInfoResponse;
 import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -47,8 +47,28 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<?> inviteRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId, @RequestBody String body) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> inviteUserToRoom(@CurrentUser UserPrincipal user, @Valid @RequestBody InviteRoomRequest inviteRoomRequest) {
+        inviteRoomRequest.setFromEmail(user.getEmail());
+        RoomInfoResponse room = roomService.inviteUserToRoom(inviteRoomRequest);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(HttpStatus.ACCEPTED)
+                .data(room)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<?> leaveRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
+        roomService.leaveRoom(roomId, user.getEmail());
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .data(HttpStatus.ACCEPTED)
+                .data(true)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 
     @PutMapping("/{roomId}")
@@ -58,11 +78,11 @@ public class RoomController {
 
         roomService.updateRoom(updateRoomRequest);
 
-        return ResponseEntity.ok().build();
-    }
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.ACCEPTED)
+                .data(true)
+                .build();
 
-    @DeleteMapping("/{roomId}")
-    public ResponseEntity<?> leaveRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
-        return ResponseEntity.ok().body("");
+        return ResponseEntity.ok().body(apiResponse);
     }
 }

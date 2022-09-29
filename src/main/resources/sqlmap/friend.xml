@@ -7,7 +7,7 @@
         <include refid="common.CUTOFF_RS">
             <property name="email" value="${fromId}"/>
             <property name="target" value="from"/>
-            <property name="who" value="any"/>
+            <property name="who" value="to"/>
         </include>
         select A.ID                                                   AS ID,
                A.EMAIL                                                AS EMAIL,
@@ -19,8 +19,7 @@
         from kakao_users A
                  JOIN CUTOFF_RS B
                       ON A.email = B.TO_ID
-        where B.status = 1
-          and A.status = 1
+        where A.status = 1
           AND B.TO_ID = #{toId}
     </select>
 

@@ -1,13 +1,12 @@
-package com.oauth2.sample.domain.room.dto;
+package com.oauth2.sample.domain.room.response;
 
+import com.oauth2.sample.domain.chat.dto.ChatStatus;
+import com.oauth2.sample.domain.chat.dto.ChatType;
+import com.oauth2.sample.domain.room.dto.RoomType;
 import com.oauth2.sample.web.security.dto.User;
 import lombok.*;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import javax.print.DocFlavor;
-import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -17,13 +16,17 @@ public class RoomInfoResponse {
 
     private String roomName;
 
+    private RoomType roomType;
+
+    private String joinUserCnt;
+
     private List<User> users;
 
     private String chatContent;
 
-    private String chatType;
+    private ChatType chatType;
 
-    private String chatStatus;
+    private ChatStatus chatStatus;
 
     private Long chatCreateAt;
 }

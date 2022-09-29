@@ -300,3 +300,109 @@ update KAKAO_ROOMS
 set name = 'test'
 where ROOM_ID = 3;
 
+
+-- exist in room
+select 1
+from KAKAO_JOIN_USERS A
+where A.EMAIL = 'y2010212@naver.com'
+  and A.ROOM_ID = 3;
+
+insert into KAKAO_ROOMS (ROOM_ID, NAME, TYPE, STATUS, CREATEAT)
+values (KAKAO_ROOMS_SEQ.nextval, null, 2, 1, sysdate);
+insert into KAKAO_JOIN_USERS (EMAIL, ROOM_ID, STATUS, CREATEAT)
+values ('', '', 1, sysdate);
+
+update KAKAO_JOIN_USERS
+set STATUS = 2
+where EMAIL = ''
+  and ROOM_ID = '';
+
+case when (select count(*)
+        from kakao_friends
+        where STATUS = 2
+
+                AND from_id = FR.from_id
+                AND to_id = FR.to_id
+
+        ) <= 0 then '1'
+        else '2' END AS CUTOFF_RS
+        from kakao_friends FR
+        where
+
+                from_id = 'y2010214@naver.com')
+
+
+WITH CUTOFF_RS AS (select FR.*,
+                          case when (select count(*)
+                                     from kakao_friends
+                                     where STATUS = 2
+
+                                       AND from_id = FR.from_id
+                                       AND to_id = FR.to_id
+
+                                    ) <= 0 then '1'
+                               else '2' END AS CUTOFF_RS
+                   from kakao_friends FR
+                   where
+
+                           from_id = 'y2010214@naver.com')
+
+
+select C.room_id as ROOM_ID,
+       nvl(C.NAME, '') as ROOM_NAME,
+       '[' || LISTAGG(
+                   '{' ||
+                   ' "id" : "' || F.ID || '",' ||
+                   ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+                   ' "email" : "' || D.EMAIL || '",' ||
+                   ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+                   ' "provider" : "' || F.PROVIDER || '",' ||
+                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   '}', ', ')
+                   within group ( order by E.nickname, F.NAME) || ']' as USERS,
+       C.type as ROOM_TYPE,
+       count(D.EMAIL) as JOIN_USER_CNT,
+       DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null) as CHAT_CONTENT,
+       NVL(G.CHAT_TYPE, null) AS CHAT_TYPE,
+       NVL(G.CHAT_STATUS, null) AS CHAT_STATUS,
+       NVL(G.CHAT_CREATEAT, null) AS CHAT_CREATEAT
+from kakao_join_users B
+         join kakao_rooms C
+              on B.ROOM_ID = C.ROOM_ID
+         left outer join (select E.ROOM_ID,
+                                 max (E.CONTENT) keep (
+                                     DENSE_RANK last
+                                     order by
+                                         E.CREATEAT,
+                                         E.CHAT_ID
+                                     ) CHAT_CONTENT, max (E.type) keep (
+        DENSE_RANK last
+        order by
+            E.CREATEAT,
+            E.CHAT_ID
+        ) CHAT_TYPE, max (E.STATUS) keep (
+        DENSE_RANK last
+        order by
+            E.CREATEAT,
+            E.CHAT_ID
+        ) CHAT_STATUS, max (E.CREATEAT) keep (
+        DENSE_RANK last
+        order by
+            E.CREATEAT,
+            E.CHAT_ID
+        ) CHAT_CREATEAT
+                          from KAKAO_CHATS E
+                          where E.TYPE in (1, 2)
+                          group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
+         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
+         join KAKAO_USERS F on D.EMAIl = F.EMAIL
+where B.EMAIL = 'y2010214@naver.com'
+  and C.ROOM_ID = '4'
+group by C.ROOM_ID,
+         C.NAME,
+         C.TYPE,
+         G.CHAT_CONTENT,
+         G.CHAT_TYPE,
+         G.CHAT_STATUS,
+         G.CHAT_CREATEAT

@@ -1,5 +1,7 @@
 package com.oauth2.sample.domain.room.dto;
 
+import com.oauth2.sample.domain.chat.dto.ChatStatus;
+import com.oauth2.sample.domain.chat.dto.ChatType;
 import lombok.*;
 
 import java.sql.Date;
@@ -13,13 +15,17 @@ public class RoomInfo {
 
     private String roomName;
 
+    private RoomType roomType;
+
     private String users;
 
     private String chatContent;
 
-    private String chatType;
+    private ChatType chatType;
 
-    private String chatStatus;
+    private ChatStatus chatStatus;
+
+    private String joinUserCnt;
 
     private Date chatCreateAt;
 }

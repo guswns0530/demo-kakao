@@ -1,5 +1,6 @@
 package com.oauth2.sample.domain.chat.dto;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -10,6 +11,7 @@ public enum ChatType {
     FILE(2),
     NOTICE(3);
 
+    @JsonValue
     private final int typeCode;
 
     public static ChatType lookUp(int statusCode) {
@@ -20,5 +22,10 @@ public enum ChatType {
         }
 
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return typeCode + "";
     }
 }

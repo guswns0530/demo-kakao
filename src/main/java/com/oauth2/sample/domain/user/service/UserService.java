@@ -19,6 +19,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FriendRepository friendRepository;
 
     public User selectUserToEmail(String email) {
         Optional<User> userOf = userRepository.findByEmail(email);
@@ -33,6 +34,16 @@ public class UserService {
         Optional<User> userOf = userRepository.findById(id);
         User user = userOf.orElseThrow(() -> {
             throw new IllegalStateException("유저를 찾지 못하였습니다.");
+        });
+
+        friendRepository.selectFriend(email, user.getEmail()).ifPresent(friend -> {
+            user.setMessage(friend.getMessage());
+            user.setImageUrl(friend.getImageUrl());
+            switch (friend.getStatus()) {
+                case FRIEND:
+                    user.setName(friend.getName());
+                    break;
+            }
         });
 
         return user;

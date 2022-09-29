@@ -8,7 +8,7 @@ spring:
     property-naming-strategy: SNAKE_CASE
 mybatis:
   type-handlers-package: "com.oauth2.sample.web.mybatis.handler"
-#logging:
-#  level:
-#    com.oauth2.sample.web.mybatis: debug
+logging:
+  level:
+    com.oauth2.sample.web.mybatis: debug
 
