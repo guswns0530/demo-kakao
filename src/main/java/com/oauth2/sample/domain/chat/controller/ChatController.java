@@ -1,15 +1,19 @@
 package com.oauth2.sample.domain.chat.controller;
 
+import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ChatType;
 import com.oauth2.sample.domain.chat.request.InsertChatRequest;
 import com.oauth2.sample.domain.chat.service.ChatService;
+import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @RestController
@@ -24,18 +28,16 @@ public class ChatController {
         return ResponseEntity.ok().body("");
     }
 
-    @PostMapping("/{roomId}")
-    public ResponseEntity<?> insertChatText(@CurrentUser UserPrincipal user, @PathVariable String roomId, @RequestBody @NotBlank( message = "필수값이 비어있습니다.") String content) {
-        InsertChatRequest request = InsertChatRequest.builder()
-                .roomId(roomId)
-                .email(user.getEmail())
-                .chatType(ChatType.TEXT)
-                .content(content)
+    @PostMapping
+    public ResponseEntity<?> insertChatText(@CurrentUser UserPrincipal user, @Valid @RequestBody InsertChatRequest insertChatRequest) {
+        Chat chat = chatService.insertChatText(insertChatRequest, user.getEmail());
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(HttpStatus.CREATED)
+                .data(chat)
                 .build();
 
-        chatService.insertChatText(request);
-
-        return ResponseEntity.ok().body(true);
+        return ResponseEntity.ok().body(apiResponse);
     }
 
     @PostMapping("/{roomId}/update")

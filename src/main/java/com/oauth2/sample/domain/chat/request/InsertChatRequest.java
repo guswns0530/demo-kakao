@@ -5,18 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 
 @Getter
 @Setter
 @Builder
 public class InsertChatRequest {
-    @Null( message = "잘못된 접근입니다.")
-    private String email;
-
+    @NotBlank( message = "필수값이 비어있습니다.")
     private String roomId;
 
-    private ChatType chatType;
-
+    @NotBlank( message = "필수값이 비어있습니다.")
     private String content;
 }

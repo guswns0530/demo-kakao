@@ -1,13 +1,13 @@
 package com.oauth2.sample.domain.room.repository;
 
 import com.oauth2.sample.domain.room.dto.RoomInfo;
+import com.oauth2.sample.domain.room.dto.RoomType;
+import com.oauth2.sample.domain.room.dto.InsertRoom;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class RoomRepositoryImplTest {
@@ -27,6 +27,9 @@ class RoomRepositoryImplTest {
 
     @Test
     void existUser() {
+        boolean b = roomRepository.existUser("6", "y2010214@naver.com");
+
+        System.out.println("b = " + b);
     }
 
     @Test
@@ -39,9 +42,15 @@ class RoomRepositoryImplTest {
 
     @Test
     void insertRoom() {
-        String n = roomRepository.insertRoom();
+        InsertRoom insertRoomRequest = InsertRoom.builder()
+                .type(RoomType.PERSON)
+                .build();
 
-        System.out.println("n = " + n);
+        boolean n = roomRepository.insertRoom(insertRoomRequest);
+
+        if ( n == true ) {
+            System.out.println("insertRoomRequest = " + insertRoomRequest);
+        }
     }
 
     @Test

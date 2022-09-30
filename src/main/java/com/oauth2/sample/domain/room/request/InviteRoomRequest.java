@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Null;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class InviteRoomRequest {
     @Null(message = "잘못된 접근입니다.")
     private String fromEmail;
 
-    @NotBlank( message = "필수값이 비어있습니다.")
+    @NotEmpty(message = "필수값이 비어있습니다.")
     private List<String> users;
 
 }

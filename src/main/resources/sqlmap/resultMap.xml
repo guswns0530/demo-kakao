@@ -33,7 +33,8 @@
         <result column="CHAT_TYPE" property="chatType" jdbcType="VARCHAR" />
         <result column="CHAT_STATUS" property="chatStatus" jdbcType="VARCHAR" />
         <result column="JOIN_USER_CNT" property="joinUserCnt" jdbcType="VARCHAR" />
-        <result column="CHAT_CREATEAT" property="chatCreateAt" jdbcType="DATE" />
+        <result column="CHAT_CREATEAT" property="chatCreateAt" jdbcType="VARCHAR" />
+        <result column="ROOM_CREATEAT" property="roomCreateAt" jdbcType="VARCHAR" />
     </resultMap>
 
 </mapper>

@@ -26,7 +26,10 @@
         DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null) as CHAT_CONTENT,
         G.CHAT_TYPE,
         G.CHAT_STATUS,
-        G.CHAT_CREATEAT,
+        to_char(G.CHAT_CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as CHAT_CREATEAT,
+
+
+        to_char(C.CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as ROOM_CREATEAT,
         (select count(*)
         from kakao_chats G
         where G.room_id = C.room_Id
@@ -70,6 +73,7 @@
         group by C.ROOM_ID,
         C.NAME,
         C.TYPE,
+        C.CREATEAT,
         G.CHAT_CONTENT,
         G.CHAT_TYPE,
         G.CHAT_STATUS,
@@ -100,7 +104,8 @@
         DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null) as CHAT_CONTENT,
         NVL(G.CHAT_TYPE, null) AS CHAT_TYPE,
         NVL(G.CHAT_STATUS, null) AS CHAT_STATUS,
-        NVL(G.CHAT_CREATEAT, null) AS CHAT_CREATEAT
+        NVL2(G.CHAT_CREATEAT, to_char(G.CHAT_CREATEAT, 'YYYY-MM-DD HH24:MI:SS'),null) as CHAT_CREATEAT,
+        to_char(C.CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as ROOM_CREATEAT
         from kakao_join_users B
         join kakao_rooms C
         on B.ROOM_ID = C.ROOM_ID
@@ -133,10 +138,11 @@
         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
         join KAKAO_USERS F on D.EMAIl = F.EMAIL
         where B.EMAIL = #{email}
-        and C.ROOM_ID = #{roomId}
+        and C.ROOM_ID = #{roomId, jdbcType=VARCHAR}
         group by C.ROOM_ID,
         C.NAME,
         C.TYPE,
+        C.CREATEAT,
         G.CHAT_CONTENT,
         G.CHAT_TYPE,
         G.CHAT_STATUS,
@@ -154,19 +160,25 @@
         from KAKAO_JOIN_USERS A
         where A.EMAIL = #{email}
           and A.ROOM_ID = #{roomId}
+          and status = 1
     </select>
 
     <insert id="inviteUserToRoom" parameterType="com.oauth2.sample.domain.room.request.InviteRoomRequest">
         insert into KAKAO_JOIN_USERS (EMAIL, ROOM_ID, STATUS, CREATEAT)
-        values (#{email}, #{roomId}, 1, sysdate)
+        values (#{email}, #{roomId}, 1, to_date(#{createAt}, 'YYYY-MM-DD HH24:MI:SS'))
     </insert>
 
-    <insert id="insertRoom">
-        <selectKey keyProperty="roomId" resultType="long" order="BEFORE">
+    <insert id="insertRoom" parameterType="com.oauth2.sample.domain.room.dto.InsertRoom">
+        <selectKey keyProperty="roomId" resultType="String" order="BEFORE">
             select KAKAO_ROOMS_SEQ.nextval from dual
         </selectKey>
         insert into KAKAO_ROOMS (ROOM_ID, NAME, TYPE, STATUS, CREATEAT)
-        values (#{roomId}, null, 2, 1, sysdate);
+        values (
+        #{roomId},
+        #{roomName, jdbcType=VARCHAR}
+        , #{type},
+        1,
+        sysdate)
     </insert>
 
     <update id="removeJoinUser" parameterType="java.util.Map">
@@ -175,4 +187,10 @@
         where EMAIL = #{email}
           and ROOM_ID = #{roomId}
     </update>
+
+    <select id="isPresent" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select 1
+        from kakao_rooms
+        where room_id = #{roomId, jdbcType=VARCHAR}
+    </select>
 </mapper>

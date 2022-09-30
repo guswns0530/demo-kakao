@@ -10,12 +10,15 @@ import java.sql.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RoomInfo {
     private String roomId;
 
     private String roomName;
 
     private RoomType roomType;
+
+    private String roomCreateAt;
 
     private String users;
 
@@ -27,5 +30,5 @@ public class RoomInfo {
 
     private String joinUserCnt;
 
-    private Date chatCreateAt;
+    private String chatCreateAt;
 }

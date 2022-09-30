@@ -1,7 +1,8 @@
 package com.oauth2.sample.domain.room.repository;
 
+import com.oauth2.sample.domain.room.dto.InviteUserToRoom;
 import com.oauth2.sample.domain.room.dto.RoomInfo;
-import com.oauth2.sample.domain.room.request.InviteRoomRequest;
+import com.oauth2.sample.domain.room.dto.InsertRoom;
 import com.oauth2.sample.domain.room.request.UpdateRoomRequest;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -38,11 +39,10 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public String insertRoom() {
-        Integer n =  sqlSession.insert("insertRoom");
-        System.out.println("n = " + n);
+    public boolean insertRoom(InsertRoom request) {
+        boolean result = sqlSession.insert("insertRoom", request) >= 1 ? true :false;
 
-        return "";
+        return result;
     }
 
     @Override
@@ -62,8 +62,9 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public boolean inviteUserToRoom(InviteRoomRequest inviteRoomRequest) {
-        boolean result = sqlSession.insert("inviteUserToRoom", inviteRoomRequest) <= 0 ? false : true;
+    public boolean inviteUserToRoom(InviteUserToRoom inviteUserToRoom) {
+
+        boolean result = sqlSession.insert("inviteUserToRoom", inviteUserToRoom) <= 0 ? false : true;
 
         return result;
     }
@@ -75,6 +76,13 @@ public class RoomRepositoryImpl implements RoomRepository {
         map.put("email", email);
 
         boolean result = sqlSession.update("removeJoinUser", map) >= 1 ? true : false;
+        return result;
+    }
+
+    @Override
+    public boolean isPresent(String roomId) {
+        boolean result = sqlSession.selectOne("isPresent", roomId) != null ? true : false;
+
         return result;
     }
 }

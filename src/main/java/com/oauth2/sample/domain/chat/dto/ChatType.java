@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 public enum ChatType {
     TEXT(1),
     FILE(2),
-    NOTICE(3);
+    JOIN(3),
+    LEAVE(4),
+    NOTICE(5);
 
     @JsonValue
     private final int typeCode;

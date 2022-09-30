@@ -64,7 +64,7 @@ public class RoomController {
         roomService.leaveRoom(roomId, user.getEmail());
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .data(HttpStatus.ACCEPTED)
+                .code(HttpStatus.ACCEPTED)
                 .data(true)
                 .build();
 

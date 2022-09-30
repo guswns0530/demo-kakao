@@ -3,21 +3,61 @@
 
 <mapper namespace="chat">
 
-    <insert id="insertChat">
+    <insert id="insertChat" parameterType="com.oauth2.sample.domain.chat.dto.Chat">
+        <selectKey keyProperty="chatId" resultType="String" order="BEFORE">
+            select kakao_chats_seq.nextval from dual
+        </selectKey>
         INSERT INTO kakao_chats
         (chat_id,
-         email,
-         room_id,
-         status,
-         type,
-         content,
-         createAt)
-        values (kakao_chats_seq.nextval,
-                #{email},
-                #{roomId},
-                1,
-                #{chatType},
-                #{content},
-                sysdate)
+        email,
+        room_id,
+        status,
+        type,
+        content,
+        createAt)
+        values (
+        #{chatId, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{roomId, jdbcType=VARCHAR},
+        1,
+        #{chatType, jdbcType=VARCHAR},
+        #{content, jdbcType=VARCHAR},
+        <choose>
+            <when test="createAt != '' and createAt != null">
+                to_date(#{createAt}, 'YYYY-MM-DD HH24:MI:SS')
+            </when>
+            <otherwise>
+                sysdate
+            </otherwise>
+        </choose>
+        )
     </insert>
+
+    <insert id="insertReadUser" parameterType="java.util.Map">
+        insert into KAKAO_READ_USERS(email, room_id, chat_id, createAt)
+        values (
+        #{email},
+        #{roomId},
+        #{chatId},
+        <choose>
+            <when test="createAt != '' and createAt != null">
+                to_date(#{createAt}, 'YYYY-MM-DD HH24:MI:SS')
+            </when>
+            <otherwise>
+                sysdate
+            </otherwise>
+        </choose>
+        )
+    </insert>
+
+    <delete id="removeReadUser" parameterType="java.util.Map">
+        delete
+        kakao_read_users
+        where email =
+        #{email}
+        and
+        room_id
+        =
+        #{roomId}
+    </delete>
 </mapper>

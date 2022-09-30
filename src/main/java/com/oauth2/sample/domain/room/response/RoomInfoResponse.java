@@ -18,6 +18,8 @@ public class RoomInfoResponse {
 
     private RoomType roomType;
 
+    private String roomCreateAt;
+
     private String joinUserCnt;
 
     private List<User> users;
@@ -28,5 +30,5 @@ public class RoomInfoResponse {
 
     private ChatStatus chatStatus;
 
-    private Long chatCreateAt;
+    private String chatCreateAt;
 }
