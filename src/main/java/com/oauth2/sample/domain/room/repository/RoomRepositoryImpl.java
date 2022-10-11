@@ -63,7 +63,6 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public boolean inviteUserToRoom(InviteUserToRoom inviteUserToRoom) {
-
         boolean result = sqlSession.insert("inviteUserToRoom", inviteUserToRoom) <= 0 ? false : true;
 
         return result;
@@ -82,6 +81,17 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public boolean isPresent(String roomId) {
         boolean result = sqlSession.selectOne("isPresent", roomId) != null ? true : false;
+
+        return result;
+    }
+
+    @Override
+    public Integer selectFriendRoomId(String fromId, String toId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("fromId", fromId);
+        map.put("toId", toId);
+
+        Integer result = sqlSession.selectOne("selectFriendRoomId", map);
 
         return result;
     }

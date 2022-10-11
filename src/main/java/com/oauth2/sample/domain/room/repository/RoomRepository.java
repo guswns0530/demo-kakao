@@ -3,11 +3,9 @@ package com.oauth2.sample.domain.room.repository;
 import com.oauth2.sample.domain.room.dto.InviteUserToRoom;
 import com.oauth2.sample.domain.room.dto.RoomInfo;
 import com.oauth2.sample.domain.room.dto.InsertRoom;
-import com.oauth2.sample.domain.room.request.InviteRoomRequest;
 import com.oauth2.sample.domain.room.request.UpdateRoomRequest;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface RoomRepository {
@@ -19,4 +17,5 @@ public interface RoomRepository {
     boolean inviteUserToRoom(InviteUserToRoom inviteUserToRoom);
     boolean removeJoinUser(String roomId, String email);
     boolean isPresent(String roomId);
+    Integer selectFriendRoomId(String fromId, String toId);
 }

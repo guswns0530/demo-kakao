@@ -167,12 +167,9 @@ INSERT INTO KAKAO_READ_USERS(email, room_id, chat_id, createAt)
 values ('y2010214@naver.com', 3, 2, sysdate);
 commit;
 
-insert into KAKAO_READ_USERS(email, room_id, chat_id, createAt)
-values (#{email}, #{roomId}, #{chatId}, #{createAt})
+select A.*
+from kakao_rooms A
+WHERE type = '1'
+  AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = 'test2')
+  AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = 'test1');
 
-select 1 from kakao_rooms where room_id = 1;
-
-update KAKAO_JOIN_USERS set status = 2 where room_id = ? and email = ?
-
-delete kakao_read_users where email = ? and room_id
--- start

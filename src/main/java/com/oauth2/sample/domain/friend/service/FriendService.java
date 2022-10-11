@@ -1,9 +1,16 @@
 package com.oauth2.sample.domain.friend.service;
 
+import com.oauth2.sample.domain.chat.dto.ReadUser;
+import com.oauth2.sample.domain.chat.repository.ChatRepository;
 import com.oauth2.sample.domain.friend.dto.Friend;
 import com.oauth2.sample.domain.friend.dto.FriendStatus;
 import com.oauth2.sample.domain.friend.repository.FriendRepository;
 import com.oauth2.sample.domain.friend.request.UpdateFriendRequest;
+import com.oauth2.sample.domain.room.dto.InsertRoom;
+import com.oauth2.sample.domain.room.dto.InviteUserToRoom;
+import com.oauth2.sample.domain.room.dto.RoomType;
+import com.oauth2.sample.domain.room.repository.RoomRepository;
+import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
@@ -13,6 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +32,9 @@ public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
+    private final ChatRepository chatRepository;
+
 
     @Transactional
     public Friend updateFriendNickname(UpdateFriendRequest updateFriendRequest) {
@@ -128,6 +141,49 @@ public class FriendService {
             }
         } catch (DuplicateKeyException ex) {
             throw new BadRequestException("이미 추가된 친구입니다.");
+        }
+
+        // 방 생성
+        Integer friendRoomId = roomRepository.selectFriendRoomId(fromEmail, toEmail);
+
+        if(friendRoomId == null) {
+            InsertRoom insertRoom = InsertRoom.builder()
+                    .type(RoomType.PERSON)
+                    .build();
+            roomRepository.insertRoom(insertRoom);
+
+            String roomId = insertRoom.getRoomId();
+
+            List<String> users = new ArrayList<>();
+            users.add(fromEmail);
+            users.add(toEmail);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            String nowStr = sdf.format(new Date());
+
+            users.forEach(user -> {
+                InviteUserToRoom inviteUserToRoom = InviteUserToRoom.builder()
+                        .roomId(roomId)
+                        .email(user)
+                        .createAt(nowStr)
+                        .build();
+
+                boolean insertResult = roomRepository.inviteUserToRoom(inviteUserToRoom);
+                if (!insertResult) {
+                    throw new BadRequestException("방 인원 추가에 실패하였습니다.");
+                }
+
+                ReadUser readUser = ReadUser.builder()
+                        .roomId(roomId)
+                        .chatId("0")
+                        .email(user)
+                        .createAt(nowStr)
+                        .build();
+                boolean insertReadUser = chatRepository.insertReadUser(readUser);
+                if(!insertReadUser) {
+                    throw new BadRequestException("방 인원 추가에 실패하였습니다.");
+                }
+            });
         }
     }
 }

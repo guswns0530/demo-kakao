@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class ChatService {
 
     private final ChatRepository chatRepository;
-    private final RoomRepository roomRepository;
 
     public Chat insertChatText(InsertChatRequest request, String email) {
         Chat chat = Chat.builder()

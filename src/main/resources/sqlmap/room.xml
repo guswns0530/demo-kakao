@@ -27,8 +27,6 @@
         G.CHAT_TYPE,
         G.CHAT_STATUS,
         to_char(G.CHAT_CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as CHAT_CREATEAT,
-
-
         to_char(C.CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as ROOM_CREATEAT,
         (select count(*)
         from kakao_chats G
@@ -64,12 +62,18 @@
         ) CHAT_CREATEAT
         from KAKAO_CHATS E
         where E.TYPE in (1, 2)
+        and E.CREATEAT >= (select NVL(B.CREATEAT, sysdate)
+        from KAKAO_READ_USERS B
+        where B.EMAIL = 'y2010214@naver.com'
+        and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
         join KAKAO_USERS F on D.EMAIl = F.EMAIL
         where B.EMAIL = #{email}
         and G.room_id is not null
+        and B.STATUS = 1
+        and D.STATUS = 1
         group by C.ROOM_ID,
         C.NAME,
         C.TYPE,
@@ -133,12 +137,18 @@
         ) CHAT_CREATEAT
         from KAKAO_CHATS E
         where E.TYPE in (1, 2)
+        and E.CREATEAT >= (select NVL(B.CREATEAT, sysdate)
+        from KAKAO_READ_USERS B
+        where B.EMAIL = 'y2010214@naver.com'
+        and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
         join KAKAO_USERS F on D.EMAIl = F.EMAIL
         where B.EMAIL = #{email}
         and C.ROOM_ID = #{roomId, jdbcType=VARCHAR}
+        and B.STATUS = 1
+        and D.STATUS = 1
         group by C.ROOM_ID,
         C.NAME,
         C.TYPE,
@@ -175,10 +185,11 @@
         insert into KAKAO_ROOMS (ROOM_ID, NAME, TYPE, STATUS, CREATEAT)
         values (
         #{roomId},
-        #{roomName, jdbcType=VARCHAR}
-        , #{type},
+        #{roomName, jdbcType=VARCHAR},
+        #{type},
         1,
-        sysdate)
+        sysdate
+        )
     </insert>
 
     <update id="removeJoinUser" parameterType="java.util.Map">
@@ -192,5 +203,13 @@
         select 1
         from kakao_rooms
         where room_id = #{roomId, jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectFriendRoomId" parameterType="java.util.Map" resultType="Integer">
+        select A.room_id AS roomId
+        from kakao_rooms A
+        WHERE type = '1'
+          AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = #{fromId})
+          AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = #{toId})
     </select>
 </mapper>

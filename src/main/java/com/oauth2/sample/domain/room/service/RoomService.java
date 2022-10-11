@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
@@ -76,30 +77,30 @@ public class RoomService {
     public RoomInfoResponse inviteUserToRoom(InviteRoomRequest inviteRoomRequest) {
         List<String> users = inviteRoomRequest.getUsers();
 
+        // 초대 유저 검증
         users.stream().forEach(user -> {
             if (!userRepository.existByEmail(user)) {
                 throw new BadRequestException("존재하지 않는 유저입니다.");
             }
-        }); // 유저 검증
+        });
 
         // 룸 생성
         Optional<RoomInfo> roomInfoOf = roomRepository.selectRoom(inviteRoomRequest.getFromEmail(), inviteRoomRequest.getRoomId());
+        // 방이 존재하지 않는 경우
         RoomInfo roomInfo = roomInfoOf.orElseGet(() -> {
-            if (roomRepository.isPresent(inviteRoomRequest.getRoomId())) {
+            if (StringUtils.hasText(inviteRoomRequest.getRoomId())) {
                 throw new BadRequestException("권한이 없습니다.");
+            }
+            if (users.size() == 1) {
+                throw new BadRequestException("잘못된 경로입니다.");
             }
 
             InsertRoom insertRoom = null;
-            if (users.size() == 1) { // 애매함 throw or create
-                insertRoom = InsertRoom.builder()
-                        .type(RoomType.PERSON)
-                        .build();
-            } else {
-                insertRoom = InsertRoom.builder()
-                        .roomName(inviteRoomRequest.getRoomName())
-                        .type(RoomType.GROUP)
-                        .build();
-            }
+
+            insertRoom = InsertRoom.builder()
+                    .roomName(inviteRoomRequest.getRoomName())
+                    .type(RoomType.GROUP)
+                    .build();
 
             boolean isInsert = roomRepository.insertRoom(insertRoom);
             if (!isInsert) {
@@ -110,8 +111,38 @@ public class RoomService {
 
             return RoomInfo.builder()
                     .roomId(insertRoom.getRoomId())
+                    .roomType(RoomType.GROUP)
                     .build();
         });
+
+        // 초대하는 방이 개인방인 경우 -> 새로운 방을 만듬
+        if (roomInfo.getRoomType() == RoomType.PERSON) {
+            InsertRoom insertRoom = InsertRoom.builder()
+                    .roomName(inviteRoomRequest.getRoomName())
+                    .type(RoomType.GROUP)
+                    .build();
+
+            boolean isInsert = roomRepository.insertRoom(insertRoom);
+            if (!isInsert) {
+                throw new BadRequestException("방 생성중 오류가 발생하였습니다.");
+            }
+
+            // 기존방에 있던 유저 초대
+            try {
+                List<User> userList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<User>>() {
+                });
+
+                userList.stream().forEach((user) -> {
+                    users.add(user.getEmail());
+                });
+            } catch (Exception ex) {
+                throw new BadRequestException("서버 오류 발생 관리자에게 문의주세요");
+            }
+
+            roomInfo = RoomInfo.builder()
+                    .roomId(insertRoom.getRoomId())
+                    .build();
+        }
 
         String roomId = roomInfo.getRoomId();
         String email = inviteRoomRequest.getFromEmail();
@@ -127,7 +158,7 @@ public class RoomService {
 
     @Transactional
     public void leaveRoom(String roomId, String email) {
-        if(!roomRepository.existUser(roomId, email)) {
+        if (!roomRepository.existUser(roomId, email)) {
             throw new BadRequestException("방에 존재하지 않습니다.");
         }
 
@@ -141,13 +172,14 @@ public class RoomService {
                 .createAt(nowStr)
                 .chatType(ChatType.LEAVE)
                 .build();
+
         boolean insertChatResult = chatRepository.insertChat(chat);
         // join_users status 삭제로 변경
         boolean removeJoinUserResult = roomRepository.removeJoinUser(roomId, email);
         // read_users 삭제
         boolean removeReadUserResult = chatRepository.removeReadUser(roomId, email);
 
-        if(!insertChatResult || !removeJoinUserResult || !removeReadUserResult ) {
+        if (!insertChatResult || !removeJoinUserResult || !removeReadUserResult) {
             throw new BadRequestException("방을 나가는데 실패하였습니다.");
         }
 
@@ -183,7 +215,7 @@ public class RoomService {
 
             Chat insertChat = Chat.builder()
                     .email(email)
-                    .content(new ObjectMapper().writeValueAsString(users))
+                    .content(new ObjectMapper().writeValueAsString(users.stream().filter(user -> !user.equals(email)).collect(Collectors.toList())))
                     .createAt(nowStr)
                     .chatType(ChatType.JOIN)
                     .roomId(roomId)
