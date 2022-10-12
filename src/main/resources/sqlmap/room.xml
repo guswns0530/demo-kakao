@@ -18,6 +18,7 @@
         ' "email" : "' || D.EMAIL || '",' ||
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
+        ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
         ' "imageUrl" : "' || F.profile_image_url || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
@@ -68,6 +69,7 @@
         and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+        join KAKAO_READ_USERS G on G.ROOM_ID = D.ROOM_ID and G.EMAIL = D.EMAIL
         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
         join KAKAO_USERS F on D.EMAIl = F.EMAIL
         where B.EMAIL = #{email}
@@ -100,6 +102,7 @@
         ' "email" : "' || D.EMAIL || '",' ||
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
+        ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
         ' "imageUrl" : "' || F.profile_image_url || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
@@ -143,6 +146,7 @@
         and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+        join KAKAO_READ_USERS G on G.ROOM_ID = D.ROOM_ID and G.EMAIL = D.EMAIL
         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
         join KAKAO_USERS F on D.EMAIl = F.EMAIL
         where B.EMAIL = #{email}
@@ -174,8 +178,33 @@
     </select>
 
     <insert id="inviteUserToRoom" parameterType="com.oauth2.sample.domain.room.request.InviteRoomRequest">
-        insert into KAKAO_JOIN_USERS (EMAIL, ROOM_ID, STATUS, CREATEAT)
-        values (#{email}, #{roomId}, 1, to_date(#{createAt}, 'YYYY-MM-DD HH24:MI:SS'))
+        MERGE
+        INTO KAKAO_JOIN_USERS A
+        USING (SELECT
+        #{email} AS EMAIL,
+        #{roomId} AS ROOM_ID,
+        <choose>
+            <when test="createAt != '' and createAt != null">
+                to_date(#{createAt}, 'YYYY-MM-DD HH24:MI:SS')
+            </when>
+            <otherwise>
+                sysdate
+            </otherwise>
+        </choose>
+        AS CREATEAT
+        from dual) B
+        ON (A.EMAIL = B.EMAIL and A.ROOM_ID = B.ROOM_ID)
+        WHEN MATCHED THEN
+        UPDATE SET A.STATUS = 1, A.CREATEAT = B.CREATEAT
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+        ROOM_ID,
+        EMAIL,
+        STATUS,
+        CREATEAT
+        )
+        VALUES (B.ROOM_ID, B.EMAIL, 1, B.CREATEAT)
     </insert>
 
     <insert id="insertRoom" parameterType="com.oauth2.sample.domain.room.dto.InsertRoom">

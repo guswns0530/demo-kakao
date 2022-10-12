@@ -3,7 +3,6 @@ package com.oauth2.sample.domain.room.response;
 import com.oauth2.sample.domain.chat.dto.ChatStatus;
 import com.oauth2.sample.domain.chat.dto.ChatType;
 import com.oauth2.sample.domain.room.dto.RoomType;
-import com.oauth2.sample.web.security.dto.User;
 import lombok.*;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class RoomInfoResponse {
 
     private String joinUserCnt;
 
-    private List<User> users;
+    private List<JoinUser> users;
 
     private String chatContent;
 

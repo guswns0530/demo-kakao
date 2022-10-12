@@ -37,4 +37,13 @@
         <result column="ROOM_CREATEAT" property="roomCreateAt" jdbcType="VARCHAR" />
     </resultMap>
 
+    <resultMap id="chat" type="com.oauth2.sample.domain.chat.dto.Chat">
+        <result column="CHAT_ID" property="chatId" jdbcType="VARCHAR"/>
+        <result column="ROOM_ID" property="roomId" jdbcType="VARCHAR"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="CONTENT" property="content" jdbcType="VARCHAR"/>
+        <result column="STATUS" property="chatStatus" jdbcType="VARCHAR"/>
+        <result column="TYPE" property="chatType" jdbcType="VARCHAR"/>
+        <result column="CREATEAT" property="createAt" jdbcType="VARCHAR"/>
+    </resultMap>
 </mapper>

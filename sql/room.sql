@@ -495,14 +495,139 @@ group by C.ROOM_ID,
 
 -- MERGE
 MERGE INTO KAKAO_JOIN_USERS A
-USING (
-        SELECT 'a' AS EMAIL , /*이메일 */
-               'a' AS ROOM_ID
-        from dual
-) B
+USING (SELECT 'y2010214@naver.com' AS EMAIL, /*이메일 */
+              '40'                 AS ROOM_ID
+       from dual) B
 ON (A.EMAIL = B.EMAIL and A.ROOM_ID = B.ROOM_ID)
 WHEN MATCHED THEN
-    UPDATE SET A.ROOM_ID = '1'
+    UPDATE
+    SET A.STATUS   = 2,
+        A.CREATEAT = sysdate
 WHEN NOT MATCHED THEN
-    INSERT () VALUES ();
+    INSERT (ROOM_ID, EMAIL, STATUS, CREATEAT)
+    VALUES (B.ROOM_ID, B.EMAIL, 1, sysdate);
 
+MERGE
+INTO KAKAO_JOIN_USERS A
+USING (SELECT 'y2010214@naver.com' AS EMAIL,
+              '46'                 AS ROOM_ID,
+              to_date('2022-10-12 10:05:29', 'YYYY-MM-DD HH24:MI:SS')
+                                   AS CREATEAT
+       from dual) B
+ON (A.EMAIL = B.EMAIL and A.ROOM_ID = B.ROOM_ID)
+WHEN MATCHED THEN
+    UPDATE
+    SET A.STATUS   = 1,
+        A.CREATEAT = B.CREATEAT
+WHEN NOT MATCHED THEN
+    INSERT
+    (ROOM_ID,
+     EMAIL,
+     STATUS,
+     CREATEAT)
+    VALUES (B.ROOM_ID, B.EMAIL, 1, B.CREATEAT)
+
+MERGE
+INTO KAKAO_JOIN_USERS A
+USING (SELECT 'y2010214@naver.com' AS EMAIL,
+              '46'                 AS ROOM_ID,
+              to_date('2022-10-12 10:17:19', 'YYYY-MM-DD HH24:MI:SS')
+                                   AS CREATEAT
+       from dual) B
+ON (A.EMAIL = B.EMAIL and A.ROOM_ID = B.ROOM_ID)
+WHEN MATCHED THEN
+    UPDATE
+    SET A.STATUS   = 1,
+        A.CREATEAT = B.CREATEAT
+WHEN NOT MATCHED THEN
+    INSERT
+    (ROOM_ID,
+     EMAIL,
+     STATUS,
+     CREATEAT)
+    VALUES (B.ROOM_ID, B.EMAIL, 1, B.CREATEAT)
+
+WITH CUTOFF_RS AS (select FR.*,
+                          case
+                              when (select count(*)
+                                    from kakao_friends
+                                    where STATUS = 2
+
+                                      AND from_id = FR.from_id
+                                      AND to_id = FR.to_id) <= 0 then '1'
+                              else '2' END AS CUTOFF_RS
+                   from kakao_friends FR
+                   where from_id = 'y2010212@naver.com')
+
+
+select C.room_id                                                                      as ROOM_ID,
+       nvl(C.NAME, '')                                                                as ROOM_NAME,
+       '[' || LISTAGG(
+                   '{' ||
+                   ' "id" : "' || F.ID || '",' ||
+                   ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+                   ' "email" : "' || D.EMAIL || '",' ||
+                   ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+                   ' "provider" : "' || F.PROVIDER || '",' ||
+                   ' "imageUrl" : "' || F.profile_image_url || '",' ||
+                   ' "lastReadChat" : "' || G.CHAT_ID || '"' ||
+                   '}', ', ')
+                   within group ( order by E.nickname, F.NAME) || ']'                 as USERS,
+       C.type                                                                         as ROOM_TYPE,
+       count(D.EMAIL)                                                                 as JOIN_USER_CNT,
+       DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null)                                 as CHAT_CONTENT,
+       NVL(G.CHAT_TYPE, null)                                                         AS CHAT_TYPE,
+       NVL(G.CHAT_STATUS, null)                                                       AS CHAT_STATUS,
+       NVL2(G.CHAT_CREATEAT, to_char(G.CHAT_CREATEAT, 'YYYY-MM-DD HH24:MI:SS'), null) as CHAT_CREATEAT,
+       to_char(C.CREATEAT, 'YYYY-MM-DD HH24:MI:SS')                                   as ROOM_CREATEAT
+    from kakao_join_users B
+             join kakao_rooms C
+                  on B.ROOM_ID = C.ROOM_ID
+             left outer join (select E.ROOM_ID,
+                                     max(E.CONTENT) keep (
+                                         DENSE_RANK last
+                                         order by
+                                             E.CREATEAT,
+                                             E.CHAT_ID
+                                         ) CHAT_CONTENT,
+                                     max(E.type) keep (
+                                         DENSE_RANK last
+                                         order by
+                                             E.CREATEAT,
+                                             E.CHAT_ID
+                                         ) CHAT_TYPE,
+                                     max(E.STATUS) keep (
+                                         DENSE_RANK last
+                                         order by
+                                             E.CREATEAT,
+                                             E.CHAT_ID
+                                         ) CHAT_STATUS,
+                                     max(E.CREATEAT) keep (
+                                         DENSE_RANK last
+                                         order by
+                                             E.CREATEAT,
+                                             E.CHAT_ID
+                                         ) CHAT_CREATEAT
+                              from KAKAO_CHATS E
+                              where E.TYPE in (1, 2)
+                                and E.CREATEAT >= (select NVL(B.CREATEAT, sysdate)
+                                                   from KAKAO_READ_USERS B
+                                                   where B.EMAIL = 'y2010214@naver.com'
+                                                     and B.ROOM_ID = E.ROOM_ID)
+                              group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
+             join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+             join KAKAO_READ_USERS G on G.ROOM_ID = D.ROOM_ID and G.EMAIL = D.EMAIL
+         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
+         join KAKAO_USERS F on D.EMAIl = F.EMAIL
+where B.EMAIL = 'y2010212@naver.com'
+  and C.ROOM_ID = '46'
+  and B.STATUS = 1
+  and D.STATUS = 1
+group by C.ROOM_ID,
+         C.NAME,
+         C.TYPE,
+         C.CREATEAT,
+         G.CHAT_CONTENT,
+         G.CHAT_TYPE,
+         G.CHAT_STATUS,
+         G.CHAT_CREATEAT

@@ -25,7 +25,7 @@ select A.USER_ID,
        A.NAME,
        DECODE(B.CUTOFF_RS, '1', A.PROVIDER, null)         as PROVIDER,
        DECODE(B.CUTOFF_RS, '1', B.NICKNAME, null)         as NICKNAME,
-       DECODE(B.CUTOFF_RS, '1', A.PROFILE_IMAGE, null)    as PROFILE_IMAGE,
+       DECODE(B.CUTOFF_RS, '1', A.PROFILE_IMAGE , null)    as PROFILE_IMAGE,
        DECODE(B.CUTOFF_RS, '1', A.BACKGROUND_IMAGE, null) as BACKGROUND_IMAGE,
        C.chat_id                                          as CHAT_ID,
        DECODE(C.status, '1', C.content, null)             as CONTENT,
@@ -74,30 +74,31 @@ where seq between 1 and 20;
 --           from kakao_friends FR
 --           where from_id = 'y2010214@naver.com') -- whit_end
 
-select a.chat_id,
-       a.EMAIL,
-       DECODE(A.STATUS, '1', A.CONTENT, null) as CONTENT,
-       a.status,
-       a.type,
-       a.seq,
-       a.createAt
-from (select A.chat_id,
-             A.content,
-             A.EMAIL,
-             A.status,
-             A.type,
-             dense_rank() over (order by A.createAt desc) as seq,
-             A.createAt --sub start
-      from kakao_chats A
-      where A.createAt >= (select NVL(B.CREATEAT, sysdate)
-                           from KAKAO_READ_USERS B
-                           where B.EMAIL = 'y2010212@naver.com'
-                             and B.ROOM_ID = A.ROOM_ID)
-        and A.room_id = 32) A --sub end
-where seq >= 1
-  and seq <= 20 -- start ~ end
-order by seq,
-         chat_id desc;
+    select a.chat_id,
+           a.EMAIL,
+           DECODE(A.STATUS, '1', A.CONTENT, null) as CONTENT,
+           a.status,
+           a.type,
+           a.seq,
+           a.createAt
+    from (select A.chat_id,
+                 A.content,
+                 A.EMAIL,
+                 A.status,
+                 A.type,
+                 dense_rank() over (order by A.createAt desc) as seq,
+                 A.createAt --sub start
+          from kakao_chats A
+          where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+                               from KAKAO_READ_USERS B
+                               where B.EMAIL = 'y2010212@naver.com'
+                                 and B.ROOM_ID = A.ROOM_ID)
+            and A.room_id = 46) A --sub end
+    -- where seq >= 1
+    --   and seq <= 20 -- start ~ endz
+    where A.CHAT_ID >= 1
+    order by seq,
+             chat_id desc;
 
 -- 채팅 삭제
 update
@@ -124,9 +125,53 @@ values (KAKAO_CHATS_SEQ.nextval,
 -- 읽은 사람 조회
 select chat_id
 from kakao_read_users
-where room_id = 1
+where room_id = 46
 order by chat_id desc;
 
 select nvl(max(chat_id), 1) chatId
 from kakao_chats
 where room_id = 1;
+
+select
+    CHAT_ID,
+    ROOM_ID,
+    EMAIL,
+    DECODE(STATUS, '1', CONTENT, null) as content,
+    STATUS,
+    TYPE,
+    CREATEAT
+from
+    KAKAO_CHATS
+where ROOM_ID = 46
+and EMAIL = 'y2010212@naver.com'
+and CHAT_ID = 4;
+
+
+select CHAT_ID,
+       ROOM_ID,
+--                EMAIL,
+       DECODE(STATUS, '1', CONTENT, null)           as CONTENT,
+       STATUS,
+       TYPE,
+       to_char(CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEAT
+from KAKAO_CHATS
+where ROOM_ID = '46'
+  and EMAIL = 'y2010212@naver.com'
+  and CHAT_ID = '4';
+
+select CHAT_ID,
+       ROOM_ID,
+       EMAIL,
+       DECODE(STATUS, '1', CONTENT, null)           as CONTENT,
+       STATUS,
+       TYPE,
+       to_char(CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEAT
+from KAKAO_CHATS
+where ROOM_ID = '46'
+  --and EMAIL = 'y2010212@naver.com'
+  and CHAT_ID = '4';
+
+update KAKAO_CHATS set STATUS = 2
+where CHAT_ID = ''
+and ROOM_ID = ''
+and EMAIL = ''

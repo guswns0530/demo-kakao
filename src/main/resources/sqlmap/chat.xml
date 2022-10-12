@@ -59,29 +59,54 @@
         #{roomId}
     </delete>
 
-    <select id="selectChatList">
-        select a.chat_id,
-               a.EMAIL,
-               DECODE(A.STATUS, '1', A.CONTENT, null) as CONTENT,
-               a.status,
-               a.type,
-               a.seq,
-               a.createAt
-        from (select A.chat_id,
-                     A.content,
-                     A.EMAIL,
-                     A.status,
-                     A.type,
-                     dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
-              from kakao_chats A
-                       join kakao_join_users B on A.room_id = B.room_id
-              where B.createAt &lt;= A.createAt
-                and B.EMAIL = 'y2010214@naver.com'
-                and A.room_id = 32
-                and A.) A --sub end
-        where seq >= 1
-          and seq &lt;= 20 -- start ~ end
-        order by seq,
-                 chat_id desc;
+    <!--    <select id="selectChatList">-->
+    <!--        select a.chat_id,-->
+    <!--        a.room_id,-->
+    <!--        a.email,-->
+    <!--        DECODE(A.STATUS, '1', A.CONTENT, null) as content,-->
+    <!--        a.status,-->
+    <!--        a.type,-->
+    <!--        a.createAt-->
+    <!--        from (select A.chat_id,-->
+    <!--        A.content,-->
+    <!--        A.EMAIL,-->
+    <!--        A.status,-->
+    <!--        A.type,-->
+    <!--        dense_rank() over (order by A.createAt desc) as seq, A.createAt &#45;&#45;sub start-->
+    <!--        from kakao_chats A-->
+    <!--        where A.createAt >= (select NVL(B.CREATEAT, sysdate)-->
+    <!--        from KAKAO_READ_USERS B-->
+    <!--        where B.EMAIL = 'y2010212@naver.com'-->
+    <!--        and B.ROOM_ID = A.ROOM_ID)-->
+    <!--        and A.room_id = 46) A &#45;&#45;sub end-->
+    <!--        <choose>-->
+    <!--            <when test="">-->
+    <!--            </when>-->
+    <!--            <otherwise>-->
+    <!--            </otherwise>-->
+    <!--        </choose>-->
+    <!--        order by seq,-->
+    <!--        chat_id desc-->
+
+    <select id="selectChat" parameterType="com.oauth2.sample.domain.chat.request.SelectChatRequest"
+            resultMap="dto.chat">
+        select CHAT_ID,
+               ROOM_ID,
+               EMAIL,
+               DECODE(STATUS, '1', CONTENT, null)         as CONTENT,
+               STATUS,
+               TYPE,
+               to_char(CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as CREATEAT
+        from KAKAO_CHATS
+        where ROOM_ID = #{roomId, jdbcType=VARCHAR}
+          and EMAIL = #{email}
+          and CHAT_ID = #{chatId, jdbcType=VARCHAR}
     </select>
+
+    <delete id="removeChat" parameterType="com.oauth2.sample.domain.chat.request.RemoveChatRequest">
+        update KAKAO_CHATS set STATUS = 2
+        where CHAT_ID = #{chatId}
+          and ROOM_ID = #{roomId}
+          and EMAIL = #{email}
+    </delete>
 </mapper>

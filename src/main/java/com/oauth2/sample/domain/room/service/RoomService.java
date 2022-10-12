@@ -14,8 +14,8 @@ import com.oauth2.sample.domain.room.dto.InsertRoom;
 import com.oauth2.sample.domain.room.request.InviteRoomRequest;
 import com.oauth2.sample.domain.room.request.UpdateRoomRequest;
 import com.oauth2.sample.domain.room.response.RoomInfoResponse;
+import com.oauth2.sample.domain.room.response.JoinUser;
 import com.oauth2.sample.domain.user.repository.UserRepository;
-import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -129,7 +129,7 @@ public class RoomService {
 
             // 기존방에 있던 유저 초대
             try {
-                List<User> userList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<User>>() {
+                List<JoinUser> userList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {
                 });
 
                 userList.stream().forEach((user) -> {
@@ -186,14 +186,24 @@ public class RoomService {
     }
 
     private RoomInfoResponse getRoomInfoResponse(RoomInfo roomInfo) {
-        List<User> arrayList = null;
+        List<JoinUser> arrayList = null;
         try {
-            arrayList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<User>>() {
+            arrayList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {
             });
         } catch (Exception ex) {
             throw new BadRequestException("서버 오류 발생 관리자에게 문의주세요");
         }
-        return RoomInfoResponse.builder().roomId(roomInfo.getRoomId()).roomName(roomInfo.getRoomName()).roomCreateAt(roomInfo.getRoomCreateAt()).chatCreateAt(roomInfo.getChatCreateAt()).chatContent(roomInfo.getChatContent()).chatStatus(roomInfo.getChatStatus()).chatType(roomInfo.getChatType()).users(arrayList).roomType(roomInfo.getRoomType()).joinUserCnt(roomInfo.getJoinUserCnt()).build();
+        return RoomInfoResponse.builder()
+                .roomId(roomInfo.getRoomId())
+                .roomName(roomInfo.getRoomName())
+                .roomCreateAt(roomInfo.getRoomCreateAt())
+                .chatCreateAt(roomInfo.getChatCreateAt())
+                .chatContent(roomInfo.getChatContent())
+                .chatStatus(roomInfo.getChatStatus())
+                .chatType(roomInfo.getChatType())
+                .users(arrayList)
+                .roomType(roomInfo.getRoomType())
+                .joinUserCnt(roomInfo.getJoinUserCnt()).build();
     }
 
     private void joinRoom(List<String> users, String roomId, String email) {
