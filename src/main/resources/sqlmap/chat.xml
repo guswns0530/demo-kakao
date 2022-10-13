@@ -59,34 +59,35 @@
         #{roomId}
     </delete>
 
-    <!--    <select id="selectChatList">-->
-    <!--        select a.chat_id,-->
-    <!--        a.room_id,-->
-    <!--        a.email,-->
-    <!--        DECODE(A.STATUS, '1', A.CONTENT, null) as content,-->
-    <!--        a.status,-->
-    <!--        a.type,-->
-    <!--        a.createAt-->
-    <!--        from (select A.chat_id,-->
-    <!--        A.content,-->
-    <!--        A.EMAIL,-->
-    <!--        A.status,-->
-    <!--        A.type,-->
-    <!--        dense_rank() over (order by A.createAt desc) as seq, A.createAt &#45;&#45;sub start-->
-    <!--        from kakao_chats A-->
-    <!--        where A.createAt >= (select NVL(B.CREATEAT, sysdate)-->
-    <!--        from KAKAO_READ_USERS B-->
-    <!--        where B.EMAIL = 'y2010212@naver.com'-->
-    <!--        and B.ROOM_ID = A.ROOM_ID)-->
-    <!--        and A.room_id = 46) A &#45;&#45;sub end-->
-    <!--        <choose>-->
-    <!--            <when test="">-->
-    <!--            </when>-->
-    <!--            <otherwise>-->
-    <!--            </otherwise>-->
-    <!--        </choose>-->
-    <!--        order by seq,-->
-    <!--        chat_id desc-->
+        <select id="selectChatList">
+            select a.chat_id,
+            a.room_id,
+            a.email,
+            DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+            a.status,
+            a.type,
+            a.createAt
+            from (select A.chat_id,
+            A.content,
+            A.EMAIL,
+            A.status,
+            A.type,
+            dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
+            from kakao_chats A
+            where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+            from KAKAO_READ_USERS B
+            where B.EMAIL = 'y2010212@naver.com'
+            and B.ROOM_ID = A.ROOM_ID)
+            and A.room_id = 46) A --sub end
+            <choose>
+                <when test="">
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+            order by seq,
+            chat_id desc
+        </select>>
 
     <select id="selectChat" parameterType="com.oauth2.sample.domain.chat.request.SelectChatRequest"
             resultMap="dto.chat">
@@ -104,9 +105,17 @@
     </select>
 
     <delete id="removeChat" parameterType="com.oauth2.sample.domain.chat.request.RemoveChatRequest">
-        update KAKAO_CHATS set STATUS = 2
+        update KAKAO_CHATS
+        set STATUS = 2
         where CHAT_ID = #{chatId}
           and ROOM_ID = #{roomId}
           and EMAIL = #{email}
     </delete>
+
+    <update id="readChat" parameterType="com.oauth2.sample.domain.chat.request.ReadChatRequest">
+        update KAKAO_READ_USERS
+        set CHAT_ID = (select max(KAKAO_CHATS.CHAT_ID) from KAKAO_CHATS where KAKAO_CHATS.ROOM_ID = #{roomId})
+        where ROOM_ID = #{roomId}
+          and EMAIL = #{email}
+    </update>
 </mapper>

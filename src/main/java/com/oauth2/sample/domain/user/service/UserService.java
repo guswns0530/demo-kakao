@@ -38,7 +38,7 @@ public class UserService {
 
         friendRepository.selectFriend(email, user.getEmail()).ifPresent(friend -> {
             user.setMessage(friend.getMessage());
-            user.setImageUrl(friend.getImageUrl());
+            user.setProfileImageUrl(friend.getProfileImageUrl());
             switch (friend.getStatus()) {
                 case FRIEND:
                     user.setName(friend.getName());

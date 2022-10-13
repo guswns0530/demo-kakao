@@ -2,6 +2,7 @@ package com.oauth2.sample.domain.chat.repository;
 
 import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ReadUser;
+import com.oauth2.sample.domain.chat.request.ReadChatRequest;
 import com.oauth2.sample.domain.chat.request.RemoveChatRequest;
 import com.oauth2.sample.domain.chat.request.SelectChatRequest;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -50,5 +52,16 @@ public class ChatRepositorImpl implements ChatRepository{
     public boolean removeChat(RemoveChatRequest removeChatRequest) {
         boolean result = sqlSession.update("removeChat", removeChatRequest) >= 1 ? true :false;
         return result;
+    }
+
+    @Override
+    public boolean readChat(ReadChatRequest readChatRequest) {
+        boolean result = sqlSession.update("readChat", readChatRequest) >= 1 ? true :false;
+        return result;
+    }
+
+    @Override
+    public List<Chat> selectChatList(SelectChatRequest selectChatRequest) {
+        return sqlSession.selectList("selectChatList", selectChatRequest);
     }
 }

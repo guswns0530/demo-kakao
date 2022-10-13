@@ -44,7 +44,7 @@
         values (#{id, jdbcType=VARCHAR},
                 #{provider, jdbcType=VARCHAR},
                 #{name, jdbcType=VARCHAR},
-                #{imageUrl, jdbcType=VARCHAR},
+                #{profileImageUrl, jdbcType=VARCHAR},
                 1,
                 sysdate,
                 #{providerId, jdbcType=VARCHAR},

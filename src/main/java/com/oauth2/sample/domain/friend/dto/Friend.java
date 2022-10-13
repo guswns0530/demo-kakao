@@ -14,7 +14,7 @@ public class Friend {
     private String id;
     private String email;
     private String name;
-    private String imageUrl;
+    private String profileImageUrl;
     private String message;
     @JsonIgnore
     private FriendStatus status;

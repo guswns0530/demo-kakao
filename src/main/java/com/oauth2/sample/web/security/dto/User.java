@@ -15,7 +15,7 @@ public class User implements Serializable {
     private String id;
     private String email;
     private String name;
-    private String imageUrl;
+    private String profileImageUrl;
     private String message;
     @JsonIgnore
     private String password;

@@ -200,7 +200,7 @@ select C.room_id                                                       as ROOM_I
                    ' "email" : "' || D.EMAIL || '",' ||
                    ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
                    ' "provider" : "' || F.PROVIDER || '",' ||
-                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
                    '}', ', ')
                    within group ( order by E.nickname, F.NAME)) || ']' as USERS,
        count(D.EMAIL) + 1                                              as JOIN_USER_CNT,
@@ -281,7 +281,7 @@ select C.room_id                                                      as ROOM_ID
                    ' "email" : "' || D.EMAIL || '",' ||
                    ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
                    ' "provider" : "' || F.PROVIDER || '",' ||
-                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
                    '}', ', ')
                    within group ( order by E.nickname, F.NAME) || ']' as USERS,
        count(D.EMAIL) + 1                                             as JOIN_USER_CNT
@@ -354,7 +354,7 @@ select C.room_id                                                      as ROOM_ID
                    ' "email" : "' || D.EMAIL || '",' ||
                    ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
                    ' "provider" : "' || F.PROVIDER || '",' ||
-                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
                    '}', ', ')
                    within group ( order by E.nickname, F.NAME) || ']' as USERS,
        C.type                                                         as ROOM_TYPE,
@@ -432,7 +432,7 @@ select C.room_id                                                                
                    ' "email" : "' || D.EMAIL || '",' ||
                    ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
                    ' "provider" : "' || F.PROVIDER || '",' ||
-                   ' "imageUrl" : "' || F.profile_image_url || '"' ||
+                   ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
                    '}', ', ')
                    within group ( order by E.nickname, F.NAME) || ']'                 as USERS,
        C.type                                                                         as ROOM_TYPE,
@@ -569,7 +569,7 @@ select C.room_id                                                                
                    ' "email" : "' || D.EMAIL || '",' ||
                    ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
                    ' "provider" : "' || F.PROVIDER || '",' ||
-                   ' "imageUrl" : "' || F.profile_image_url || '",' ||
+                   ' "profileImageUrl" : "' || F.profile_image_url || '",' ||
                    ' "lastReadChat" : "' || G.CHAT_ID || '"' ||
                    '}', ', ')
                    within group ( order by E.nickname, F.NAME) || ']'                 as USERS,

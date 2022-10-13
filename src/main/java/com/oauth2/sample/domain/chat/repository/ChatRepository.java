@@ -2,9 +2,11 @@ package com.oauth2.sample.domain.chat.repository;
 
 import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ReadUser;
+import com.oauth2.sample.domain.chat.request.ReadChatRequest;
 import com.oauth2.sample.domain.chat.request.RemoveChatRequest;
 import com.oauth2.sample.domain.chat.request.SelectChatRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ChatRepository {
@@ -17,4 +19,8 @@ public interface ChatRepository {
     boolean removeReadUser(String roomId, String email);
 
     boolean removeChat(RemoveChatRequest removeChatRequest);
+
+    boolean readChat(ReadChatRequest readChatRequest);
+
+    List<Chat> selectChatList(SelectChatRequest selectChatRequest);
 }

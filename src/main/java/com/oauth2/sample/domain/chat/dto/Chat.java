@@ -14,17 +14,19 @@ public class Chat {
     private String content;
     private ChatType chatType;
     private ChatStatus chatStatus;
+    private boolean sync;
 
 
     private String createAt;
 
     @Builder
-    public Chat(String email, String roomId, ChatType chatType, String content, String createAt, ChatStatus chatStatus) {
+    public Chat(String email, String roomId, ChatType chatType, String content, String createAt, ChatStatus chatStatus, boolean sync) {
         this.email = email;
         this.roomId = roomId;
         this.chatType = chatType;
         this.content = content;
         this.createAt = createAt;
         this.chatStatus = chatStatus;
+        this.sync = sync;
     }
 }

@@ -19,7 +19,7 @@
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "imageUrl" : "' || F.profile_image_url || '"' ||
+        ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
         C.type as ROOM_TYPE,
@@ -103,7 +103,7 @@
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "imageUrl" : "' || F.profile_image_url || '"' ||
+        ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
         C.type as ROOM_TYPE,
