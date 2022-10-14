@@ -2,6 +2,7 @@ package com.oauth2.sample;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oauth2.sample.domain.chat.request.SelectChatListRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,16 +40,7 @@ class SampleApplicationTests {
 
 	@Test
 	void listToString() throws JsonProcessingException {
-		ArrayList<Object> objects = new ArrayList<>();
-		objects.add("1");
-		objects.add("2");
-		objects.add("3");
-		objects.add("4");
-
-
-		String s = new ObjectMapper().writeValueAsString(objects);
-
-		System.out.println("s = " + s);
+		System.out.println("SelectChatListRequest.SelectType.LOAD.name() = " + SelectChatListRequest.SelectType.LOAD.name());
     }
 
 }

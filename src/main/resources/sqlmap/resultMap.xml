@@ -22,6 +22,7 @@
         <result column="MESSAGE" property="message" jdbcType="VARCHAR"/>
         <result column="PROFILE_IMAGE_URL" property="profileImageUrl" jdbcType="VARCHAR"/>
         <result column="STATUS" property="status" jdbcType="VARCHAR"/>
+        <result column="ROOM_ID" property="roomId" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="roomInfo" type="com.oauth2.sample.domain.room.dto.RoomInfo">
@@ -45,5 +46,6 @@
         <result column="STATUS" property="chatStatus" jdbcType="VARCHAR"/>
         <result column="TYPE" property="chatType" jdbcType="VARCHAR"/>
         <result column="CREATEAT" property="createAt" jdbcType="VARCHAR"/>
+        <result column="sync" property="sync" jdbcType="VARCHAR"/>
     </resultMap>
 </mapper>

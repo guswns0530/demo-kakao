@@ -4,6 +4,7 @@ import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ReadUser;
 import com.oauth2.sample.domain.chat.request.ReadChatRequest;
 import com.oauth2.sample.domain.chat.request.RemoveChatRequest;
+import com.oauth2.sample.domain.chat.request.SelectChatListRequest;
 import com.oauth2.sample.domain.chat.request.SelectChatRequest;
 
 import java.util.List;
@@ -22,5 +23,5 @@ public interface ChatRepository {
 
     boolean readChat(ReadChatRequest readChatRequest);
 
-    List<Chat> selectChatList(SelectChatRequest selectChatRequest);
+    List<Chat> selectChatList(SelectChatListRequest selectChatlistRequest);
 }

@@ -59,35 +59,46 @@
         #{roomId}
     </delete>
 
-        <select id="selectChatList">
-            select a.chat_id,
-            a.room_id,
-            a.email,
-            DECODE(A.STATUS, '1', A.CONTENT, null) as content,
-            a.status,
-            a.type,
-            a.createAt
-            from (select A.chat_id,
-            A.content,
-            A.EMAIL,
-            A.status,
-            A.type,
-            dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
-            from kakao_chats A
-            where A.createAt >= (select NVL(B.CREATEAT, sysdate)
-            from KAKAO_READ_USERS B
-            where B.EMAIL = 'y2010212@naver.com'
-            and B.ROOM_ID = A.ROOM_ID)
-            and A.room_id = 46) A --sub end
-            <choose>
-                <when test="">
-                </when>
-                <otherwise>
-                </otherwise>
-            </choose>
-            order by seq,
-            chat_id desc
-        </select>>
+    <select id="selectChatList" parameterType="com.oauth2.sample.domain.chat.request.SelectChatListRequest" resultMap="dto.chat">
+        select a.chat_id,
+        a.room_id,
+        a.email,
+        DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+        a.status,
+        a.type,
+        a.createAt,
+        'true' as sync
+        from (select A.chat_id,
+        A.ROOM_ID,
+        A.content,
+        A.EMAIL,
+        A.status,
+        A.type,
+        dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
+        from kakao_chats A
+        where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+        from KAKAO_READ_USERS B
+        where B.EMAIL = #{email}
+        and B.ROOM_ID = A.ROOM_ID)
+        and A.room_id = #{roomId}
+        <choose>
+            <when test="selectType.name == 'LOAD'">
+                <if test="chatId != '' and chatId != null">
+                    and A.CHAT_ID > #{chatId}
+                </if>
+            </when>
+            <when test="selectType.name == 'RELOAD'">
+                and A.CHAT_ID &lt; #{chatId}
+            </when>
+        </choose>
+        ) A --sub end
+        <if test="selectType.name == 'LOAD'">
+            where seq &lt;= 20
+        </if>
+        order by seq,
+        chat_id desc
+    </select>
+
 
     <select id="selectChat" parameterType="com.oauth2.sample.domain.chat.request.SelectChatRequest"
             resultMap="dto.chat">

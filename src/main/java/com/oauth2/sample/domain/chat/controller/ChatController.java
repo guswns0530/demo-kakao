@@ -1,10 +1,7 @@
 package com.oauth2.sample.domain.chat.controller;
 
 import com.oauth2.sample.domain.chat.dto.Chat;
-import com.oauth2.sample.domain.chat.request.InsertChatRequest;
-import com.oauth2.sample.domain.chat.request.ReadChatRequest;
-import com.oauth2.sample.domain.chat.request.RemoveChatRequest;
-import com.oauth2.sample.domain.chat.request.SelectChatRequest;
+import com.oauth2.sample.domain.chat.request.*;
 import com.oauth2.sample.domain.chat.service.ChatService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
@@ -24,14 +21,16 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @GetMapping("/{roomId}")
-    public ResponseEntity<?> selectChatList(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
-        SelectChatRequest selectChatRequest = SelectChatRequest.builder()
+    @GetMapping("/{roomId}/load/{chatId}")
+    public ResponseEntity<?> selectChatListLoad(@CurrentUser UserPrincipal user, @PathVariable String roomId, @PathVariable String chatId) {
+        SelectChatListRequest selectChatListRequest = SelectChatListRequest.builder()
+                .selectType(SelectChatListRequest.SelectType.LOAD)
+                .chatId(chatId)
                 .roomId(roomId)
                 .email(user.getEmail())
                 .build();
 
-        List<Chat> list = chatService.selectChatList(selectChatRequest);
+        List<Chat> list = chatService.selectChatList(selectChatListRequest);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.OK)
@@ -41,10 +40,42 @@ public class ChatController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
-//    @GetMapping("/{roomId}/{chatId}")
-//    public ResponseEntity<?> selectChat(@CurrentUser UserPrincipal user, @PathVariable String roomId, String chatId) {
-//        return ResponseEntity.ok().body("");
-//    }
+    @GetMapping("/{roomId}/load")
+    public ResponseEntity<?> selectChatListLoad(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
+        SelectChatListRequest selectChatListRequest = SelectChatListRequest.builder()
+                .selectType(SelectChatListRequest.SelectType.LOAD)
+                .roomId(roomId)
+                .email(user.getEmail())
+                .build();
+
+        List<Chat> list = chatService.selectChatList(selectChatListRequest);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(list)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @GetMapping("/{roomId}/reload/{chatId}")
+    public ResponseEntity<?> selectChatListReload(@CurrentUser UserPrincipal user, @PathVariable String roomId, @PathVariable String chatId) {
+        SelectChatListRequest selectChatListRequest = SelectChatListRequest.builder()
+                .selectType(SelectChatListRequest.SelectType.RELOAD)
+                .chatId(chatId)
+                .roomId(roomId)
+                .email(user.getEmail())
+                .build();
+
+        List<Chat> list = chatService.selectChatList(selectChatListRequest);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(list)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
 
     @PostMapping
     public ResponseEntity<?> insertChatText(@CurrentUser UserPrincipal user, @Valid @RequestBody InsertChatRequest insertChatRequest) {

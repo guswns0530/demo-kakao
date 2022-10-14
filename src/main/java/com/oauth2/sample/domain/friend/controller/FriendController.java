@@ -37,6 +37,18 @@ public class FriendController {
         return ResponseEntity.ok().body(apiResponse);
     }
 
+    @GetMapping("/{toId}")
+    public ResponseEntity<?> selectFriend(@CurrentUser UserPrincipal user, @PathVariable String toId) {
+        Friend friend = friendService.selectFriend(user.getEmail(), toId);
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(friend)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
     @GetMapping("/added-me")
     public ResponseEntity<?> selectAddedMeFriendList(@CurrentUser UserPrincipal user) {
         List<Friend> friends = friendService.selectAddedMeFriendListToEmail(user.getEmail());

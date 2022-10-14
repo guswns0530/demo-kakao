@@ -192,6 +192,33 @@ select a.chat_id,
        DECODE(A.STATUS, '1', A.CONTENT, null) as content,
        a.status,
        a.type,
+       a.createAt,
+       a.seq
+from (select A.chat_id,
+             A.ROOM_ID,
+             A.content,
+             A.EMAIL,
+             A.status,
+             A.type,
+             dense_rank() over (order by A.createAt desc) as seq,
+             A.createAt --sub start
+      from kakao_chats A
+      where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+                           from KAKAO_READ_USERS B
+                           where B.EMAIL = 'y2010212@naver.com'
+                             and B.ROOM_ID = A.ROOM_ID)
+        and A.room_id = 46
+        and A.CHAT_ID > 4) A --sub end
+where seq <= 20
+order by seq,
+         chat_id desc;
+
+select a.chat_id,
+       a.room_id,
+       a.email,
+       DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+       a.status,
+       a.type,
        a.createAt
 from (select A.chat_id,
              A.ROOM_ID,
@@ -206,6 +233,68 @@ from (select A.chat_id,
                            from KAKAO_READ_USERS B
                            where B.EMAIL = 'y2010212@naver.com'
                              and B.ROOM_ID = A.ROOM_ID)
-        and A.room_id = 46) A --sub end
+        and A.room_id = '1'
+        and A.CHAT_ID > 'null') A --sub end
+where seq <= 20
+order by seq,
+         chat_id desc
+
+
+select a.chat_id,
+       a.room_id,
+       a.email,
+       DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+       a.status,
+       a.type,
+       a.createAt
+from (select A.chat_id,
+             A.ROOM_ID,
+
+                A.content,
+              A.EMAIL,
+             A.status,
+             A.type,
+             dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
+      from kakao_chats A
+      where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+                           from KAKAO_READ_USERS B
+                           where B.EMAIL = 'y2010212@naver.com'
+                             and B.ROOM_ID = A.ROOM_ID)
+        and A.room_id = '1'
+
+        and A.CHAT_ID < '3'
+
+     ) A --sub end
+
+order by seq,
+         chat_id desc
+
+select a.chat_id,
+       a.room_id,
+       a.email,
+       DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+       a.status,
+       a.type,
+       a.createAt
+from (select A.chat_id,
+             A.ROOM_ID,
+             A.content,
+             A.EMAIL,
+             A.status,
+             A.type,
+             dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
+      from kakao_chats A
+      where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+                           from KAKAO_READ_USERS B
+                           where B.EMAIL = 'y2010212@naver.com'
+                             and B.ROOM_ID = A.ROOM_ID)
+        and A.room_id = '1'
+     ) A --sub end
+
+where seq <= 20
+
 order by seq,
          chat_id desc;
+
+select A.*, true as sync
+from kakao_chats A;

@@ -4,6 +4,7 @@ import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ReadUser;
 import com.oauth2.sample.domain.chat.request.ReadChatRequest;
 import com.oauth2.sample.domain.chat.request.RemoveChatRequest;
+import com.oauth2.sample.domain.chat.request.SelectChatListRequest;
 import com.oauth2.sample.domain.chat.request.SelectChatRequest;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -61,7 +62,7 @@ public class ChatRepositorImpl implements ChatRepository{
     }
 
     @Override
-    public List<Chat> selectChatList(SelectChatRequest selectChatRequest) {
-        return sqlSession.selectList("selectChatList", selectChatRequest);
+    public List<Chat> selectChatList(SelectChatListRequest selectChatlistRequest) {
+        return sqlSession.selectList("selectChatList", selectChatlistRequest);
     }
 }

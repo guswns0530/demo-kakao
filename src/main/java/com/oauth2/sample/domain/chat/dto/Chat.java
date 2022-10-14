@@ -15,8 +15,6 @@ public class Chat {
     private ChatType chatType;
     private ChatStatus chatStatus;
     private boolean sync;
-
-
     private String createAt;
 
     @Builder

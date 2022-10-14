@@ -120,3 +120,38 @@ from kakao_users A
               ON A.email = B.TO_ID
 where A.status = 1
   AND B.TO_ID = 'y2010212@naver.com'
+
+WITH CUTOFF_RS AS (select FR.*,
+                          case when (select count(*)
+                                     from kakao_friends
+                                     where STATUS = 2
+
+                                       AND from_id =FR.to_id
+                                       AND to_id = FR.from_id
+
+                                    ) <= 0 then '1'
+                               else '2' END AS CUTOFF_RS
+                   from kakao_friends FR
+                   where
+
+                           from_id = 'y2010212@naver.com')
+
+
+select
+    A.ID AS ID,
+    A.EMAIL AS EMAIL,
+    DECODE(B.NICKNAME, null, A.NAME, B.NICKNAME) AS NAME,
+    DECODE(B.CUTOFF_RS,'1' , A.MESSAGE , null) AS MESSAGE,
+    DECODE(B.CUTOFF_RS,'1' , A.PROFILE_IMAGE_URL, null) AS PROFILE_IMAGE_URL,
+    DECODE(B.CUTOFF_RS,'1' , A.BACKGROUND_IMAGE_URL , null) AS BACKGROUND_IMAGE_URL,
+    to_char(B.STATUS) AS STATUS,
+    (select A.room_id AS roomId
+     from kakao_rooms A
+     WHERE type = '1'
+       AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = 'y2010212@naver.com')
+       AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = ?)) as room_id
+from kakao_users A
+         JOIN CUTOFF_RS B
+              ON A.email = B.TO_ID
+where B.status = 1
+  and A.status = 1

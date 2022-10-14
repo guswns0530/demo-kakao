@@ -4,10 +4,7 @@ import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ChatStatus;
 import com.oauth2.sample.domain.chat.dto.ChatType;
 import com.oauth2.sample.domain.chat.repository.ChatRepository;
-import com.oauth2.sample.domain.chat.request.InsertChatRequest;
-import com.oauth2.sample.domain.chat.request.ReadChatRequest;
-import com.oauth2.sample.domain.chat.request.RemoveChatRequest;
-import com.oauth2.sample.domain.chat.request.SelectChatRequest;
+import com.oauth2.sample.domain.chat.request.*;
 import com.oauth2.sample.domain.room.repository.RoomRepository;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -82,8 +79,8 @@ public class ChatService {
         }
     }
 
-    public List<Chat> selectChatList(SelectChatRequest selectChatRequest) {
-        List<Chat> list = chatRepository.selectChatList(selectChatRequest);
+    public List<Chat> selectChatList(SelectChatListRequest selectChatListRequest) {
+        List<Chat> list = chatRepository.selectChatList(selectChatListRequest);
 
         return list;
     }

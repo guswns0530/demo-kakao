@@ -186,4 +186,13 @@ public class FriendService {
             });
         }
     }
+
+    public Friend selectFriend(String email, String toId) {
+        Optional<Friend> friendOf = friendRepository.selectFriend(email, toId);
+        Friend friend = friendOf.orElseThrow(() -> {
+            throw new BadRequestException("존재하지 않는 친구입니다.");
+        });
+
+        return friend;
+    }
 }
