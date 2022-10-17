@@ -9,13 +9,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
-public class ApiException {
+public class ApiException<T> {
     private int errorCode;
     private String error;
-    private String errorDescription;
+    private T errorDescription;
 
     @Builder
-    public ApiException(HttpStatus errorCode, String error, String errorDescription) {
+    public ApiException(HttpStatus errorCode, String error, T errorDescription) {
         this.errorCode = errorCode.value();
         if(error == null) {
             this.error = errorCode.getReasonPhrase();

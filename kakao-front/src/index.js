@@ -1,16 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from '../node_modules/react-router-dom/dist/index';
 import { Provider } from 'react-redux';
-import { legacy_createStore } from 'redux';
+import {applyMiddleware, legacy_createStore} from 'redux';
 import rootReducer from './modules/index';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import {rootSaga} from "./modules/index";
+import createSagaMiddleware from 'redux-saga'
 
-const store = legacy_createStore(rootReducer, composeWithDevTools());
+const sagaMiddleware = createSagaMiddleware()
+const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));
+sagaMiddleware.run(rootSaga)
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -21,7 +25,4 @@ root.render(
   </React.StrictMode>,
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

@@ -1,10 +1,7 @@
 package com.oauth2.sample.web.advice;
 
 import com.oauth2.sample.web.payload.ApiException;
-import com.oauth2.sample.web.payload.ApiExceptions;
-import com.oauth2.sample.web.payload.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -12,12 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collections;
 import java.util.List;
 
 @RestControllerAdvice
@@ -42,17 +35,21 @@ public class ControllerAdvice {
     public ResponseEntity methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
         List<FieldError> result = bindingResult.getFieldErrors();
-        
+
+        FieldError fieldError = result.get(0);
+
 //        result.stream().forEach(error -> {
 //            System.out.println("error.getDefaultMessage() = " + error.getDefaultMessage());
 //            System.out.println("error.getField() = " + error.getField());
 //            System.out.println("error.getRejectedValue() = " + error.getRejectedValue());
 //        });
 
-        return ResponseEntity.ok().body(
-                ApiExceptions.builder()
+
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ApiException.builder()
                         .errorCode(HttpStatus.BAD_REQUEST)
-                        .errorDescriptions(Collections.singletonList(result))
+                        .errorDescription(fieldError)
                         .build()
         );
     }
