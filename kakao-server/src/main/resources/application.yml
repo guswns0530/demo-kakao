@@ -6,9 +6,12 @@ spring:
       - profiles/application-oauth2.yml
   jackson:
     property-naming-strategy: SNAKE_CASE
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 30MB
 mybatis:
   type-handlers-package: "com.oauth2.sample.web.mybatis.handler"
 logging:
   level:
     com.oauth2.sample.web.mybatis: debug
-
