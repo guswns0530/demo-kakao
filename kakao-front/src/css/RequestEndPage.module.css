@@ -1,0 +1,65 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nanum Gothic', AppleSDGothicNeo-Regular, 'Malgun Gothic', '맑은 고딕', dotum, '돋움', sans-serif;
+}
+
+header {
+    background-color: #fff;
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 30px 10px;
+    z-index: 5;
+}
+
+header img {
+    width: 90px;
+}
+
+.wrap_error {
+    z-index: -1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transform: translate(-50%, -50%);
+}
+
+.logo {
+    width: 130px;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+}
+
+.title {
+    margin-top: 50px;
+    font-size: 32px;
+    font-weight: 600;
+}
+.description {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 15px;
+    line-height: 22px;
+    color: #666;
+}
+
+.btn {
+    margin-top: 30px;
+    width: 140px;
+    height: 60px;
+    border-radius: 100px;
+    border: none;
+    background-color: #eee;
+    color: #000;
+    font-size: 20px;
+    font-weight: 900;
+}

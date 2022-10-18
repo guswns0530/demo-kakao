@@ -31,6 +31,7 @@ section#login_popup {
 
 .lp_logo > img {
     width: 35%;
+    height: 100%;
     background-size: cover;
 }
 .lp_logo_text {
@@ -68,9 +69,13 @@ section#login_popup {
     border-top: none;
     margin-top: 0px;
 }
-#lp_id:valid,
-#lp_pwd:valid {
-    background-color: #e8f0fe;
+/*#lp_id:valid,*/
+/*#lp_pwd:valid {*/
+/*    background-color: #e8f0fe;*/
+/*}*/
+
+.input_box > input:focus{
+    border-bottom: solid 2px #000;
 }
 
 #lp_submit {
@@ -150,4 +155,37 @@ section#login_popup {
     border: none;
     cursor: pointer;
     border-radius: 3px;
+}
+#errorAlert {
+    margin-top: 20px;
+    padding: 20px;
+    font-size: 13px;
+    line-height: 20px;
+    background-color: #fafafa;
+
+    -webkit-animation: fadeInFromNone 0.5s ease-out;
+    -moz-animation: fadeInFromNone 0.5s ease-out;
+    -o-animation: fadeInFromNone 0.5s ease-out;
+    animation: fadeInFromNone 0.5s ease-out;
+}
+
+@keyframes fadeInFromNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: block;
+        opacity: 0;
+    }
+
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+#errorAlert > p {
+    color: #e65f32;
 }

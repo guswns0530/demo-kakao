@@ -26,6 +26,9 @@ export const register = createAction(REGISTER, ({email, password}) => ({
 export const login = createAction(LOGIN, ({email, password}) => ({
     email, password
 }))
+export const loginFailure = createAction(LOGIN_FAILURE, (error) => {
+    return error
+})
 
 const registerSaga = createRequestSaga(REGISTER, authAPI.register, (data) => {
 
@@ -60,7 +63,6 @@ const auth = handleActions({
         ...state, authError: null, auth
     }), [LOGIN_FAILURE]: (state, {payload: error}) => ({
         ...state, authError: error
-
     })
 }, initialState,);
 
