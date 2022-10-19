@@ -1,11 +1,10 @@
 import React from "react";
 import style from '../../css/LoginPage.module.css'
 
-const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup}) => {
-
+const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup, authLoading}) => {
     return (
         <>
-            {popup ? <a>소셜 로그인 중입니다.</a> :
+            {popup ? <div>소셜 로그인 중입니다.</div> :
                 <form id={style.lp_form} onSubmit={onSubmit}>
                     <div className={style.input_box}>
                         <input
@@ -30,7 +29,7 @@ const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup}) =>
                             <p className={style.desc_error}>{authError.toString()}</p>
                         </div>
                     }
-                    <input type="submit" value="로그인" id={style.lp_submit} />
+                    <input type="submit" value="로그인" id={style.lp_submit} className={authLoading ? style.lp_submit_disable : ''} />
                     <div className={style.line_or}>
                         <div>또는</div>
                     </div>

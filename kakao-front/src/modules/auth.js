@@ -1,25 +1,19 @@
 import {createAction, handleActions} from 'redux-actions';
-import produce from 'immer'
 import {takeLatest} from 'redux-saga/effects'
 import createRequestSaga from "../lib/createRequestSaga";
 import * as authAPI from '../lib/api/auth'
 import {setAuthorization} from "../lib/api/client";
 
-const CHANGE_FIELD = 'auth/CHANGE_FIELD'
-const INITIALIZE_FORM = 'auth/INITIALIZE_FORM'
+export const REGISTER = 'auth/REGISTER'
+export const REGISTER_SUCCESS = 'auth/REGISTER_SUCCESS'
+export const REGISTER_FAILURE = 'auth/REGISTER_FAILURE'
 
-const REGISTER = 'auth/REGISTER'
-const REGISTER_SUCCESS = 'auth/REGISTER_SUCCESS'
-const REGISTER_FAILURE = 'auth/REGISTER_FAILURE'
+export const LOGIN = 'auth/LOGIN'
+export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
+export const LOGIN_FAILURE = 'auth/LOGIN_FAILURE'
 
-const LOGIN = 'auth/LOGIN'
-const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
-const LOGIN_FAILURE = 'auth/LOGIN_FAILURE'
+export const LOGOUT = 'auth/LOGOUT'
 
-export const changeField = createAction(CHANGE_FIELD, ({form, key, value}) => ({
-    form, key, value
-}))
-export const initializeForm = createAction(INITIALIZE_FORM, form => form)
 export const register = createAction(REGISTER, ({email, password}) => ({
     email, password
 }))
@@ -29,6 +23,7 @@ export const login = createAction(LOGIN, ({email, password}) => ({
 export const loginFailure = createAction(LOGIN_FAILURE, (error) => {
     return error
 })
+export const logout = createAction(LOGOUT)
 
 const registerSaga = createRequestSaga(REGISTER, authAPI.register, (data) => {
 
@@ -41,21 +36,12 @@ export function* authSaga() {
 }
 
 const initialState = {
-    register: {
-        email: '', password: '', name: '', passwordConfirm: ''
-    }, login: {
-        email: '', password: ''
-    }, auth: null, authError: null
+    auth: null,
+    authError: null
 }
 
 const auth = handleActions({
-    [CHANGE_FIELD]: (state, {payload: {form, key, value}}) => {
-        return produce(state, draft => {
-            draft[form][key] = value
-        })
-    }, [INITIALIZE_FORM]: (state, {payload: form}) => ({
-        ...state, [form]: initialState[form]
-    }), [REGISTER_SUCCESS]: (state, {payload: auth}) => ({
+    [REGISTER_SUCCESS]: (state, {payload: auth}) => ({
         ...state, authError: null, auth
     }), [REGISTER_FAILURE]: (state, {payload: error}) => ({
         ...state, authError: error
@@ -63,6 +49,8 @@ const auth = handleActions({
         ...state, authError: null, auth
     }), [LOGIN_FAILURE]: (state, {payload: error}) => ({
         ...state, authError: error
+    }), [LOGOUT]: (state) => ({
+        ...initialState
     })
 }, initialState,);
 

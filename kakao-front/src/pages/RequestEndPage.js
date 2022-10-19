@@ -6,26 +6,24 @@ import style from '../css/RequestEndPage.module.css'
 
 const RequestEndPage = () => {
     return (<>
-        <>
-            <header>
-                <Link to={"/"}>
-                    <img src={kLogo}/>
-                </Link>
-            </header>
-            <div className={style.wrap_error}>
-                <div className={style.logo}>
-                    <img src={logo}/>
-                </div>
-                <p className={style.title}>요청이 끝난 페이지입니다.</p>
-                <p className={style.description}>요청이 완료되었습니다.<br/>
-                    페이지를 닫아주시길바랍니다.</p>
-                <button className={style.btn}>
-                    <Link to={"/"}>
-                        홈으로
-                    </Link>
-                </button>
+        <header>
+            <Link to={"/"}>
+                <img src={kLogo} alt="kakao_logo"/>
+            </Link>
+        </header>
+        <div className={style.wrap_error}>
+            <div className={style.logo}>
+                <img src={logo} alt="logo"/>
             </div>
-        </>
+            <p className={style.title}>요청이 끝난 페이지입니다.</p>
+            <p className={style.description}>요청이 완료되었습니다.<br/>
+                페이지를 닫아주시길바랍니다.</p>
+            <Link to={"/"}>
+                <button className={style.btn}>
+                    홈으로
+                </button>
+            </Link>
+        </div>
     </>)
 }
 

@@ -88,6 +88,7 @@ section#login_popup {
     cursor: pointer;
     border-radius: 3px;
     margin-top: 30px;
+    transition: 0.1s;
 }
 
 .account {
@@ -155,6 +156,11 @@ section#login_popup {
     border: none;
     cursor: pointer;
     border-radius: 3px;
+
+    transition: 0.1s;
+}
+.login_kakao:hover {
+    background-color: #e7e7e7;
 }
 #errorAlert {
     margin-top: 20px;
@@ -188,4 +194,10 @@ section#login_popup {
 
 #errorAlert > p {
     color: #e65f32;
+}
+
+.lp_submit_disable {
+    background-color: #f2f2f2 !important;
+    color: #b4b4b4 !important;
+    cursor: alias !important;
 }

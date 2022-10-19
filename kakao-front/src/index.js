@@ -2,27 +2,41 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from '../node_modules/react-router-dom/dist/index';
-import { Provider } from 'react-redux';
+
+// React-router-dom
+import {BrowserRouter} from '../node_modules/react-router-dom/dist/index';
+
+//redux
+import {Provider} from 'react-redux';
 import {applyMiddleware, legacy_createStore} from 'redux';
 import rootReducer from './modules/index';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import {composeWithDevTools} from 'redux-devtools-extension';
 import {rootSaga} from "./modules/index";
 import createSagaMiddleware from 'redux-saga'
 
-const sagaMiddleware = createSagaMiddleware()
-const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(sagaMiddleware)));
-sagaMiddleware.run(rootSaga)
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// sync
+import {syncConfig} from "./modules/index";
+import {createStateSyncMiddleware, initMessageListener} from "redux-state-sync/dist/syncState";
+import {persistStore} from "redux-persist";
+import {PersistGate} from "redux-persist/integration/react";
 
-root.render(
-  <React.StrictMode>
+const sagaMiddleware = createSagaMiddleware()
+
+const store = legacy_createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(createStateSyncMiddleware(syncConfig), sagaMiddleware)))
+sagaMiddleware.run(rootSaga)
+initMessageListener(store)
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+const persist = persistStore(store)
+
+root.render(<React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider> 
-  </React.StrictMode>,
-);
+        <PersistGate loading={null} persistor={persist}>
+            <BrowserRouter>
+                <App/>
+            </BrowserRouter>
+        </PersistGate>
+    </Provider>
+</React.StrictMode>,);
 
 reportWebVitals();
