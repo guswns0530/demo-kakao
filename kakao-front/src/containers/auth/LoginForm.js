@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {LOGIN, login, loginFailure} from "../../modules/auth";
+import {LOGIN, login } from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginForm from "../../component/auth/AuthLoginForm";
 import {check} from '../../modules/user'
@@ -18,7 +18,10 @@ const LoginForm = () => {
         user: user.user,
         authLoading: loading[LOGIN]
     }))
+    // redux로 관리해야함
     const [popup, setPopup] = useState(null);
+    const [error, setErrorMsg] = useState('')
+
 
     const onChange = e => {
         const { value, name } = e.target
@@ -36,18 +39,18 @@ const LoginForm = () => {
         const { email, password } = form;
         if(email.trim() === '') {
             const errorMsg = "계정을 입력해주세요"
-            dispatch(loginFailure(errorMsg))
+            setErrorMsg((errorMsg))
             return
         }
         /* eslint-disable */
         if(!email.match(/^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
             const errorMsg = "이메일 형식이 맞지않습니다. 다시 입력해주세요"
-            dispatch(loginFailure(errorMsg))
+            setErrorMsg(errorMsg)
             return
         }
         if(password.trim() === '') {
             const errorMsg = "비밀번호를 입력해주세요"
-            dispatch(loginFailure(errorMsg))
+            setErrorMsg(errorMsg)
             return
         }
 
@@ -70,6 +73,7 @@ const LoginForm = () => {
 
     useEffect(() => {
         if(authError) {
+            setErrorMsg(authError)
             return
         }
         if(auth) {
@@ -97,7 +101,7 @@ const LoginForm = () => {
             form={form}
             onChange={onChange}
             onSubmit={onSubmit}
-            authError={authError}
+            authError={error}
             onClick={onClick}
             popup={popup}
             authLoading={authLoading}
