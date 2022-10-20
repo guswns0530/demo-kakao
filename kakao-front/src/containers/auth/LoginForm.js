@@ -73,7 +73,6 @@ const LoginForm = () => {
                 clearInterval(interval)
             }
         }, 300)
-
     }
 
     // form 초기화

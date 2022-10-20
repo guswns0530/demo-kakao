@@ -2,6 +2,7 @@ import client from "../lib/api/client";
 import {refreshToken} from "../lib/api/auth";
 import {accessToken} from "../modules/auth";
 
+
 const setup = (store) => {
     const {dispatch} = store
 
@@ -9,14 +10,15 @@ const setup = (store) => {
         (config) => {
             const state = store.getState()
 
-            if(!state.auth.auth) {
+            if (!state.auth.auth) {
                 return config;
             }
 
             const token = state.auth.auth.access_token
 
-            if(token) {
-                config.headers["Authorization"] = "Bearer " + token;
+            if (token) {
+                const accessToken = "Bearer " + token;
+                config.headers["Authorization"] = accessToken
             }
 
             return config;
@@ -32,27 +34,29 @@ const setup = (store) => {
 
         async (err) => {
             let number = Math.random();
-            console.log('start-error', number)
-            console.log(err)
 
             const state = store.getState()
             const originalConfig = err.config
 
-            if(!originalConfig) {
+
+            if (!originalConfig) {
                 return Promise.reject(err)
             }
 
-            if(originalConfig.url !== "/auth/login" && err.response) {
-                if(err.response.status === 401 && err.response) {
+            console.log('start-error', number)
+            console.error(number + ' : ' + err)
+
+            if (originalConfig.url !== "/auth/login" && err.response) {
+                if (err.response.status === 401 && err.response) {
                     originalConfig._retry = true;
 
                     try {
-                        if(!state.auth.auth) {
+                        if (!state.auth.auth) {
                             return Promise.reject(err)
                         }
                         const token = state.auth.auth.access_token;
                         const rs = await refreshToken(token)
-                        const { access_token } = rs.data.data
+                        const {access_token} = rs.data.data
 
                         console.log(`refresh token: ${access_token}`)
 
@@ -65,9 +69,9 @@ const setup = (store) => {
                 }
             }
 
-            return Promise.reject(err)
-
             console.log('end-error', number)
+
+            return Promise.reject(err)
         })
 
 }

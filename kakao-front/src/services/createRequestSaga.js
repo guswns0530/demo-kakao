@@ -6,9 +6,7 @@ export default function createRequestSaga(type, request, callback = () => {}) {
     const FAILURE = `${type}_FAILURE`
 
     return function*(action) {
-        const uuid = Math.random() * 100
         yield put(startLoading(type))
-        console.log('startLoading', uuid)
         try {
             const response = yield call(request, action.payload)
             console.log(response)
@@ -28,7 +26,6 @@ export default function createRequestSaga(type, request, callback = () => {}) {
             }
         }
 
-        console.log('finishiLoading', uuid)
         yield put(finishLoading(type))
     }
 }

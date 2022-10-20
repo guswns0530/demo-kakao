@@ -20,9 +20,6 @@ export const register = createAction(REGISTER, ({email, password}) => ({
 export const login = createAction(LOGIN, ({email, password}) => ({
     email, password
 }))
-export const loginFailure = createAction(LOGIN_FAILURE, (error) => {
-    return error
-})
 export const logout = createAction(LOGOUT)
 export const accessToken = createAction(ACCESS_TOKEN, (access_token) => (access_token))
 
