@@ -1,9 +1,9 @@
 import {createAction, handleActions} from "redux-actions";
 import {takeLatest} from 'redux-saga/effects'
-import createRequestSaga from "../lib/createRequestSaga";
+import createRequestSaga from "../services/createRequestSaga";
 import * as userApi from '../lib/api/user'
 
-const CHECK = 'user/CHECK'
+export const CHECK = 'user/CHECK'
 const CHECK_SUCCESS = 'user/CHECK_SUCCESS'
 const CHECK_FAILURE = 'user/CHECK_FAILURE'
 
@@ -26,7 +26,8 @@ export default handleActions(
     {
         [CHECK_SUCCESS]: (state, {payload: user}) => ({
             ...state,
-            user
+            user,
+            checkError: null
         }),
         [CHECK_FAILURE]: (state, {payload: error}) => ({
             ...state,

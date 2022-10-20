@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import kLogo from "../assets/logo.svg";
+import kakaoLogo from "../assets/logo.svg";
 import logo from "../assets/reload.png";
 import style from '../css/RequestEndPage.module.css'
 
@@ -8,7 +8,9 @@ const RequestEndPage = () => {
     return (<>
         <header>
             <Link to={"/"}>
-                <img src={kLogo} alt="kakao_logo"/>
+                <object data={kakaoLogo} alt="KAKAO_LOGO">
+                    <img alt={"kakaoLogo"} src={kakaoLogo}></img>
+                </object>
             </Link>
         </header>
         <div className={style.wrap_error}>

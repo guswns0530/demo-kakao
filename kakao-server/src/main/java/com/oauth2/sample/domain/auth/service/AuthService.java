@@ -52,7 +52,7 @@ public class AuthService {
         String savedToken = userRepository.getRefreshTokenByEmail(email);
 
         if (!savedToken.equals(oldRefreshToken)) {
-            throw new RuntimeException("Not Matched Refresh Token");
+            throw new RuntimeException("Refresh Token이 매칭되지 않습니다");
         }
 
         // 4. JWT 갱신

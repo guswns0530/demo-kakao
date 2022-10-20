@@ -9,7 +9,9 @@ const NotFoundPage = () => {
         <>
             <header>
                 <Link to={"/"}>
-                    <img src={kakaoLogo} alt="kakao_logo"/>
+                    <object data={kakaoLogo} alt="KAKAO_LOGO">
+                        <img alt={"kakaoLogo"} src={kakaoLogo}></img>
+                    </object>
                 </Link>
             </header>
             <div className={style.wrap_error}>

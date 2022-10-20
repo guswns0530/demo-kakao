@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import RequestEndPage from "./RequestEndPage";
 import {useLocation} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
+import {accessToken} from "../modules/auth";
 
 function useQuery() {
     const { search } = useLocation();
@@ -11,16 +12,20 @@ function useQuery() {
 
 const Oauth2RedirectHandler = () => {
     const query = useQuery()
+    const dispatch = useDispatch()
 
     const token = query.get('token')
     const error = query.get('error')
 
-    const {auth} = useSelector(({auth }) => ({
-        auth: auth.auth
-    }))
+    useEffect(() => {
+        if(token) {
+            dispatch(accessToken(token))
 
-    console.log(token, error)
-    console.log(auth)
+            window.close()
+        } else {
+            console.log(error)
+        }
+    }, [dispatch, token, error])
 
     return (
         <>

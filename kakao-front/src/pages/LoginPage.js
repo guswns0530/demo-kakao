@@ -8,7 +8,9 @@ const LoginPage = () => {
     return (
         <section id={style.login_popup}>
             <div className={style.lp_logo}>
-                <img src={logo} alt="KAKAO_LOGO"/>
+                <object data={logo} alt="KAKAO_LOGO">
+                    <img alt={"logo"} src={logo}></img>
+                </object>
             </div>
             <LoginForm/>
             <div className={style.account}>

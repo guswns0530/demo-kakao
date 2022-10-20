@@ -17,6 +17,10 @@ header img {
     width: 90px;
 }
 
+header object {
+    width: 90px;
+}
+
 .wrap_error {
     z-index: -1;
     position: absolute;
@@ -32,6 +36,11 @@ header img {
 
 .logo {
     width: 200px;
+}
+
+.logo object {
+    width: 100%;
+    height: 100%;
 }
 
 .logo img {

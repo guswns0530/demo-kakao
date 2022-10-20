@@ -28,7 +28,6 @@ public class AuthController {
     // 토큰 재발급
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody String oldAccessToken) {
-
         if(StringUtils.hasText(oldAccessToken) && oldAccessToken.startsWith("Bearer ")) {
             oldAccessToken = oldAccessToken.substring(7);
         }
