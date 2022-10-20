@@ -3,7 +3,7 @@ import {all} from 'redux-saga/effects'
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import auth, {ACCESS_TOKEN, authSaga, LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS} from './auth';
+import auth, {SET_ACCESS_TOKEN, authSaga, LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS} from './auth';
 import loading from "./loading";
 import user, {userSaga} from './user'
 import form from './form'
@@ -23,12 +23,13 @@ const persistConfig = {
 const authConfig = {
   key: 'auth',
   storage,
-  blacklist: ['authError']
+  whitelist: ['auth'],
+  blacklist: ['authError', 'authPopup']
 }
 
 // 동기화하는 리듀서
 export const syncConfig = {
-  whitelist: [LOGIN_SUCCESS, REGISTER_SUCCESS, LOGOUT, ACCESS_TOKEN],
+  whitelist: [LOGIN_SUCCESS, REGISTER_SUCCESS, LOGOUT, SET_ACCESS_TOKEN],
 }
 const rootReducer = combineReducers({
   auth: persistReducer(authConfig, auth),

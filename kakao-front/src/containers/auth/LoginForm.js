@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {LOGIN, login } from "../../modules/auth";
+import {LOGIN, login, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginForm from "../../component/auth/AuthLoginForm";
 import { useNavigate } from "react-router-dom";
@@ -11,18 +11,17 @@ import {check, CHECK} from "../../modules/user";
 const LoginForm = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { form, auth, authError, user, authLoading, userLoading } = useSelector(( {auth, user, loading, form}) => ({
+    const { form, auth, authError, user, authLoading, userLoading, authPopup } = useSelector(( {auth, user, loading, form}) => ({
         form: form.login,
         auth: auth.auth,
         authError: auth.authError,
         user: user.user,
         authLoading: loading[LOGIN],
-        userLoading: loading[CHECK]
+        userLoading: loading[CHECK],
+        authPopup: auth.authPopup
     }))
-    // redux로 관리해야함
-    const [popup, setPopup] = useState(null);
-    const [error, setErrorMsg] = useState('')
 
+    const [error, setErrorMsg] = useState('')
 
     const onChange = e => {
         const { value, name } = e.target
@@ -59,17 +58,17 @@ const LoginForm = () => {
     }
 
     const onClick = () => {
-        if(popup) {
-            popup.focus()
+        if(authPopup) {
+            authPopup.focus()
             return
         }
 
         const opener = window.open(`http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${OAUTH2_REDIRECT_URI}`, 'Popup', "resizable=0, status=0,toolbar=0, width=400, height=600")
-        setPopup(opener)
+        dispatch(setPopup(opener))
 
         const interval = setInterval(() => {
             if(opener.closed) {
-                setPopup(null)
+                dispatch(setPopup(null))
                 clearInterval(interval)
             }
         }, 300)
@@ -98,12 +97,12 @@ const LoginForm = () => {
 
     useEffect(() => {
         return () => {
-            if(popup) {
-                popup.close()
-                setPopup(null)
+            if(authPopup) {
+                dispatch(setPopup(null))
+                authPopup.close()
             }
         }
-    }, [dispatch, popup])
+    }, [dispatch, authPopup])
 
     return (
         <AuthLoginForm
@@ -112,7 +111,7 @@ const LoginForm = () => {
             onSubmit={onSubmit}
             authError={error}
             onClick={onClick}
-            popup={popup}
+            popup={authPopup}
             authLoading={authLoading}
         />
     )

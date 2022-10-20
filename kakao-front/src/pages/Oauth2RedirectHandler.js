@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import RequestEndPage from "./RequestEndPage";
 import {useLocation} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {accessToken} from "../modules/auth";
+import {setAccessToken, setPopup} from "../modules/auth";
 
 function useQuery() {
     const { search } = useLocation();
@@ -19,7 +19,8 @@ const Oauth2RedirectHandler = () => {
 
     useEffect(() => {
         if(token) {
-            dispatch(accessToken(token))
+            dispatch(setAccessToken(token))
+            dispatch(setPopup(null))
 
             window.close()
         } else {

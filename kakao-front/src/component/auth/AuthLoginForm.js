@@ -4,7 +4,14 @@ import style from '../../css/LoginPage.module.css'
 const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup, authLoading}) => {
     return (
         <>
-            {popup ? <div>소셜 로그인 중입니다.</div> :
+            {popup ?
+                <div>
+                    <div className={style.social_login_text}>로그인 중입니다.</div>
+                    <div className={style.loading_box}>
+                        <div className={style.loader}></div>
+                    </div>
+                </div>
+                :
                 <form id={style.lp_form} onSubmit={onSubmit}>
                     <div className={style.input_box}>
                         <input

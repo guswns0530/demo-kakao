@@ -1,6 +1,6 @@
 import client from "../lib/api/client";
 import {refreshToken} from "../lib/api/auth";
-import {accessToken} from "../modules/auth";
+import {setAccessToken} from "../modules/auth";
 
 
 const setup = (store) => {
@@ -33,8 +33,6 @@ const setup = (store) => {
         },
 
         async (err) => {
-            let number = Math.random();
-
             const state = store.getState()
             const originalConfig = err.config
 
@@ -42,9 +40,6 @@ const setup = (store) => {
             if (!originalConfig) {
                 return Promise.reject(err)
             }
-
-            console.log('start-error', number)
-            console.error(number + ' : ' + err)
 
             if (originalConfig.url !== "/auth/login" && err.response) {
                 if (err.response.status === 401 && err.response) {
@@ -58,9 +53,7 @@ const setup = (store) => {
                         const rs = await refreshToken(token)
                         const {access_token} = rs.data.data
 
-                        console.log(`refresh token: ${access_token}`)
-
-                        dispatch(accessToken(access_token))
+                        dispatch(setAccessToken(access_token))
 
                         return client(originalConfig)
                     } catch (_err) {
@@ -68,8 +61,6 @@ const setup = (store) => {
                     }
                 }
             }
-
-            console.log('end-error', number)
 
             return Promise.reject(err)
         })

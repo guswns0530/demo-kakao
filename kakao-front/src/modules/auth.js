@@ -11,8 +11,10 @@ export const LOGIN = 'auth/LOGIN'
 export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'auth/LOGIN_FAILURE'
 
-export const ACCESS_TOKEN = 'auth/SET_AUTH'
+export const SET_ACCESS_TOKEN = 'auth/SET_AUTH'
 export const LOGOUT = 'auth/LOGOUT'
+
+export const AUTH_POPUP = 'auth/POPUP'
 
 export const register = createAction(REGISTER, ({email, password}) => ({
     email, password
@@ -21,7 +23,9 @@ export const login = createAction(LOGIN, ({email, password}) => ({
     email, password
 }))
 export const logout = createAction(LOGOUT)
-export const accessToken = createAction(ACCESS_TOKEN, (access_token) => (access_token))
+export const setAccessToken = createAction(SET_ACCESS_TOKEN, (access_token) => (access_token))
+
+export const setPopup = createAction(AUTH_POPUP, (popup) => (popup))
 
 const registerSaga = createRequestSaga(REGISTER, authAPI.register, (data) => {
 
@@ -35,7 +39,8 @@ export function* authSaga() {
 
 const initialState = {
     auth: null,
-    authError: null
+    authError: null,
+    authPopup: null
 }
 
 const auth = handleActions({
@@ -49,13 +54,18 @@ const auth = handleActions({
         ...state, authError: error
     }), [LOGOUT]: () => ({
         ...initialState
-    }), [ACCESS_TOKEN]: (state, {payload: access_token}) => ({
+    }), [SET_ACCESS_TOKEN]: (state, {payload: access_token}) => ({
         ...state,
         auth: {
             access_token,
             token_type: "Bearer"
         }
-    })
+    }), [AUTH_POPUP]: (state, {payload: popup}) => {
+        return {
+            ...state,
+            authPopup: popup
+        }
+    }
 }, initialState,);
 
 export default auth;
