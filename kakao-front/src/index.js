@@ -19,6 +19,7 @@ import {syncConfig} from "./modules/index";
 import {createStateSyncMiddleware, initMessageListener} from "redux-state-sync/dist/syncState";
 import {persistStore} from "redux-persist";
 import {PersistGate} from "redux-persist/integration/react";
+import setUpInterceptors from "./services/setUpInterceptors";
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -38,5 +39,7 @@ root.render(<React.StrictMode>
         </PersistGate>
     </Provider>
 </React.StrictMode>,);
+
+setUpInterceptors(store)
 
 reportWebVitals();

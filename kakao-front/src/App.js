@@ -6,21 +6,7 @@ import RequestEndPage from "./pages/RequestEndPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Oauth2RedirectHandler from "./pages/Oauth2RedirectHandler";
 
-//init
-import {setAuthorization} from "./lib/api/client";
-import {useSelector} from "react-redux";
-
-
 function App() {
-    //init
-    const {auth} = useSelector(({auth}) => ({
-        auth: auth.auth
-    }))
-
-    if(auth) {
-        setAuthorization(auth)
-    }
-
     return (
         <>
             <Routes>

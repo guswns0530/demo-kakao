@@ -3,20 +3,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {LOGIN, login } from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginForm from "../../component/auth/AuthLoginForm";
-import {check} from '../../modules/user'
 import { useNavigate } from "react-router-dom";
 import {OAUTH2_REDIRECT_URI} from "../../constants";
+import {check, CHECK} from "../../modules/user";
 
 
 const LoginForm = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { form, auth, authError, user, authLoading } = useSelector(( {auth, user, loading, form}) => ({
+    const { form, auth, authError, user, authLoading, userLoading } = useSelector(( {auth, user, loading, form}) => ({
         form: form.login,
         auth: auth.auth,
         authError: auth.authError,
         user: user.user,
-        authLoading: loading[LOGIN]
+        authLoading: loading[LOGIN],
+        userLoading: loading[CHECK]
     }))
     // redux로 관리해야함
     const [popup, setPopup] = useState(null);
@@ -65,8 +66,17 @@ const LoginForm = () => {
 
         const opener = window.open(`http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${OAUTH2_REDIRECT_URI}`, 'Popup', "resizable=0, status=0,toolbar=0, width=400, height=600")
         setPopup(opener)
+
+        const interval = setInterval(() => {
+            if(opener.closed) {
+                setPopup(null)
+                clearInterval(interval)
+            }
+        }, 300)
+
     }
 
+    // form 초기화
     useEffect(() => {
         dispatch(initializeForm('login'))
     }, [dispatch, auth, user])
@@ -76,7 +86,7 @@ const LoginForm = () => {
             setErrorMsg(authError)
             return
         }
-        if(auth) {
+        if(auth && !userLoading) {
             dispatch(check())
         }
     }, [auth, authError, dispatch])

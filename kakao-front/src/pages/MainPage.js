@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {logout} from "../modules/auth";
+import {initializeUser} from "../modules/user";
 
 const MainPage = () => {
     const dispatch = useDispatch()
@@ -12,6 +13,7 @@ const MainPage = () => {
         <Link to={"/register"}><button>회원가입</button></Link>
         <button onClick={() => {
             dispatch(logout())
+            dispatch(initializeUser())
         }}>로그아웃</button>
     </>)
 }
