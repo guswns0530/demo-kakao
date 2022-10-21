@@ -4,12 +4,12 @@ import createRequestSaga from "../services/createRequestSaga";
 import * as userApi from '../lib/api/user'
 
 export const CHECK = 'user/CHECK'
-const CHECK_SUCCESS = 'user/CHECK_SUCCESS'
-const CHECK_FAILURE = 'user/CHECK_FAILURE'
+export const CHECK_SUCCESS = 'user/CHECK_SUCCESS'
+export const CHECK_FAILURE = 'user/CHECK_FAILURE'
 
 const INITIALIZE_USER = 'user/INITIALIZE_USER'
 
-export const check = createAction(CHECK)
+export const check = createAction(CHECK, (payload) => payload)
 export const initializeUser = createAction(INITIALIZE_USER)
 
 const checkSaga = createRequestSaga(CHECK, userApi.selectMe)

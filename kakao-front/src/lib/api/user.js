@@ -1,6 +1,13 @@
 import client from "./client";
 
-export const selectMe = () => {
+export const selectMe = (token) => {
+    if(token) {
+        return client.get('/users', {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        })
+    }
     return client.get('/users')
 }
 

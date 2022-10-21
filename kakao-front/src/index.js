@@ -20,6 +20,7 @@ import {createStateSyncMiddleware, initMessageListener} from "redux-state-sync/d
 import {persistStore} from "redux-persist";
 import {PersistGate} from "redux-persist/integration/react";
 import setUpInterceptors from "./services/setUpInterceptors";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -32,14 +33,13 @@ const persist = persistStore(store)
 
 root.render(<React.StrictMode>
     <Provider store={store}>
-        <PersistGate loading={null} persistor={persist}>
-            <BrowserRouter>
+        <BrowserRouter>
+            <PersistGate loading={<NotFoundPage/>} persistor={persist}>
                 <App/>
-            </BrowserRouter>
-        </PersistGate>
+            </PersistGate>
+        </BrowserRouter>
     </Provider>
 </React.StrictMode>,);
 
 setUpInterceptors(store)
-
 reportWebVitals();

@@ -17,8 +17,10 @@ const setup = (store) => {
             const token = state.auth.auth.access_token
 
             if (token) {
-                const accessToken = "Bearer " + token;
-                config.headers["Authorization"] = accessToken
+                if(!config.headers["Authorization"]) {
+                    const accessToken = "Bearer " + token;
+                    config.headers["Authorization"] = accessToken
+                }
             }
 
             return config;

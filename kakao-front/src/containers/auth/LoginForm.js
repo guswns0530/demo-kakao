@@ -1,27 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {LOGIN, login, setPopup} from "../../modules/auth";
+import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginForm from "../../component/auth/AuthLoginForm";
 import { useNavigate } from "react-router-dom";
 import {OAUTH2_REDIRECT_URI} from "../../constants";
-import {check, CHECK} from "../../modules/user";
-
+import {check} from "../../modules/user";
 
 const LoginForm = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { form, auth, authError, user, authLoading, userLoading, authPopup } = useSelector(( {auth, user, loading, form}) => ({
+    const { form, auth, authError, user, authLoading, authPopup } = useSelector(( {auth, user, loading, form}) => ({
         form: form.login,
         auth: auth.auth,
         authError: auth.authError,
         user: user.user,
         authLoading: loading[LOGIN],
-        userLoading: loading[CHECK],
         authPopup: auth.authPopup
     }))
-
-    const [error, setErrorMsg] = useState('')
 
     const onChange = e => {
         const { value, name } = e.target
@@ -39,18 +35,30 @@ const LoginForm = () => {
         const { email, password } = form;
         if(email.trim() === '') {
             const errorMsg = "계정을 입력해주세요"
-            setErrorMsg((errorMsg))
+            dispatch({
+                type: LOGIN_FAILURE,
+                payload: errorMsg,
+                error: true
+            })
             return
         }
         /* eslint-disable */
         if(!email.match(/^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/)) {
             const errorMsg = "이메일 형식이 맞지않습니다. 다시 입력해주세요"
-            setErrorMsg(errorMsg)
+            dispatch({
+                type: LOGIN_FAILURE,
+                payload: errorMsg,
+                error: true
+            })
             return
         }
         if(password.trim() === '') {
             const errorMsg = "비밀번호를 입력해주세요"
-            setErrorMsg(errorMsg)
+            dispatch({
+                type: LOGIN_FAILURE,
+                payload: errorMsg,
+                error: true
+            })
             return
         }
 
@@ -81,11 +89,9 @@ const LoginForm = () => {
 
     useEffect(() => {
         if(authError) {
-            setErrorMsg(authError)
             return
-        }
-        if(auth && !userLoading) {
-            dispatch(check())
+        } else if (auth) {
+            dispatch(check(auth.access_token))
         }
     }, [auth, authError, dispatch])
 
@@ -109,7 +115,7 @@ const LoginForm = () => {
             form={form}
             onChange={onChange}
             onSubmit={onSubmit}
-            authError={error}
+            authError={authError}
             onClick={onClick}
             popup={authPopup}
             authLoading={authLoading}
