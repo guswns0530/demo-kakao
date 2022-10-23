@@ -1,4 +1,9 @@
-
+* {
+    font-family: 'Nanum Gothic', AppleSDGothicNeo-Regular, 'Malgun Gothic', '맑은 고딕', dotum, '돋움', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 #root:not(:empty) ~ #loading {
     display: none;
