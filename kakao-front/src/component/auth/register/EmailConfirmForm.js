@@ -11,7 +11,7 @@ const EmailConfirmForm = ({onChange, form, onClick, verify, emailInput, onSubmit
         <form onSubmit={onSubmit}>
             <div className={style.box}>
                 <div className={style.input}>
-                    <input className={(form.email.error && style.error)} type="text" placeholder="이메일 주소 입력" name="email" onChange={onChange} value={form.email.value} style={{paddingRight: '80px'}}  ref={emailInput} disabled={verify}/>
+                    <input className={(form.email.error && style.error)} type="text" placeholder="이메일 주소 입력" name="email" onChange={onChange} value={form.email.value} style={{paddingRight: '80px'}}  ref={emailInput} disabled={verify || loading}/>
                     {!verify &&
                         <button className={style.input_box_btn} onClick={onClick} disabled={loading}>인증요청</button>
                     }
