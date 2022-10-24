@@ -3,6 +3,8 @@ package com.oauth2.sample;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oauth2.sample.domain.chat.request.SelectChatListRequest;
+import com.oauth2.sample.domain.email.dto.EmailConfirmToken;
+import com.oauth2.sample.domain.email.service.EmailConfirmService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +18,9 @@ import java.util.*;
 class SampleApplicationTests {
 	@Autowired
 	public AuthenticationManager authenticationManager;
+
+	@Autowired
+	public EmailConfirmService emailConfirmService;
 
 	@Autowired
 	public PasswordEncoder passwordEncoder;
@@ -43,4 +48,9 @@ class SampleApplicationTests {
 		System.out.println("SelectChatListRequest.SelectType.LOAD.name() = " + SelectChatListRequest.SelectType.LOAD.name());
     }
 
+	@Test
+	void send() {
+//		EmailConfirmToken emailConfirmToken = emailConfirmService.createEmailConfirmToken("wooae1234@gmail.com");
+
+	}
 }

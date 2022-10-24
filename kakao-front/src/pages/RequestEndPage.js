@@ -6,7 +6,7 @@ import style from '../css/RequestEndPage.module.css'
 
 const RequestEndPage = () => {
     return (<>
-        <header>
+        <header className={style.title}>
             <Link to={"/"}>
                 <object data={kakaoLogo} alt="KAKAO_LOGO">
                     <img alt={"kakaoLogo"} src={kakaoLogo}></img>

@@ -4,9 +4,11 @@ import com.oauth2.sample.domain.auth.response.AuthResponse;
 import com.oauth2.sample.domain.auth.request.LoginRequest;
 import com.oauth2.sample.domain.auth.request.SignUpRequest;
 import com.oauth2.sample.domain.auth.service.AuthService;
+import com.oauth2.sample.domain.email.service.EmailConfirmService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.dto.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,8 +16,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -24,6 +28,7 @@ import java.net.URI;
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthService authService;
+    private final EmailConfirmService emailConfirmService;
 
     // 토큰 재발급
     @PostMapping("/refresh")
@@ -57,8 +62,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        User user = authService.registerUser(signUpRequest);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest, HttpSession session) {
+        User user = authService.registerUser(signUpRequest, session);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/user")
@@ -70,5 +75,29 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.created(location).body(response);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getEmailConfirmToken(@PathVariable String email, HttpSession session) {
+        emailConfirmService.createEmailConfirmToken(email, session);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(true)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @PostMapping("/email-confirm")
+    public ResponseEntity<?> checkEmailConfirmToken(@RequestBody String confirmToken, HttpSession session) {
+        emailConfirmService.checkEmailConfirmToken(confirmToken, session);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(true)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 }

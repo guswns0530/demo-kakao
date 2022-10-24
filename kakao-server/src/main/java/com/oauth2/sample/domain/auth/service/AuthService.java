@@ -2,6 +2,7 @@ package com.oauth2.sample.domain.auth.service;
 
 import com.oauth2.sample.domain.auth.request.LoginRequest;
 import com.oauth2.sample.domain.auth.request.SignUpRequest;
+import com.oauth2.sample.domain.email.dto.EmailConfirmToken;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Service
@@ -78,18 +80,26 @@ public class AuthService {
         return token;
     }
 
-    public User registerUser(SignUpRequest signUpRequest) {
-        if(userRepository.existByEmail(signUpRequest.getEmail())) {
-            throw new BadRequestException("이미 사용중인 이메일입니다.");
+    public User registerUser(SignUpRequest signUpRequest, HttpSession session) {
+        Object object = session.getAttribute(EmailConfirmToken.EMAIL_TOKEN_SESSION_KEY);
+        if(object == null) {
+            throw new BadRequestException("잘못된 접근입니다.");
         }
-
+        EmailConfirmToken emailConfirmToken = (EmailConfirmToken) object;
+        
+        if(!emailConfirmToken.isCheck()) {
+            throw new BadRequestException("이메일 인증이 미완료 상태입니다.");
+        }
+        
         User result = userRepository.save(User.builder()
                 .name(signUpRequest.getName())
-                .email(signUpRequest.getEmail())
+                .email(emailConfirmToken.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
                 .build()
         );
+
+        session.removeAttribute(EmailConfirmToken.EMAIL_TOKEN_SESSION_KEY);
 
         return result;
     }

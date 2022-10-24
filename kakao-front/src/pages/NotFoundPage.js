@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 const NotFoundPage = () => {
     return (
         <>
-            <header>
+            <header className={style.title}>
                 <Link to={"/"}>
                     <object data={kakaoLogo} alt="KAKAO_LOGO">
                         <img alt={"kakaoLogo"} src={kakaoLogo}></img>

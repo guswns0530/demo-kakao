@@ -1,7 +1,7 @@
 * {
 }
 
-header {
+.title {
     background-color: #fff;
     margin: 0 auto;
     max-width: 1200px;
@@ -9,11 +9,11 @@ header {
     z-index: 5;
 }
 
-header img {
+.title img {
     width: 90px;
 }
 
-header object {
+.title object {
     width: 90px;
 }
 

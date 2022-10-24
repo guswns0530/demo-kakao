@@ -10,10 +10,6 @@ import javax.validation.constraints.*;
 public class SignUpRequest {
 
     @NotBlank
-    @Email
-    private String email;
-
-    @NotBlank
     @Size(min = 1, max = 20)
     private String name;
 
