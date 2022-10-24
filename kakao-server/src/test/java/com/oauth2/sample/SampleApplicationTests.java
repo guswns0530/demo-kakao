@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 @SpringBootTest
 class SampleApplicationTests {
@@ -51,6 +52,10 @@ class SampleApplicationTests {
 	@Test
 	void send() {
 //		EmailConfirmToken emailConfirmToken = emailConfirmService.createEmailConfirmToken("wooae1234@gmail.com");
+
+		boolean matches = Pattern.matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", "wooae1234@gmail.com");
+
+		System.out.println("matches = " + matches);
 
 	}
 }

@@ -54,6 +54,7 @@ a {
 }
 
 .navigation_bar {
+  transition: 0.3s;
   width: 33%;
   height: 100%;
   background-color: #4c4c4c;
@@ -128,6 +129,11 @@ form header {
   height: 40px;
 }
 
+.box input:disabled {
+  background-color: #fff !important;
+  color: #8e8e8e !important;
+}
+
 .box input:focus {
   border-bottom: 2px solid #000;
 }
@@ -144,7 +150,7 @@ form header {
 
 .input_box_btn {
   width: 72px;
-  height: 68%;
+  height: 28px;
   position: absolute;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -154,8 +160,7 @@ form header {
   right: 0;
 
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
 }
 
 .account_info {

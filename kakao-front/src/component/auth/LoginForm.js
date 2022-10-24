@@ -1,7 +1,7 @@
 import React from "react";
 import style from '../../css/LoginPage.module.css'
 
-const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup, authLoading}) => {
+const LoginForm = ({form, onSubmit, onChange, authError, onClick, popup, authLoading}) => {
     return (
         <>
             {popup ?
@@ -20,7 +20,7 @@ const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup, aut
                             id="lp_id"
                             placeholder="아이디"
                             onChange={onChange}
-                            value={form.email}
+                            value={form.email.value}
                         />
                         <input
                             type="password"
@@ -28,7 +28,7 @@ const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup, aut
                             id="lp_pwd"
                             placeholder="비밀번호"
                             onChange={onChange}
-                            value={form.password}
+                            value={form.password.value}
                         />
                     </div>
                     {authError &&
@@ -49,4 +49,4 @@ const AuthLoginForm = ({form, onSubmit, onChange, authError, onClick, popup, aut
     )
 }
 
-export default AuthLoginForm
+export default LoginForm

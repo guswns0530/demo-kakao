@@ -19,7 +19,7 @@ public class EmailConfirmService {
     private final UserRepository userRepository;
 
     public void createEmailConfirmToken(String email, HttpSession session) {
-        if(!(StringUtils.hasText(email) && Pattern.matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", email))) {
+        if(!(StringUtils.hasText(email) || !Pattern.matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", email))) {
             throw new BadRequestException("이메일 형식이 맞지 않습니다.");
         }
 

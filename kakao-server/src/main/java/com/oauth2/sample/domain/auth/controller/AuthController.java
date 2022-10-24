@@ -33,6 +33,7 @@ public class AuthController {
     // 토큰 재발급
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody String oldAccessToken) {
+        oldAccessToken = oldAccessToken.substring(0, oldAccessToken.length() - 1);
         if(StringUtils.hasText(oldAccessToken) && oldAccessToken.startsWith("Bearer ")) {
             oldAccessToken = oldAccessToken.substring(7);
         }
@@ -91,6 +92,7 @@ public class AuthController {
 
     @PostMapping("/email-confirm")
     public ResponseEntity<?> checkEmailConfirmToken(@RequestBody String confirmToken, HttpSession session) {
+        confirmToken = confirmToken.substring(0, confirmToken.length() - 1);
         emailConfirmService.checkEmailConfirmToken(confirmToken, session);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()

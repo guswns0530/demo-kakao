@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
 import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
-import AuthLoginForm from "../../component/auth/AuthLoginForm";
+import AuthLoginform from "../../component/auth/LoginForm";
 import { useNavigate } from "react-router-dom";
 import {OAUTH2_REDIRECT_URI} from "../../constants";
 import {check} from "../../modules/user";
@@ -32,7 +32,7 @@ const LoginForm = () => {
 
     const onSubmit = e => {
         e.preventDefault()
-        const { email, password } = form;
+        const { email: {value: email}, password: {value: password} } = form;
         if(email.trim() === '') {
             const errorMsg = "계정을 입력해주세요"
             dispatch({
@@ -111,7 +111,7 @@ const LoginForm = () => {
     }, [dispatch, authPopup])
 
     return (
-        <AuthLoginForm
+        <AuthLoginform
             form={form}
             onChange={onChange}
             onSubmit={onSubmit}
