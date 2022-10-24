@@ -33,7 +33,8 @@ const EmailConfirmForm = ({onChange, form, currentPage, setCurrentPage}) => {
         }
         setLoading(true)
         const email = form.email.value
-        
+        emailInput.current.value = email + ""
+
         if(email.trim() === '') {
             const error = "이메일을 입력해주세요."
             dispatch(setFieldError({form: "register", key: "email", error}))
@@ -55,7 +56,6 @@ const EmailConfirmForm = ({onChange, form, currentPage, setCurrentPage}) => {
             const response = await getEmailVerify(email)
 
             setVerify(true)
-            emailInput.current.value = email + " "
         } catch (err) {
             const {error_description } = err.response.data
             dispatch(setFieldError({form: "register", key: "email", error: error_description}))

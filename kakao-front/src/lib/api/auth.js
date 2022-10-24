@@ -9,7 +9,7 @@ export const register = ({ email, password, name}) => {
 }
 
 export const getEmailVerify = (email) => {
-    return client.get('/auth/'+email)
+    return client.post('/auth/email-verify', email)
 }
 
 export const checkEmailVerify = (verifyCode) => {

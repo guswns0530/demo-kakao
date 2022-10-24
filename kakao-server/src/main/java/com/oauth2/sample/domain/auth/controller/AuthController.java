@@ -78,8 +78,9 @@ public class AuthController {
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<?> getEmailConfirmToken(@PathVariable String email, HttpSession session) {
+    @PostMapping("/email-verify")
+    public ResponseEntity<?> getEmailConfirmToken(@RequestBody String email, HttpSession session) {
+        email = email.substring(0, email.length() - 1);
         emailConfirmService.createEmailConfirmToken(email, session);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
