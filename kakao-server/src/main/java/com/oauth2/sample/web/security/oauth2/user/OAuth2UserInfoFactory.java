@@ -10,7 +10,6 @@ public class OAuth2UserInfoFactory {
         if(registrationId.equalsIgnoreCase(AuthProvider.kakao.name())) {
             return new KakaoOAuth2UserInfo(attributes);
         } else {
-            throw new OAuth2AuthenticationProcessingException(registrationId + " 로그인은 지원하지 않습니다.");
-        }
+            throw new OAuth2AuthenticationProcessingException(registrationId + " 로그인은 지원하지 않습니다.");        }
     }
 }
