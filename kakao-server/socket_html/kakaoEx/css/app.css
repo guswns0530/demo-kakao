@@ -24,20 +24,17 @@ a {
   width: 100%;
   height: 100%;
   vertical-align: middle;
+
   text-align: center;
 }
 
 /* section */
-#register_popup {
+section#register_popup {
   display: inline-block;
   width: 570px;
 }
 
-.register_wrap {
-  text-align: start;
-}
-
-.register_wrap > .form {
+#register_popup > .form {
   margin-top: 50px;
   padding: 70px 70px 50px 70px;
   border-radius: 5px;
@@ -68,18 +65,9 @@ a {
 }
 
 .navigation_bar {
-  transition: 0.3s;
   width: 33%;
   height: 100%;
   background-color: #4c4c4c;
-}
-
-.navigation_bar[data-idx='1'] {
-  width: 66%;
-}
-
-.navigation_bar[data-idx='2'] {
-  width: 100%;
 }
 
 .btn {
@@ -151,11 +139,6 @@ form header {
   height: 40px;
 }
 
-.box input:disabled {
-  background-color: #fff !important;
-  color: #8e8e8e !important;
-}
-
 .box input:focus {
   border-bottom: 2px solid #000;
 }
@@ -172,7 +155,7 @@ form header {
 
 .input_box_btn {
   width: 72px;
-  height: 28px;
+  height: 68%;
   position: absolute;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -182,7 +165,8 @@ form header {
   right: 0;
 
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .account_info {
@@ -196,26 +180,4 @@ form header {
   font-size: 16px;
   margin-top: 10px;
   font-weight: 900;
-}
-
-.cng {
-  font-size: 30px;
-  text-align: center;
-  margin-top: -20px;
-}
-
-
-.account_text {
-  margin-top: 40px;
-  font-size: 16px;
-  line-height: 24px;
-  color: #191919;
-  text-align: center;
-
-  margin-bottom: -25px;
-}
-
-.account_text .bold {
-  display: inline-block;
-  font-weight: bold;
 }
