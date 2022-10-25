@@ -60,6 +60,14 @@ a {
   background-color: #4c4c4c;
 }
 
+.navigation_bar[data-idx='1'] {
+  width: 66%;
+}
+
+.navigation_bar[data-idx='2'] {
+  width: 100%;
+}
+
 .btn {
   margin-top: 70px;
 
@@ -174,4 +182,26 @@ form header {
   font-size: 16px;
   margin-top: 10px;
   font-weight: 900;
+}
+
+.cng {
+  font-size: 30px;
+  text-align: center;
+  margin-top: -20px;
+}
+
+
+.account_text {
+  margin-top: 40px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #191919;
+  text-align: center;
+
+  margin-bottom: -25px;
+}
+
+.account_text .bold {
+  display: inline-block;
+  font-weight: bold;
 }

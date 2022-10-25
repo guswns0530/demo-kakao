@@ -58,8 +58,9 @@ public class ControllerAdvice {
         );
     }
 
-    @ExceptionHandler({MailSendException.class, SMTPSendFailedException.class})
+    @ExceptionHandler({MailSendException.class})
     public ResponseEntity SMTPSendFailedException(MailSendException exception) {
+        exception.printStackTrace();
 
         String errorMsg = "메일을 처리중에 오류가 발생하였습니다.";
 

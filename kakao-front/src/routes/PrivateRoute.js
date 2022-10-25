@@ -1,37 +1,24 @@
 import {Navigate} from 'react-router-dom'
-import {useSelector, useDispatch} from "react-redux";
-import {check} from "../modules/user";
-import {useEffect} from "react";
+import { useSelector} from "react-redux";
 
 const PrivateRoute = ({children, isLogin}) => {
-    const dispatch = useDispatch()
-    const {auth, user, checkError} = useSelector(({auth, user}) => ({
-        auth: auth.auth,
+    const {user, checkError} = useSelector(({auth, user}) => ({
         user: user.user,
         checkError: user.checkError
     }))
 
-
-
-    // useEffect(() => {
-    //     if (!user) {
-    //         dispatch(check())
-    //     }
-    // })
-    //
-    // useEffect(() => {
-    //     if (checkError) {
-    //         console.log(checkError)
-    //
-    //         return <Navigate to={"/login"}/>
-    //     }
-    // }, [dispatch, user, checkError])
-
     if(isLogin) {
+        if(user) {
+            return children
+        }
+    } else {
+        if(user) {
+            return <Navigate to={"/"} />
+        }
         return children
     }
 
-    return children
+    return <Navigate to={"/login"}/>
 }
 
 export default PrivateRoute

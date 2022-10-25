@@ -1,14 +1,9 @@
 import {createAction, handleActions} from 'redux-actions';
 import {takeLatest} from 'redux-saga/effects'
-import createRequestSaga from "../services/createRequestSaga";
 import * as authAPI from '../lib/api/auth'
 import {put, select, take, call} from 'redux-saga/effects'
 import {finishLoading, startLoading} from "./loading";
 import {check, CHECK_FAILURE, CHECK_SUCCESS} from "./user";
-
-export const REGISTER = 'auth/REGISTER'
-export const REGISTER_SUCCESS = 'auth/REGISTER_SUCCESS'
-export const REGISTER_FAILURE = 'auth/REGISTER_FAILURE'
 
 export const LOGIN = 'auth/LOGIN'
 export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
@@ -19,11 +14,9 @@ export const SET_ACCESS_TOKEN_SUCCESS = 'auth/SET_AUTH_SUCCESS'
 export const SET_ACCESS_TOKEN_FAILURE = 'auth/SET_AUTH_FAILURE'
 export const LOGOUT = 'auth/LOGOUT'
 
+export const SET_REDIRECT_URI = 'auth/SET_REDIRECT_URI'
 export const AUTH_POPUP = 'auth/POPUP'
 
-export const register = createAction(REGISTER, ({email, password}) => ({
-    email, password
-}))
 export const login = createAction(LOGIN, ({email, password}) => ({
     email, password
 }))
@@ -31,9 +24,6 @@ export const logout = createAction(LOGOUT)
 export const setAccessToken = createAction(SET_ACCESS_TOKEN, (access_token) => (access_token))
 export const setPopup = createAction(AUTH_POPUP, (popup) => (popup))
 
-const registerSaga = createRequestSaga(REGISTER, authAPI.register, (data) => {
-
-})
 const loginSaga = function* ({type, payload}){
     yield put(startLoading(type))
 
@@ -84,7 +74,6 @@ const setAccessTokenSaga = function* ({type, payload}) {
 }
 
 export function* authSaga() {
-    yield takeLatest(REGISTER, registerSaga)
     yield takeLatest(LOGIN, loginSaga)
     yield takeLatest(SET_ACCESS_TOKEN, setAccessTokenSaga)
 }
@@ -93,14 +82,11 @@ const initialState = {
     auth: null,
     authError: null,
     authPopup: null,
+    redirectURI: null
 }
 
 const auth = handleActions({
-    [REGISTER_SUCCESS]: (state, {payload: auth}) => ({
-        ...state, authError: null, auth
-    }), [REGISTER_FAILURE]: (state, {payload: error}) => ({
-        ...state, authError: error
-    }), [LOGIN_SUCCESS]: (state, {payload: auth}) => ({
+    [LOGIN_SUCCESS]: (state, {payload: auth}) => ({
         ...state, authError: null, auth
     }), [LOGIN_FAILURE]: (state, {payload: error}) => ({
         ...state, authError: error
@@ -126,7 +112,10 @@ const auth = handleActions({
             auth: null,
             authError: error
         }
-    }
+    }, [SET_REDIRECT_URI]: (state, {payload: redirectURI}) => ({
+        ...state,
+        redirectURI
+    })
 }, initialState);
 
 export default auth;

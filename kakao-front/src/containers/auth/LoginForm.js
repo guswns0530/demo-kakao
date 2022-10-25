@@ -3,20 +3,21 @@ import {useDispatch, useSelector} from "react-redux";
 import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginform from "../../component/auth/LoginForm";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {OAUTH2_REDIRECT_URI} from "../../constants";
 import {check} from "../../modules/user";
 
 const LoginForm = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { form, auth, authError, user, authLoading, authPopup } = useSelector(( {auth, user, loading, form}) => ({
+    const { form, auth, authError, user, authLoading, authPopup, redirectURI } = useSelector(( {auth, user, loading, form}) => ({
         form: form.login,
         auth: auth.auth,
         authError: auth.authError,
         user: user.user,
         authLoading: loading[LOGIN],
-        authPopup: auth.authPopup
+        authPopup: auth.authPopup,
+        redirectURI: auth.redirectURI
     }))
 
     const onChange = e => {
@@ -97,6 +98,10 @@ const LoginForm = () => {
 
     useEffect(() => {
         if(auth && user) {
+            if(redirectURI) {
+                navigate(redirectURI);
+                return
+            }
             navigate('/');
         }
     }, [navigate, auth, user])

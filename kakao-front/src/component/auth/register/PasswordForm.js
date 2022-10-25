@@ -1,7 +1,7 @@
 import React from "react";
 import style from "../../../css/RegisterPage.module.css";
 
-const PasswordForm = ({onChange, form}) => {
+const PasswordForm = ({onChange, form, onSubmit,btnStatus}) => {
     return (<>
         <div className={style.title}>
             카카오계정 로그인에 사용할<br/>
@@ -10,11 +10,11 @@ const PasswordForm = ({onChange, form}) => {
 
         <div className={style.account_info}>
             <header>카카오계정</header>
-            <div>wooae1234@gmail.com</div>
+            <div>{form.email.value}</div>
         </div>
 
 
-        <form>
+        <form onSubmit={onSubmit}>
             <header>비밀번호</header>
             <div className={style.box}>
                 <div className={style.input}>
@@ -32,7 +32,7 @@ const PasswordForm = ({onChange, form}) => {
                     <p>{form.passwordConfirm.error}</p>
                 }
             </div>
-            <button className={style.btn}>
+            <button className={`${style.btn} ${btnStatus && style.able}`}>
                 다음
             </button>
         </form>

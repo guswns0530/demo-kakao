@@ -22,6 +22,7 @@ import {PersistGate} from "redux-persist/integration/react";
 import setUpInterceptors from "./services/setUpInterceptors";
 import NotFoundPage from "./pages/NotFoundPage";
 
+
 const sagaMiddleware = createSagaMiddleware()
 
 const store = legacy_createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(createStateSyncMiddleware(syncConfig), sagaMiddleware)))

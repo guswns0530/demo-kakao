@@ -1,13 +1,13 @@
 import React from "react";
 import style from "../../../css/RegisterPage.module.css";
 
-const ProfileForm = ({onChange, form}) => {
+const ProfileForm = ({onChange, form, btnStatus, onSubmit}) => {
     return (<>
         <div className={style.title}>
             카카오계정 프로필을<br/>
             설정해 주세요.
         </div>
-        <form>
+        <form onSubmit={onSubmit}>
             <header>닉네임</header>
             <div className={style.box}>
                 <div className={style.input}>
@@ -17,7 +17,7 @@ const ProfileForm = ({onChange, form}) => {
                     <p>{form.name.error}</p>
                 }
             </div>
-            <button className={style.btn}>
+            <button className={`${style.btn} ${btnStatus && style.able}`} disabled={!btnStatus}>
                 다음
             </button>
         </form>

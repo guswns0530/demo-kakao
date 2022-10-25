@@ -4,6 +4,8 @@ import logo from '../assets/logo.svg'
 import style from '../css/LoginPage.module.css'
 import LoginForm from "../containers/auth/LoginForm";
 
+
+
 const LoginPage = () => {
     return (
         <section id={style.login_popup}>

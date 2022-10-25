@@ -1,7 +1,7 @@
 * {
 }
 
-.title {
+.logo_title {
     background-color: #fff;
     margin: 0 auto;
     max-width: 1200px;
@@ -9,11 +9,11 @@
     z-index: 5;
 }
 
-.title img {
+.logo_title img {
     width: 90px;
 }
 
-.title object {
+.logo_title object {
     width: 90px;
 }
 

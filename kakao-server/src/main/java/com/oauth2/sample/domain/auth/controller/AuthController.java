@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,8 +33,8 @@ public class AuthController {
 
     // 토큰 재발급
     @PostMapping("/refresh")
-    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody String oldAccessToken) {
-        oldAccessToken = oldAccessToken.substring(0, oldAccessToken.length() - 1);
+    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
+        String oldAccessToken = map.get("oldAccessToken");
         if(StringUtils.hasText(oldAccessToken) && oldAccessToken.startsWith("Bearer ")) {
             oldAccessToken = oldAccessToken.substring(7);
         }
@@ -79,8 +80,9 @@ public class AuthController {
     }
 
     @PostMapping("/email-verify")
-    public ResponseEntity<?> getEmailConfirmToken(@RequestBody String email, HttpSession session) {
-        email = email.substring(0, email.length() - 1);
+    public ResponseEntity<?> getEmailConfirmToken(@RequestBody Map<String, String> map, HttpSession session) {
+        String email = map.get("email");
+
         emailConfirmService.createEmailConfirmToken(email, session);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()

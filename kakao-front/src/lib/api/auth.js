@@ -4,12 +4,12 @@ export const login = ({ email, password}) => {
     return client.post('/auth/login', {email, password})
 }
 
-export const register = ({ email, password, name}) => {
-    return client.post('/auth/login', {email, password, name})
+export const register = ({ password, name}) => {
+    return client.post('/auth/signup', {password, name})
 }
 
 export const getEmailVerify = (email) => {
-    return client.post('/auth/email-verify', email)
+    return client.post('/auth/email-verify', {email})
 }
 
 export const checkEmailVerify = (verifyCode) => {
@@ -17,5 +17,5 @@ export const checkEmailVerify = (verifyCode) => {
 }
 
 export const refreshToken = (jwtToken) => {
-    return client.post('/auth/refresh', jwtToken)
+    return client.post('/auth/refresh', {oldAccessToken: jwtToken})
 }

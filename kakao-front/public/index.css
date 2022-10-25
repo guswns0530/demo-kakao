@@ -5,16 +5,6 @@
     box-sizing: border-box;
 }
 
-#root:not(:empty) ~ #loading {
-    display: none;
-}
-
-#loading {
-    background-color: #f9f9f9;
-    width: 100vw;
-    height: 100vh;
-}
-
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #fff inset;
     -webkit-text-fill-color: #000;
@@ -27,3 +17,4 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
 *:disabled {
     cursor: default;
 }
+

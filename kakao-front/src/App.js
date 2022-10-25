@@ -1,4 +1,5 @@
 import {Route, Routes} from '../node_modules/react-router-dom/dist/index';
+import React from "react";
 import LoginPage from './pages/LoginPage';
 import RegisterPage from "./pages/RegisterPage";
 import MainPage from "./pages/MainPage";
@@ -6,21 +7,34 @@ import RequestEndPage from "./pages/RequestEndPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Oauth2RedirectHandler from "./pages/Oauth2RedirectHandler";
 import PrivateRoute from "./routes/PrivateRoute";
+// import {CSSTransition, TransitionGroup} from "react-transition-group";
+
+import './css/Transition.css'
+import {useLocation} from "react-router-dom";
+
 
 function App() {
+    const location = useLocation()
+
     return (
         <>
-            <Routes>
-                <Route path={'/'} element={
-                    <PrivateRoute>
+            {/*<TransitionGroup className="transition-group">*/}
+            {/*    <CSSTransition key={location.pathname} classNames="fade" timeout={1000}>*/}
+            <Routes location={location}>
+                <Route path={'/*'} element={
+                    <PrivateRoute isLogin={true}>
                         <MainPage/>
                     </PrivateRoute>
                 }/>
                 <Route path={'/login'} element={
-                    <LoginPage/>
+                    <PrivateRoute isLogin={false}>
+                        <LoginPage/>
+                    </PrivateRoute>
                 }/>
-                <Route path={'/register'} element={
-                    <RegisterPage/>
+                <Route path={'/register/*'} element={
+                    <PrivateRoute isLogin={false}>
+                        <RegisterPage/>
+                    </PrivateRoute>
                 }/>
                 <Route path={'/request-end'} element={
                     <RequestEndPage/>
@@ -32,6 +46,8 @@ function App() {
                     <NotFoundPage/>
                 }/>
             </Routes>
+            {/*    </CSSTransition>*/}
+            {/*</TransitionGroup>*/}
         </>
     );
 }
