@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import RegisterPasswordForm from "../../../component/auth/register/PasswordForm"
 import {useDispatch} from "react-redux";
 import {setFieldError} from "../../../modules/form";
+import {PROFILE_SETTING} from "../RegisterForm";
 
 const PasswordForm = ({onChange, form, currentPage, setCurrentPage}) => {
     const dispatch = useDispatch();
@@ -64,7 +65,7 @@ const PasswordForm = ({onChange, form, currentPage, setCurrentPage}) => {
             return
         }
 
-        setCurrentPage(currentPage + 1)
+        setCurrentPage(PROFILE_SETTING)
     }
 
     return (<>

@@ -50,14 +50,14 @@ a {
   justify-content: center;
 }
 
-.lp_logo > img {
-  width: 100%;
-  height: 100%;
-}
-.lp_logo > object {
+.lp_logo svg {
   width: 100px;
   height: 100%;
   background-size: cover;
+}
+
+.lp_logo svg{
+  cursor: pointer;
 }
 
 .navigation_wrap {

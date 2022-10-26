@@ -3,8 +3,9 @@ import RegisterEmailConfirmForm from "../../../component/auth/register/EmailConf
 import {useDispatch} from "react-redux";
 import {setFieldError} from "../../../modules/form";
 import {checkEmailVerify, getEmailVerify} from "../../../lib/api/auth";
+import {PASSWORD_CONFIRM} from "../RegisterForm";
 
-const EmailConfirmForm = ({onChange, form, currentPage, setCurrentPage}) => {
+const EmailConfirmForm = ({onChange, form, setCurrentPage}) => {
     const dispatch = useDispatch();
     const [verify, setVerify] = useState(false)
     const [btnStatus, setBtnStatus] = useState(false)
@@ -74,7 +75,7 @@ const EmailConfirmForm = ({onChange, form, currentPage, setCurrentPage}) => {
 
         try {
             await checkEmailVerify(verifyCode)
-            setCurrentPage(currentPage+1)
+            setCurrentPage(PASSWORD_CONFIRM)
         } catch(err) {
             const {error_description } = err.response.data
             dispatch(setFieldError({form: "register", key: "verifyCode", error: error_description}))

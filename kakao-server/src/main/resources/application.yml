@@ -13,6 +13,6 @@ spring:
       max-request-size: 30MB
 mybatis:
   type-handlers-package: "com.oauth2.sample.web.mybatis.handler"
-logging:
-  level:
-    com.oauth2.sample.web.mybatis: debug
+#logging:
+#  level:
+#    com.oauth2.sample.web.mybatis: debug

@@ -8,7 +8,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 import java.util.regex.Pattern;
 
@@ -35,6 +34,8 @@ public class EmailConfirmService {
         mailMessage.setSubject("회원가입 이메일 인증");
         mailMessage.setText(token.getId());
         emailSenderService.sendEmail(mailMessage);
+
+        System.out.println("token.getId() = " + token.getId());
 
         session.setAttribute(EmailConfirmToken.EMAIL_TOKEN_SESSION_KEY, token);
     }

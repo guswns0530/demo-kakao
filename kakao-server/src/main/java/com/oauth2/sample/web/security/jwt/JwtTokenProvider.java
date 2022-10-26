@@ -16,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -75,6 +76,8 @@ public class JwtTokenProvider {
 
         saveRefreshToken(authentication, refreshToken);
 
+        System.out.println("refreshToken = " + refreshToken);
+
         ResponseCookie cookie = ResponseCookie.from(appProperties.getAuth().getRefreshCookieKey(), refreshToken)
                 .httpOnly(true)
                 .secure(true)
@@ -82,8 +85,15 @@ public class JwtTokenProvider {
                 .maxAge(appProperties.getAuth().getRefreshTokenExpireLength()/1000)
                 .path("/")
                 .build();
-
         response.addHeader("Set-Cookie", cookie.toString());
+
+//        Cookie cookie = new Cookie(appProperties.getAuth().getRefreshCookieKey(), refreshToken);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        cookie.setMaxAge(Long.valueOf(appProperties.getAuth().getRefreshTokenExpireLength()/1000).intValue());
+////        cookie.setPath("/");
+//
+//        response.addCookie(cookie);
     }
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {

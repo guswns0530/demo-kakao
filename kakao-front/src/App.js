@@ -6,33 +6,34 @@ import MainPage from "./pages/MainPage";
 import RequestEndPage from "./pages/RequestEndPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Oauth2RedirectHandler from "./pages/Oauth2RedirectHandler";
-import PrivateRoute from "./routes/PrivateRoute";
-// import {CSSTransition, TransitionGroup} from "react-transition-group";
 
-import './css/Transition.css'
 import {useLocation} from "react-router-dom";
+import PrivateRoute from "./routes/PrivateRoute";
+import {useSelector} from "react-redux";
 
 
 function App() {
     const location = useLocation()
+    const {auth, user} = useSelector(({auth, user}) => ({
+        auth: auth.auth,
+        user: user.user
+    }))
 
     return (
         <>
-            {/*<TransitionGroup className="transition-group">*/}
-            {/*    <CSSTransition key={location.pathname} classNames="fade" timeout={1000}>*/}
             <Routes location={location}>
-                <Route path={'/*'} element={
-                    <PrivateRoute isLogin={true}>
+                <Route index element={
+                    <PrivateRoute isAllowed={auth && user} redirectPath={"/login"}>
                         <MainPage/>
                     </PrivateRoute>
                 }/>
                 <Route path={'/login'} element={
-                    <PrivateRoute isLogin={false}>
+                    <PrivateRoute isAllowed={!user} redirectPath={"/"}>
                         <LoginPage/>
                     </PrivateRoute>
                 }/>
-                <Route path={'/register/*'} element={
-                    <PrivateRoute isLogin={false}>
+                <Route path={'/register'} element={
+                    <PrivateRoute isAllowed={!user} redirectPath={"/"}>
                         <RegisterPage/>
                     </PrivateRoute>
                 }/>
@@ -40,14 +41,16 @@ function App() {
                     <RequestEndPage/>
                 }/>
                 <Route path={'/oauth2/redirect'} element={
-                    <Oauth2RedirectHandler/>
+                    <PrivateRoute isAllowed={true} redirectPath={"/"}>
+                        <Oauth2RedirectHandler/>
+                    </PrivateRoute>
                 }/>
                 <Route path={'*'} element={
-                    <NotFoundPage/>
+                    <PrivateRoute isAllowed={true} redirectPath={"/"}>
+                        <NotFoundPage/>
+                    </PrivateRoute>
                 }/>
             </Routes>
-            {/*    </CSSTransition>*/}
-            {/*</TransitionGroup>*/}
         </>
     );
 }

@@ -3,7 +3,7 @@ import {takeLatest} from 'redux-saga/effects'
 import * as authAPI from '../lib/api/auth'
 import {put, select, take, call} from 'redux-saga/effects'
 import {finishLoading, startLoading} from "./loading";
-import {check, CHECK_FAILURE, CHECK_SUCCESS} from "./user";
+import {check, CHECK_FAILURE, CHECK_SUCCESS, initializeUser} from "./user";
 
 export const LOGIN = 'auth/LOGIN'
 export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
@@ -20,7 +20,7 @@ export const AUTH_POPUP = 'auth/POPUP'
 export const login = createAction(LOGIN, ({email, password}) => ({
     email, password
 }))
-export const logout = createAction(LOGOUT)
+export const logout = createAction(LOGOUT, () => {})
 export const setAccessToken = createAction(SET_ACCESS_TOKEN, (access_token) => (access_token))
 export const setPopup = createAction(AUTH_POPUP, (popup) => (popup))
 
@@ -37,6 +37,8 @@ const loginSaga = function* ({type, payload}){
             type: LOGIN_SUCCESS,
             payload: data
         })
+
+        console.log(response)
     } catch (e) {
         if(e.response) {
             yield put({
@@ -46,6 +48,15 @@ const loginSaga = function* ({type, payload}){
             })
         }
     }
+
+    yield put(finishLoading(type))
+}
+const logoutSaga = function* ({type, payload}) {
+    yield put(startLoading(type))
+    // yield put({
+    //     type: LOGOUT
+    // })
+    yield put(initializeUser())
 
     yield put(finishLoading(type))
 }
@@ -76,6 +87,7 @@ const setAccessTokenSaga = function* ({type, payload}) {
 export function* authSaga() {
     yield takeLatest(LOGIN, loginSaga)
     yield takeLatest(SET_ACCESS_TOKEN, setAccessTokenSaga)
+    yield takeLatest(LOGOUT, logoutSaga)
 }
 
 const initialState = {

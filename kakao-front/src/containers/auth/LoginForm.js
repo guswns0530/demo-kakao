@@ -4,7 +4,7 @@ import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginform from "../../component/auth/LoginForm";
 import {useNavigate} from "react-router-dom";
-import {OAUTH2_REDIRECT_URI} from "../../constants";
+import {API_BASE_URL, OAUTH2_REDIRECT_URI} from "../../constants";
 import {check} from "../../modules/user";
 
 const LoginForm = () => {
@@ -72,7 +72,7 @@ const LoginForm = () => {
             return
         }
 
-        const opener = window.open(`http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${OAUTH2_REDIRECT_URI}`, 'Popup', "resizable=0, status=0,toolbar=0, width=400, height=600")
+        const opener = window.open(`${API_BASE_URL}/oauth2/authorization/kakao?redirect_uri=${OAUTH2_REDIRECT_URI}`, 'Popup', "resizable=0, status=0,toolbar=0, width=400, height=600")
         dispatch(setPopup(opener))
 
         const interval = setInterval(() => {

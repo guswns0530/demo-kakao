@@ -8,10 +8,12 @@ import ProfileForm from "./register/ProfileForm";
 import RegisterSuccess from "../../component/auth/register/RegisterSuccess";
 import RegisterFailure from "../../component/auth/register/RegisterFailure";
 
-// import {Routes, Route} from "react-router-dom"
-
+export const EMAIL_VERIFY = 0
+export const PASSWORD_CONFIRM = 1;
+export const PROFILE_SETTING = 2;
 export const SUCCESS_PAGE = 3
 export const FAILURE_PAGE = 4
+
 const RegisterForm = () => {
     const dispatch = useDispatch();
     const {form} = useSelector(({form}) => ({
@@ -59,33 +61,6 @@ const RegisterForm = () => {
     return <AuthRegisterForm
         currentPage={currentPage}
     >
-        {/*<Routes>*/}
-        {/*    <Route path={"/email-verify"} element={<EmailConfirmForm*/}
-        {/*        form={form}*/}
-        {/*        onChange={onChange}*/}
-        {/*        currentPage={currentPage}*/}
-        {/*        setCurrentPage={setCurrentPage}*/}
-        {/*    />}>*/}
-
-        {/*    </Route>*/}
-        {/*    <Route path={"/password-confirm"} element={<PasswordForm*/}
-        {/*        form={form}*/}
-        {/*        onChange={onChange}*/}
-        {/*        currentPage={currentPage}*/}
-        {/*        setCurrentPage={setCurrentPage}*/}
-        {/*    />}>*/}
-
-        {/*    </Route>*/}
-        {/*    <Route path={"/profile-setting"} element={<ProfileForm*/}
-        {/*        form={form}*/}
-        {/*        onChange={onChange}*/}
-        {/*        currentPage={currentPage}*/}
-        {/*        setCurrentPage={setCurrentPage}*/}
-        {/*    />}>*/}
-        {/*    </Route>*/}
-        {/*</Routes>*/}
-
-
         {Pages[currentPage]}
     </AuthRegisterForm>
 }

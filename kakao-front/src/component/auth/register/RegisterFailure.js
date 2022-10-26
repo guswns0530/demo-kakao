@@ -2,7 +2,7 @@ import React from "react";
 import style from "../../../css/RegisterPage.module.css"
 import {Link} from "react-router-dom";
 
-const RegisterFailure = ({form}) => {
+const RegisterFailure = () => {
     return <>
         <div className={`${style.title} ${style.cng}`}>
             환영합니다!
