@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oauth2.sample.domain.chat.request.SelectChatListRequest;
 import com.oauth2.sample.domain.email.dto.EmailConfirmToken;
 import com.oauth2.sample.domain.email.service.EmailConfirmService;
+import com.oauth2.sample.web.config.AppProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,9 @@ class SampleApplicationTests {
 
 	@Autowired
 	public PasswordEncoder passwordEncoder;
+
+	@Autowired
+	public AppProperties appProperties;
 
 	@Test
 	void contextLoads() {
@@ -51,11 +55,9 @@ class SampleApplicationTests {
 
 	@Test
 	void send() {
-//		EmailConfirmToken emailConfirmToken = emailConfirmService.createEmailConfirmToken("wooae1234@gmail.com");
+		String domain = appProperties.getCors().getDomain();
 
-		boolean matches = Pattern.matches("^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", "wooae1234@gmail.com");
-
-		System.out.println("matches = " + matches);
+		System.out.println("domain = " + domain);
 
 	}
 }

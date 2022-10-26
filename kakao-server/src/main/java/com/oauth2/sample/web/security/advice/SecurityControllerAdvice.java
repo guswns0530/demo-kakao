@@ -24,7 +24,6 @@ public class SecurityControllerAdvice {
 
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity authenticationExceptionHandle(AuthenticationException exception) {
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 getApiException(exception.getLocalizedMessage())
         );

@@ -25,8 +25,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity defaultExceptionHandler(Exception exception) {
-        exception.printStackTrace();
-
         return ResponseEntity.badRequest().body(
                 ApiException.builder()
                         .errorCode(HttpStatus.BAD_REQUEST)
@@ -60,8 +58,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler({MailSendException.class})
     public ResponseEntity SMTPSendFailedException(MailSendException exception) {
-        exception.printStackTrace();
-
         String errorMsg = "메일을 처리중에 오류가 발생하였습니다.";
 
 //        if(exception == 550) {

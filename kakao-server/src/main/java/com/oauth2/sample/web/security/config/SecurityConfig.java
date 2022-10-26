@@ -105,7 +105,6 @@ public class SecurityConfig {
 
         http.authenticationProvider(localeAuthenticationProvider);
 
-
         return http.build();
     }
 }

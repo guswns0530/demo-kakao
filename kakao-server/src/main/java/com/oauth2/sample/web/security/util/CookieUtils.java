@@ -1,5 +1,6 @@
 package com.oauth2.sample.web.security.util;
 
+import org.springframework.http.ResponseCookie;
 import org.springframework.util.SerializationUtils;
 
 import javax.servlet.http.Cookie;
@@ -14,33 +15,40 @@ public class CookieUtils {
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
-        if( cookies != null && cookies.length > 0) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals(name))
-                return Optional.of(cookie);
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(name))
+                    return Optional.of(cookie);
             }
         }
 
         return Optional.empty();
     }
 
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(maxAge);
-        response.addCookie(cookie);
+    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge, String domain) {
+        ResponseCookie cookie = ResponseCookie.from(name, value)
+                .httpOnly(true)
+                .maxAge(maxAge)
+                .path("/")
+                .domain(domain)
+                .sameSite("Lax")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name, String domain) {
         Cookie[] cookies = request.getCookies();
-        if(cookies != null && cookies.length > 0) {
-            for(Cookie cookie : cookies) {
-                if(cookie.getName().equals(name)) {
-                    cookie.setValue("");
-                    cookie.setPath("/");
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    ResponseCookie rcookie = ResponseCookie.from(name, "")
+                            .path("/")
+                            .sameSite("Lax")
+                            .domain(domain)
+                            .maxAge(0)
+                            .build();
+
+                    response.addHeader("Set-Cookie", rcookie.toString());
                 }
             }
         }

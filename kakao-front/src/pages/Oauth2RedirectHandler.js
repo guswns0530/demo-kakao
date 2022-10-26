@@ -21,15 +21,10 @@ const Oauth2RedirectHandler = () => {
     const error = query.get('error')
 
     useEffect(() => {
-        // if(auth) {
-        //     window.close();
-        //     return
-        // }
-
         if(token) {
             dispatch(setAccessToken(token))
             dispatch(setPopup(null))
-        } else {
+        } else if(error) {
             const { errorDescription } = JSON.parse(error)
 
             dispatch({
@@ -39,7 +34,7 @@ const Oauth2RedirectHandler = () => {
             })
         }
 
-        // window.close()
+        window.close()
     }, [dispatch, token, error, auth])
 
     return (

@@ -4,6 +4,7 @@ import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.dto.UserStatus;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
+import com.oauth2.sample.web.security.util.CookieUtils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     private final AppProperties appProperties;
     private final UserRepository userRepository;
+
     private String AUTHORITIES_KEY = "role";
 
     public String createAccessToken(Authentication authentication) {
@@ -78,22 +80,11 @@ public class JwtTokenProvider {
 
         System.out.println("refreshToken = " + refreshToken);
 
-        ResponseCookie cookie = ResponseCookie.from(appProperties.getAuth().getRefreshCookieKey(), refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Lax")
-                .maxAge(appProperties.getAuth().getRefreshTokenExpireLength()/1000)
-                .path("/")
-                .build();
-        response.addHeader("Set-Cookie", cookie.toString());
+        String name = appProperties.getAuth().getRefreshCookieKey();
+        Long maxAge = appProperties.getAuth().getRefreshTokenExpireLength() / 1000;
+        String domain = appProperties.getCors().getDomain();
 
-//        Cookie cookie = new Cookie(appProperties.getAuth().getRefreshCookieKey(), refreshToken);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-//        cookie.setMaxAge(Long.valueOf(appProperties.getAuth().getRefreshTokenExpireLength()/1000).intValue());
-////        cookie.setPath("/");
-//
-//        response.addCookie(cookie);
+        CookieUtils.addCookie(response, name, refreshToken, maxAge.intValue(), domain);
     }
 
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
