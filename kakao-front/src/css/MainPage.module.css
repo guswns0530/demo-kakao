@@ -50,7 +50,7 @@ li {
     width: 80px;
     height: 100%;
     position: fixed;
-    z-index: -1;
+    z-index: 1;
     background-color: #ddd;
 
     border-right: 1px solid #ccc;
@@ -198,9 +198,9 @@ li {
 }
 .profile .context > .msg {
     width: 100%;
-    margin-top: 3px;
+    margin-top: 4px;
     color: rgb(131, 128, 128);
-    font-size: 14px;
+    font-size: 13px;
     overflow: hidden;
 }
 

@@ -1,5 +1,6 @@
 package com.oauth2.sample.domain.user.service;
 
+import com.oauth2.sample.domain.file.service.FileService;
 import com.oauth2.sample.domain.friend.dto.Friend;
 import com.oauth2.sample.domain.friend.dto.FriendStatus;
 import com.oauth2.sample.domain.friend.repository.FriendRepository;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -20,6 +22,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
+
+    private final FileService fileService;
 
     public User selectUserToEmail(String email) {
         Optional<User> userOf = userRepository.findByEmail(email);
@@ -54,6 +58,9 @@ public class UserService {
         boolean result = false;
 
         try {
+            if(updateUserRequest.getFile() != null) {
+                fileService.upload(updateUserRequest.getFile());
+            }
             result = userRepository.updateUserToEmail(updateUserRequest);
         } catch (DuplicateKeyException ex) {
             throw new BadRequestException("이미 사용중인 아이디입니다.");

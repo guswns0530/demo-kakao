@@ -11,8 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 @Slf4j
 @RestController
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal user, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal user, @Valid UpdateUserRequest updateUserRequest) {
         User updateUser = userService.updateUserToEmail(user.getEmail(), updateUserRequest);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(

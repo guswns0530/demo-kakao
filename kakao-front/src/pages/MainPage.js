@@ -1,23 +1,27 @@
 import React from "react";
 import {useDispatch} from "react-redux";
+import {Route, Routes} from '../../node_modules/react-router-dom/dist/index';
 import {logout} from "../modules/auth";
 
 import style from '../css/MainPage.module.css'
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
+import Friend from "../component/app/Friend";
 
 const MainPage = () => {
     const dispatch = useDispatch()
+    const location = useLocation()
 
     return (<>
         <nav className={style.fixed_nav}>
             <ul className={style.main_nav}>
                 <li>
-                    <Link className={style.select}>
+                    <Link className={location.pathname === '/app' ? style.select : ''} to={"/app"}>
+
                         <i className="material-icons" id="nav_1">person</i>
                     </Link>
                 </li>
                 <li>
-                    <Link>
+                    <Link className={location.pathname === '/app/chatting' ? style.select : ''} to={"/app/chatting"}>
                         <i className="material-icons" id="nav_2"
                         >chat_bubble
                             <div className={style.alert}>1</div>
@@ -28,13 +32,17 @@ const MainPage = () => {
 
             <ul className={style.sub_nav}>
                 <li>
-                    <a href="/auth/logout">
+                    <Link>
                         <i className="material-icons"> settings </i>
-                    </a>
+                    </Link>
                 </li>
             </ul>
         </nav>
-        <button onClick={() => dispatch(logout())}>로그아웃</button>
+        <Routes>
+            <Route index element={<Friend/>}/>
+            <Route path={"/chatting"} element={<div>앱</div>}/>
+        </Routes>
+        <button style={{zIndex: 5, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
     </>)
 }
 

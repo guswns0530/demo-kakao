@@ -37,8 +37,6 @@ const loginSaga = function* ({type, payload}){
             type: LOGIN_SUCCESS,
             payload: data
         })
-
-        console.log(response)
     } catch (e) {
         if(e.response) {
             yield put({

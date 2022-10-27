@@ -7,7 +7,7 @@ import RequestEndPage from "./pages/RequestEndPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Oauth2RedirectHandler from "./pages/Oauth2RedirectHandler";
 
-import {useLocation} from "react-router-dom";
+import {useLocation, Navigate} from "react-router-dom";
 import PrivateRoute from "./routes/PrivateRoute";
 import {useSelector} from "react-redux";
 
@@ -19,21 +19,25 @@ function App() {
         user: user.user
     }))
 
+    if(location.pathname === "/") {
+        return <Navigate to={"/app"}/>
+    }
+
     return (
         <>
             <Routes location={location}>
-                <Route index element={
+                <Route path={"/app/*"} element={
                     <PrivateRoute isAllowed={auth && user} redirectPath={"/login"}>
                         <MainPage/>
                     </PrivateRoute>
                 }/>
                 <Route path={'/login'} element={
-                    <PrivateRoute isAllowed={!user} redirectPath={"/"}>
+                    <PrivateRoute isAllowed={!user} redirectPath={"/app"}>
                         <LoginPage/>
                     </PrivateRoute>
                 }/>
                 <Route path={'/register'} element={
-                    <PrivateRoute isAllowed={!user} redirectPath={"/"}>
+                    <PrivateRoute isAllowed={!user} redirectPath={"/app"}>
                         <RegisterPage/>
                     </PrivateRoute>
                 }/>
@@ -41,12 +45,12 @@ function App() {
                     <RequestEndPage/>
                 }/>
                 <Route path={'/oauth2/redirect'} element={
-                    <PrivateRoute isAllowed={true} redirectPath={"/"}>
+                    <PrivateRoute isAllowed={true} redirectPath={"/app"}>
                         <Oauth2RedirectHandler/>
                     </PrivateRoute>
                 }/>
                 <Route path={'*'} element={
-                    <PrivateRoute isAllowed={true} redirectPath={"/"}>
+                    <PrivateRoute isAllowed={true} redirectPath={"/app"}>
                         <NotFoundPage/>
                     </PrivateRoute>
                 }/>
