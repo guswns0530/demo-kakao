@@ -41,14 +41,14 @@ public class CookieUtils {
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
-                    ResponseCookie rcookie = ResponseCookie.from(name, "")
+                    ResponseCookie rCookie = ResponseCookie.from(name, "")
                             .path("/")
                             .sameSite("Lax")
                             .domain(domain)
                             .maxAge(0)
                             .build();
 
-                    response.addHeader("Set-Cookie", rcookie.toString());
+                    response.addHeader("Set-Cookie", rCookie.toString());
                 }
             }
         }
