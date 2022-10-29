@@ -45,7 +45,7 @@ public class CookieUtils {
                             .path("/")
                             .sameSite("Lax")
                             .domain(domain)
-                            .maxAge(0)
+                            .maxAge(0) 
                             .build();
 
                     response.addHeader("Set-Cookie", rCookie.toString());
