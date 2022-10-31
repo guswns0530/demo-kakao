@@ -26,10 +26,6 @@ import java.net.URLEncoder;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    @Autowired
-    @Qualifier(value = "handlerExceptionResolver")
-    private HandlerExceptionResolver resolver;
-
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Override

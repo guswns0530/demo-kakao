@@ -13,7 +13,9 @@ public class UpdateUserRequest {
 
     private String name;
 
-    private MultipartFile file;
+    private MultipartFile profileImageFile;
+
+    private MultipartFile backgroundImageFile;
 
     @Null(message = "잘못된 접근입니다.")
     private String profileImage;

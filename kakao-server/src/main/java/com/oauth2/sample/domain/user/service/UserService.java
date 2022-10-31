@@ -58,8 +58,8 @@ public class UserService {
         boolean result = false;
 
         try {
-            if(updateUserRequest.getFile() != null) {
-                fileService.upload(updateUserRequest.getFile());
+            if(updateUserRequest.getProfileImageFile() != null && !updateUserRequest.getProfileImageFile().isEmpty()) {
+                fileService.upload(updateUserRequest.getProfileImageFile());
             }
             result = userRepository.updateUserToEmail(updateUserRequest);
         } catch (DuplicateKeyException ex) {

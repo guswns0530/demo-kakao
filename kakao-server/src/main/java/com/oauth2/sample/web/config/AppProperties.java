@@ -14,7 +14,6 @@ public class AppProperties {
     private final Auth auth = new Auth();
     private final OAuth2 oauth2 = new OAuth2();
     private final Cors cors = new Cors();
-    private final FileS
 
     @Data
     @RequiredArgsConstructor

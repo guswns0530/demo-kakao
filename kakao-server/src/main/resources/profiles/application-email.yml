@@ -1,7 +1,6 @@
 spring:
   mail:
     host: smtp.gmail.com
-#    host: stmp.mail.cmsoft.co.kr
     port: 587
     #    username: guswnsemailserver@gmail.com
     #    password: iznvqnwqigcdhadq

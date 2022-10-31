@@ -11,7 +11,8 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 30MB
-      location: : D:\\temp
+      location: e:\\temp
+#      location: d:\\temp
 mybatis:
   type-handlers-package: "com.oauth2.sample.web.mybatis.handler"
 #logging:
