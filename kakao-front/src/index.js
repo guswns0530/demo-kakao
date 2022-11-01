@@ -22,6 +22,8 @@ import {PersistGate} from "redux-persist/integration/react";
 import setUpInterceptors from "./services/setUpInterceptors";
 import NotFoundPage from "./pages/NotFoundPage";
 
+// queryClient
+import  {QueryClient, QueryClientProvider} from "react-query";
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -29,14 +31,27 @@ const store = legacy_createStore(rootReducer, {}, composeWithDevTools(applyMiddl
 sagaMiddleware.run(rootSaga)
 initMessageListener(store)
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
 const persist = persistStore(store)
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: 0,
+            useErrorBoundary: true
+        },
+        mutations: {
+            useErrorBoundary: true
+        }
+    }
+})
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(<React.StrictMode>
     <Provider store={store}>
         <BrowserRouter>
             <PersistGate loading={<NotFoundPage/>} persistor={persist}>
-                <App/>
+                <QueryClientProvider client={queryClient}>
+                    <App/>
+                </QueryClientProvider>
             </PersistGate>
         </BrowserRouter>
     </Provider>

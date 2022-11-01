@@ -2,5 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="file">
-
+    <insert id="insertFile" parameterType="com.oauth2.sample.domain.file.dto.FileDto">
+        insert into kakao_files (file_id, email, original_name, original_ext, createAt)
+        values (#{fileId}, #{email}, #{originalName}, #{originalExt}, sysdate)
+    </insert>
 </mapper>

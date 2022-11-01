@@ -6,17 +6,15 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @Builder
-public class File {
-    private String fileId;
+public class FileDto {
+    private Long fileId;
     private String email;
-    private String fileName;
     private String originalName;
     private String originalExt;
 
-    public File(String fileId, String email, String fileName, String originalName, String originalExt) {
+    public FileDto(Long fileId, String email, String originalName, String originalExt) {
         this.fileId = fileId;
         this.email = email;
-        this.fileName = fileName;
         this.originalName = originalName;
         this.originalExt = originalExt;
     }

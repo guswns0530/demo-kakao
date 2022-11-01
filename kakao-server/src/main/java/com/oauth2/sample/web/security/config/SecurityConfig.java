@@ -76,6 +76,7 @@ public class SecurityConfig {
                         "/**/*.css",
                         "/**/*.js",
                         "/ws/**/**",
+                        "/file/**/**",
                         "/auth/**/**",
                         "/oauth2/**/**").permitAll()
                 .anyRequest().authenticated()
@@ -97,8 +98,6 @@ public class SecurityConfig {
             .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler);
-
-
 
         http.addFilterBefore(jwtTokenAuthenticationFilter
                 , UsernamePasswordAuthenticationFilter.class);

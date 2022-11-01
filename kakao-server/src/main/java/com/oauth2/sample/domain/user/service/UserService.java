@@ -8,12 +8,20 @@ import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.domain.user.request.UpdateUserRequest;
 import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
+import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
+import java.awt.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,7 +31,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
 
+    private Map<String, MediaType> mediaTypeMap;
+
     private final FileService fileService;
+
+    @PostConstruct
+    public void init() {
+        mediaTypeMap = new HashMap<>();
+        mediaTypeMap.put(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_JPEG);
+        mediaTypeMap.put(MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_GIF);
+        mediaTypeMap.put(MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_PNG);
+    }
 
     public User selectUserToEmail(String email) {
         Optional<User> userOf = userRepository.findByEmail(email);
@@ -59,12 +77,28 @@ public class UserService {
 
         try {
             if(updateUserRequest.getProfileImageFile() != null && !updateUserRequest.getProfileImageFile().isEmpty()) {
-                fileService.upload(updateUserRequest.getProfileImageFile());
+                MultipartFile file = updateUserRequest.getProfileImageFile();
+
+                String contentType = file.getContentType();
+                if( mediaTypeMap.get(contentType) != null ) {
+                    String path = fileService.uploadFile(email, file);
+
+                    updateUserRequest.setProfileImage(path);
+                }
+                else {
+                    throw new BadRequestException("이미지 타입의 파일이 아닙니다.");
+                }
+                updateUserRequest.setProfileImageFile(null);
             }
             result = userRepository.updateUserToEmail(updateUserRequest);
         } catch (DuplicateKeyException ex) {
             throw new BadRequestException("이미 사용중인 아이디입니다.");
+        } catch (IOException e) {
+            throw new RuntimeException("파일 업로드중에 오류가 발생하였습니다.");
+        } catch (Exception ex) {
+            throw new BadRequestException(ex.getMessage());
         }
+
         Optional<User> user = Optional.empty();
 
         if (result) {

@@ -21,6 +21,8 @@ repositories {
 dependencies {
 	implementation fileTree(dir: 'src/main/resources/libs', include: ['*.jar'])
 
+	implementation 'commons-io:commons-io:2.6'
+
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation group: 'org.springframework.security', name: 'spring-security-messaging', version: '5.7.3'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

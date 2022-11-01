@@ -12,8 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 @SpringBootTest
@@ -55,9 +59,14 @@ class SampleApplicationTests {
 
 	@Test
 	void send() {
-		String domain = appProperties.getCors().getDomain();
+		String uuid = UUID.randomUUID().toString();
 
-		System.out.println("domain = " + domain);
 
+	@Test
+	void test1() throws Exception{
+//		byte[] bytes = Files.readAllBytes(Paths.get("C:\\Users\\smsoft\\Downloads\\reload.png"));
+		Base64.Encoder encoder = Base64.getEncoder();
+		System.out.println(encoder.encode(bytes).length);
+		System.out.println(new String(encoder.encode(bytes)));
 	}
 }

@@ -117,13 +117,11 @@ create table kakao_read_users
 
 ---------------- kakao_files ----------------
 drop table kakao_files;
-drop sequence kakao_files_seq;
 
 create table kakao_files
 (
     file_id       INTEGER,
     email         VARCHAR2(266),
-    file_name     VARCHAR2(260),
     original_name VARCHAR2(260),
     original_ext  VARCHAR2(8),
     createAt      date,
@@ -132,7 +130,6 @@ create table kakao_files
     reserved3     VARCHAR2(300),
     constraint kakao_files_pk primary key (email, file_id)
 );
-create sequence kakao_files_seq start with 1 increment by 1 nocycle nocache;
 
 
 -- dummy test

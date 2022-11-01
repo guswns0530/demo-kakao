@@ -86,10 +86,10 @@
             name = #{name, jdbcType=VARCHAR},
         </if>
         <if test="profileImage != '' and profileImage != null">
-            profile_image = #{profileImage, jdbcType=VARCHAR},
+            profile_image_url = #{profileImage, jdbcType=VARCHAR},
         </if>
         <if test="backgroundImage != '' and backgroundImage != null">
-            background_image = #{backgroundImage, jdbcType=VARCHAR},
+            background_image_url = #{backgroundImage, jdbcType=VARCHAR},
         </if>
         <if test="message != '' and message != null">
             message = #{message, jdbcType=VARCHAR},
