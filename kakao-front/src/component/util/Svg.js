@@ -1,10 +1,13 @@
 import React from "react";
+import styled from 'styled-components'
 
 const Svg = ({children}) => {
+    const Svg = styled.svg`
+    `
     return (<svg>
-        <fieldset>
+        <foreignObject style={{width: '100%', height: '100%'}}>
             {children}
-        </fieldset>
+        </foreignObject>
     </svg>)
 }
 
