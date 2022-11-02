@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal user, @Valid UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal user, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         User updateUser = userService.updateUserToEmail(user.getEmail(), updateUserRequest);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(

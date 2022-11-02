@@ -1,14 +1,34 @@
 import React from "react";
 import styled from 'styled-components'
 
+
+
 const Svg = ({children}) => {
-    const Svg = styled.svg`
+    const StyledSvg = styled.svg`
+      width: 100%;
+      height: 100%;
+
+      & > foreignObject {
+        width: 100%;
+        height: 100%;
+      }
+      
+      & div {
+        width: 100%;
+        height: 100%;
+      }
+
+      & > foreignObject img {
+        background-color: inherit;
+        width: 100%;
+        height: 100%;
+      }
     `
-    return (<svg>
-        <foreignObject style={{width: '100%', height: '100%'}}>
+    return (<StyledSvg>
+        <foreignObject>
             {children}
         </foreignObject>
-    </svg>)
+    </StyledSvg>)
 }
 
 export default Svg

@@ -57,16 +57,4 @@ class SampleApplicationTests {
 		System.out.println("SelectChatListRequest.SelectType.LOAD.name() = " + SelectChatListRequest.SelectType.LOAD.name());
     }
 
-	@Test
-	void send() {
-		String uuid = UUID.randomUUID().toString();
-
-
-	@Test
-	void test1() throws Exception{
-//		byte[] bytes = Files.readAllBytes(Paths.get("C:\\Users\\smsoft\\Downloads\\reload.png"));
-		Base64.Encoder encoder = Base64.getEncoder();
-		System.out.println(encoder.encode(bytes).length);
-		System.out.println(new String(encoder.encode(bytes)));
-	}
 }

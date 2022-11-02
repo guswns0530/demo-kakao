@@ -95,6 +95,7 @@ public class AuthService {
                 .name(signUpRequest.getName())
                 .email(emailConfirmToken.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .profileImageUrl(Math.floor(Math.random() * 5) + "")
                 .provider(AuthProvider.local)
                 .build()
         );

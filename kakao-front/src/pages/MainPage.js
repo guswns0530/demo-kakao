@@ -6,6 +6,7 @@ import {logout} from "../modules/auth";
 import style from '../css/MainPage.module.css'
 import {Link, useLocation} from "react-router-dom";
 import Friend from "../component/app/Friend";
+import ProfilePopup from "../containers/app/popup/ProfilePopup";
 
 const MainPage = () => {
     const dispatch = useDispatch()
@@ -40,6 +41,7 @@ const MainPage = () => {
         </nav>
         <Routes>
             <Route index element={<Friend/>}/>
+            <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
             <Route path={"/chatting"} element={<div>앱</div>}/>
         </Routes>
         <button style={{zIndex: 5, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>

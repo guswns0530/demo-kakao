@@ -1,6 +1,6 @@
 import React from "react";
 
-import MyInfoComponent from "../../../component/app/friend/MyInfo";
+import MyInfoComponent from "../../../component/app/friend/Profile";
 import {useSelector} from "react-redux";
 
 const MyInfo = () => {

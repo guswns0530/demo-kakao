@@ -88,6 +88,9 @@
         <if test="profileImage != '' and profileImage != null">
             profile_image_url = #{profileImage, jdbcType=VARCHAR},
         </if>
+        <if test="removeProfileImage == true">
+            profile_image_url = null,
+        </if>
         <if test="backgroundImage != '' and backgroundImage != null">
             background_image_url = #{backgroundImage, jdbcType=VARCHAR},
         </if>

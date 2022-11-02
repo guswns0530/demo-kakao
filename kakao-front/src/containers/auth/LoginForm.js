@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
+import {LOGIN, login, LOGIN_FAILURE, setPopup, setRedirectPath} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginform from "../../component/auth/LoginForm";
 import {useNavigate} from "react-router-dom";
@@ -99,12 +99,13 @@ const LoginForm = () => {
     useEffect(() => {
         if(auth && user) {
             if(redirectURI) {
+                dispatch(setRedirectPath("/"))
                 navigate(redirectURI);
                 return
             }
             navigate('/');
         }
-    }, [navigate, auth, user])
+    }, [navigate, auth, user, redirectURI])
 
     useEffect(() => {
         return () => {

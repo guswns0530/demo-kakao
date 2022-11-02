@@ -23,6 +23,7 @@ export const login = createAction(LOGIN, ({email, password}) => ({
 export const logout = createAction(LOGOUT, () => {})
 export const setAccessToken = createAction(SET_ACCESS_TOKEN, (access_token) => (access_token))
 export const setPopup = createAction(AUTH_POPUP, (popup) => (popup))
+export const setRedirectPath = createAction(SET_REDIRECT_URI, (redirectPath) => (redirectPath))
 
 const loginSaga = function* ({type, payload}){
     yield put(startLoading(type))

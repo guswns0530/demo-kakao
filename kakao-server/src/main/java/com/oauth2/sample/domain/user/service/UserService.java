@@ -74,6 +74,8 @@ public class UserService {
     public User updateUserToEmail(String email, UpdateUserRequest updateUserRequest) {
         updateUserRequest.setEmail(email);
         boolean result = false;
+        System.out.println("updateUserRequest.getRemoveProfileImage() = " + updateUserRequest.getRemoveProfileImage());
+        System.out.println("updateUserRequest = " + updateUserRequest.getRemoveBackgroundImage());
 
         try {
             if(updateUserRequest.getProfileImageFile() != null && !updateUserRequest.getProfileImageFile().isEmpty()) {
@@ -89,6 +91,7 @@ public class UserService {
                     throw new BadRequestException("이미지 타입의 파일이 아닙니다.");
                 }
                 updateUserRequest.setProfileImageFile(null);
+                updateUserRequest.setRemoveProfileImage(false);
             }
             result = userRepository.updateUserToEmail(updateUserRequest);
         } catch (DuplicateKeyException ex) {
