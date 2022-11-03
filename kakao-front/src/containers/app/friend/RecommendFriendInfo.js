@@ -10,6 +10,7 @@ const RecommendFriendInfoFetching = () => {
         return selectRecommendFriendList()
     }, {
         suspense: true,
+        retryDelay: 10000
     });
     const [isMore, setMore] = useState(true)
 

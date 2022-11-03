@@ -38,13 +38,15 @@ const setup = (store) => {
             const state = store.getState()
             const originalConfig = err.config
 
+            console.log(originalConfig)
+            console.log(err.response)
 
             if (!originalConfig) {
                 return Promise.reject(err)
             }
 
             if (originalConfig.url !== "/auth/login" && err.response) {
-                if (err.response.status === 401 && err.response) {
+                if (err.response && err.response.status === 401) {
                     originalConfig._retry = true;
 
                     try {
@@ -54,6 +56,8 @@ const setup = (store) => {
                         const token = state.auth.auth.access_token;
                         const rs = await refreshToken(token)
                         const {access_token} = rs.data.data
+
+                        console.log(access_token)
 
                         dispatch(setAccessToken(access_token))
 

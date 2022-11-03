@@ -1,35 +1,31 @@
 import React, {Suspense} from "react";
 import ProfilePopupComponent from "../../../component/app/popup/ProfilePopup";
-import {useParams, Navigate} from "react-router-dom";
+import {Navigate, useParams} from "react-router-dom";
 import {useQuery} from "react-query";
 import {selectUser} from "../../../lib/api/friend";
+import ErrorBoundary from "../../../component/util/ErrorBoundary";
 
 
 const ProfilePopupFetching = () => {
     const {id} = useParams()
-    const {data, error} = useQuery("selectUser", async () => selectUser(id), {
+    const {data} = useQuery("selectUser", async () => selectUser(id), {
         suspense: true,
-        onError: (error) => {
-            console.log(error)
-        }
     })
 
-    console.log(data, error)
 
-    if(error) {
-        return <Navigate to={"/app"}/>
-    }
-
-
-    return <ProfilePopupComponent/>
+    return (<>
+        <ProfilePopupComponent resource={data}/>
+    </>)
 }
 
 const ProfilePopup = () => {
     return (
-        <Suspense>
-            <ProfilePopupFetching/>
+        <Suspense fallback={<div>loading...</div>}>
+            <ErrorBoundary fallback={Navigate({to: "/app"})}>
+                <ProfilePopupFetching/>
+            </ErrorBoundary>
         </Suspense>
-        )
+    )
 }
 
 export default ProfilePopup

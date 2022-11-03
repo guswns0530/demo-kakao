@@ -23,7 +23,7 @@ import setUpInterceptors from "./services/setUpInterceptors";
 import NotFoundPage from "./pages/NotFoundPage";
 
 // queryClient
-import  {QueryClient, QueryClientProvider} from "react-query";
+import {QueryClient, QueryClientProvider, setLogger} from "react-query";
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -37,13 +37,18 @@ const queryClient = new QueryClient({
         queries: {
             retry: 0,
             cacheTime: 0,
-            useErrorBoundary: true,
         },
         mutations: {
             useErrorBoundary: true
         },
     }
 })
+setLogger({
+    error: () => {},
+    log: () => {},
+    warn: () => {}
+})
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(<React.StrictMode>
@@ -51,9 +56,7 @@ root.render(<React.StrictMode>
         <BrowserRouter>
             <PersistGate loading={<NotFoundPage/>} persistor={persist}>
                 <QueryClientProvider client={queryClient}>
-                    <React.Suspense fallback={<div>loading... ...</div>}>
-                        <App/>
-                    </React.Suspense>
+                    <App/>
                 </QueryClientProvider>
             </PersistGate>
         </BrowserRouter>
