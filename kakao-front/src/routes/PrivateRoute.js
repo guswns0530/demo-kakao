@@ -1,20 +1,10 @@
-import {Navigate, useLocation} from 'react-router-dom'
-import {useDispatch} from "react-redux";
-import {setRedirectPath} from "../modules/auth";
-
-const notSavePath = ['/login', '/register']
+import {useLocation, Navigate} from 'react-router-dom'
 
 const PrivateRoute = ({children, redirectPath, isAllowed}) => {
-    const dispatch = useDispatch()
-    const location = useLocation()
+    const {pathname} = useLocation()
 
-    const {pathname} = location
-
-    if(!isAllowed) {
-        if(notSavePath.indexOf(pathname) < 0) {
-            dispatch(setRedirectPath(pathname))
-        }
-        return <Navigate to={redirectPath} replace />
+    if (!isAllowed) {
+        return <Navigate to={redirectPath} state={pathname} />
     }
 
     return children

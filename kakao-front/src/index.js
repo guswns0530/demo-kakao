@@ -36,11 +36,12 @@ const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             retry: 0,
-            useErrorBoundary: true
+            cacheTime: 0,
+            useErrorBoundary: true,
         },
         mutations: {
             useErrorBoundary: true
-        }
+        },
     }
 })
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -50,7 +51,9 @@ root.render(<React.StrictMode>
         <BrowserRouter>
             <PersistGate loading={<NotFoundPage/>} persistor={persist}>
                 <QueryClientProvider client={queryClient}>
-                    <App/>
+                    <React.Suspense fallback={<div>loading... ...</div>}>
+                        <App/>
+                    </React.Suspense>
                 </QueryClientProvider>
             </PersistGate>
         </BrowserRouter>

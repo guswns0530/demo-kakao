@@ -163,6 +163,10 @@ li {
     padding-top: 90px;
 }
 
+.container section .profile:first-child {
+    margin-bottom: 6px;
+}
+
 .profile {
     padding: 8px 20px;
     display: flex;
@@ -217,7 +221,6 @@ li {
 
 .container .disable_box {
     margin: 0 20px;
-    margin-top: 6px;
     padding: 12px 6px;
     font-size: 13px;
     color: rgba(85, 84, 84, 0.6);
@@ -228,6 +231,20 @@ li {
 }
 .container .disable_box > .content {
     display: flex;
+}
+
+.container .disable_box > .content_more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.container .disable_box > .content_more span{
+    color: rgba(85, 84, 84, 0.6);
+    font-size: 16px;
+    font-weight: 900;
 }
 
 .container .disable_box .name {
@@ -633,6 +650,7 @@ header img {
 /* profile popup */
 #profile_popup {
     position: fixed;
+    z-index: 1;
     top: 0;
     left: 0;
     width: 290px;

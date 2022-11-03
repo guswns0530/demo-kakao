@@ -18,8 +18,9 @@ function App() {
         auth: auth.auth,
         user: user.user
     }))
+    const {pathname, state} = location
 
-    if(location.pathname === "/") {
+    if (pathname === "/") {
         return <Navigate to={"/app"}/>
     }
 
@@ -32,7 +33,7 @@ function App() {
                     </PrivateRoute>
                 }/>
                 <Route path={'/login'} element={
-                    <PrivateRoute isAllowed={!user} redirectPath={"/app"}>
+                    <PrivateRoute isAllowed={!user} redirectPath={state ? state : '/app'}>
                         <LoginPage/>
                     </PrivateRoute>
                 }/>
@@ -50,9 +51,7 @@ function App() {
                     </PrivateRoute>
                 }/>
                 <Route path={'*'} element={
-                    <PrivateRoute isAllowed={true} redirectPath={"/app"}>
-                        <NotFoundPage/>
-                    </PrivateRoute>
+                    <NotFoundPage/>
                 }/>
             </Routes>
         </>

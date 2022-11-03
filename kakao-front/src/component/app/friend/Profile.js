@@ -26,27 +26,20 @@ const Profile = ({user}) => {
     const src = checkUrl();
 
     return (<>
-            <div className={style.profile}>
-                <div className={style.image}>
-                    <Svg>
-                        {src === ProfilePng ?
-                            <div style={{backgroundColor: backgroundColor[num]}}>
-                                <img src={src} alt="img"/>
-
-                            }    </div>
-                            :
-                            <img src={src} alt="img"/>
-                        }
-                    </Svg>
-                </div>
-                <div className={style.context}>
-                    <div className={style.name}>{name}</div>
-                    <div className={style.msg}>
-                        {message}
-                    </div>
+        <div className={style.profile}>
+            <div className={style.image}>
+                <Svg backgroundColor={backgroundColor[num]}>
+                    <img src={src} alt="img"/>
+                </Svg>
+            </div>
+            <div className={style.context}>
+                <div className={style.name}>{name}</div>
+                <div className={style.msg}>
+                    {message}
                 </div>
             </div>
-        </>)
+        </div>
+    </>)
 }
 
 function isValidHttpUrl(string) {

@@ -6,7 +6,6 @@ import {logout} from "../modules/auth";
 import style from '../css/MainPage.module.css'
 import {Link, useLocation} from "react-router-dom";
 import Friend from "../component/app/Friend";
-import ProfilePopup from "../containers/app/popup/ProfilePopup";
 
 const MainPage = () => {
     const dispatch = useDispatch()
@@ -33,18 +32,17 @@ const MainPage = () => {
 
             <ul className={style.sub_nav}>
                 <li>
-                    <Link>
+                    <Link to={"./setting"}>
                         <i className="material-icons"> settings </i>
                     </Link>
                 </li>
             </ul>
         </nav>
         <Routes>
-            <Route index element={<Friend/>}/>
-            <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
+            <Route path={"/*"} element={<Friend/>}/>
             <Route path={"/chatting"} element={<div>앱</div>}/>
         </Routes>
-        <button style={{zIndex: 5, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
+        <button style={{zIndex: 1, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
     </>)
 }
 

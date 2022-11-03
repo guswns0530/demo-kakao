@@ -1,16 +1,14 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from "react-redux";
-import {LOGIN, login, LOGIN_FAILURE, setPopup, setRedirectPath} from "../../modules/auth";
+import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginform from "../../component/auth/LoginForm";
-import {useNavigate} from "react-router-dom";
 import {API_BASE_URL, OAUTH2_REDIRECT_URI} from "../../constants";
 import {check} from "../../modules/user";
 
 const LoginForm = () => {
-    const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { form, auth, authError, user, authLoading, authPopup, redirectURI } = useSelector(( {auth, user, loading, form}) => ({
+    const { form, auth, authError, user, authLoading, authPopup } = useSelector(( {auth, user, loading, form}) => ({
         form: form.login,
         auth: auth.auth,
         authError: auth.authError,
@@ -96,16 +94,14 @@ const LoginForm = () => {
         }
     }, [auth, authError, dispatch])
 
-    useEffect(() => {
-        if(auth && user) {
-            if(redirectURI) {
-                dispatch(setRedirectPath("/"))
-                navigate(redirectURI);
-                return
-            }
-            navigate('/');
-        }
-    }, [navigate, auth, user, redirectURI])
+    // useEffect(() => {
+    //     if(auth && user) {
+    //         if(state) {
+    //             navigate(state);
+    //         }
+    //         // navigate('/');
+    //     }
+    // }, [navigate, auth, user, redirectURI, state])
 
     useEffect(() => {
         return () => {
