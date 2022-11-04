@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import {useDispatch} from "react-redux";
 import {Route, Routes} from '../../node_modules/react-router-dom/dist/index';
 import {logout} from "../modules/auth";
@@ -7,7 +7,7 @@ import style from '../css/MainPage.module.css'
 import {Link, useLocation} from "react-router-dom";
 import Friend from "../component/app/Friend";
 
-const MainPage = () => {
+const MainPageFetch = () => {
     const dispatch = useDispatch()
     const location = useLocation()
 
@@ -44,6 +44,16 @@ const MainPage = () => {
         </Routes>
         <button style={{zIndex: 1, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
     </>)
+}
+
+const MainPage = () => {
+    return (
+        <>
+            <Suspense fallback={<div>Loading...</div>}>
+                <MainPageFetch/>
+            </Suspense>
+        </>
+    )
 }
 
 export default MainPage

@@ -10,9 +10,9 @@ const RecommendFriendInfoFetching = () => {
         return selectRecommendFriendList()
     }, {
         suspense: true,
-        retryDelay: 10000
+        enabled: true
     });
-    const [isMore, setMore] = useState(true)
+    const [isMore, setMore] = useState(false)
 
     const onClick = (e) => {
         e.preventDefault()

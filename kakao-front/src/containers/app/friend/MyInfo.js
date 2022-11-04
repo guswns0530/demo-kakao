@@ -1,16 +1,26 @@
-import React from "react";
+import React, {Suspense} from "react";
 
 import MyInfoComponent from "../../../component/app/friend/Profile";
-import {useSelector} from "react-redux";
+import {useQuery} from "react-query";
+import {selectMe} from "../../../lib/api/user";
 
-const MyInfo = () => {
-    const {user} = useSelector(({user}) => ({
-        user: user.user
-    }))
+const MyInfoFetch = () => {
+    const {data} = useQuery("checkUser", async () => {
+        return selectMe()
+    }, {
+        suspense: true,
+        enabled: true
+    })
 
     return (
-        <MyInfoComponent user={user}/>
+        <MyInfoComponent user={data.data.data}/>
     )
+}
+
+const MyInfo = () => {
+    return <Suspense fallback={<div> loading...</div>}>
+        <MyInfoFetch/>
+    </Suspense>
 }
 
 export default MyInfo

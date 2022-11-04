@@ -43,7 +43,8 @@ public class UserService {
         mediaTypeMap.put(MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_PNG);
     }
 
-    public User selectUserToEmail(String email) {
+    public User
+    selectUserToEmail(String email) {
         Optional<User> userOf = userRepository.findByEmail(email);
         User user = userOf.orElseThrow(() -> {
             throw new IllegalStateException("유저를 찾지 못하였습니다.");
@@ -74,8 +75,6 @@ public class UserService {
     public User updateUserToEmail(String email, UpdateUserRequest updateUserRequest) {
         updateUserRequest.setEmail(email);
         boolean result = false;
-        System.out.println("updateUserRequest.getRemoveProfileImage() = " + updateUserRequest.getRemoveProfileImage());
-        System.out.println("updateUserRequest = " + updateUserRequest.getRemoveBackgroundImage());
 
         try {
             if(updateUserRequest.getProfileImageFile() != null && !updateUserRequest.getProfileImageFile().isEmpty()) {
@@ -92,6 +91,8 @@ public class UserService {
                 }
                 updateUserRequest.setProfileImageFile(null);
                 updateUserRequest.setRemoveProfileImage(false);
+            } else if(updateUserRequest.getRemoveProfileImage()) {
+                updateUserRequest.setProfileImage(Math.floor(Math.random() * 5) + "");
             }
             result = userRepository.updateUserToEmail(updateUserRequest);
         } catch (DuplicateKeyException ex) {

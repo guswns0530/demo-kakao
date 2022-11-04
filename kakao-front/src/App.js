@@ -14,9 +14,8 @@ import {useSelector} from "react-redux";
 
 function App() {
     const location = useLocation()
-    const {auth, user} = useSelector(({auth, user}) => ({
+    const {auth} = useSelector(({auth, user}) => ({
         auth: auth.auth,
-        user: user.user
     }))
     const {pathname, state} = location
 
@@ -28,17 +27,17 @@ function App() {
         <>
             <Routes location={location}>
                 <Route path={"/app/*"} element={
-                    <PrivateRoute isAllowed={auth && user} redirectPath={"/login"}>
+                    <PrivateRoute isAllowed={auth} redirectPath={"/login"}>
                         <MainPage/>
                     </PrivateRoute>
                 }/>
                 <Route path={'/login'} element={
-                    <PrivateRoute isAllowed={!user} redirectPath={state ? state : '/app'}>
+                    <PrivateRoute isAllowed={!auth} redirectPath={state ? state : '/app'}>
                         <LoginPage/>
                     </PrivateRoute>
                 }/>
                 <Route path={'/register'} element={
-                    <PrivateRoute isAllowed={!user} redirectPath={"/app"}>
+                    <PrivateRoute isAllowed={!auth} redirectPath={"/app"}>
                         <RegisterPage/>
                     </PrivateRoute>
                 }/>

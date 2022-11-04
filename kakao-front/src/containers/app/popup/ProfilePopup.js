@@ -12,7 +12,6 @@ const ProfilePopupFetching = () => {
         suspense: true,
     })
 
-
     return (<>
         <ProfilePopupComponent resource={data}/>
     </>)

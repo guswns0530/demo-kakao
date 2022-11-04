@@ -4,7 +4,6 @@ import {LOGIN, login, LOGIN_FAILURE, setPopup} from "../../modules/auth";
 import {changeField, initializeForm} from "../../modules/form";
 import AuthLoginform from "../../component/auth/LoginForm";
 import {API_BASE_URL, OAUTH2_REDIRECT_URI} from "../../constants";
-import {check} from "../../modules/user";
 
 const LoginForm = () => {
     const dispatch = useDispatch();
@@ -85,23 +84,6 @@ const LoginForm = () => {
     useEffect(() => {
         dispatch(initializeForm('login'))
     }, [dispatch, auth, user])
-
-    useEffect(() => {
-        if(authError) {
-            return
-        } else if (auth) {
-            dispatch(check(auth.access_token))
-        }
-    }, [auth, authError, dispatch])
-
-    // useEffect(() => {
-    //     if(auth && user) {
-    //         if(state) {
-    //             navigate(state);
-    //         }
-    //         // navigate('/');
-    //     }
-    // }, [navigate, auth, user, redirectURI, state])
 
     useEffect(() => {
         return () => {

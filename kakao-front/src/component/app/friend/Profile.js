@@ -14,6 +14,10 @@ const Profile = ({user}) => {
             return profile_image_url
         }
 
+        if(profile_image_url * 1) {
+            return ProfilePng
+        }
+
         if (profile_image_url) {
             return `${API_BASE_URL}/file/${profile_image_url}`
         }
@@ -21,8 +25,8 @@ const Profile = ({user}) => {
         return ProfilePng
     }, [profile_image_url])
 
-    const backgroundColor = ['#7289da', '#747f8d', '#43b581', '#faa61a', '#f04747']
-    const num = (email.charAt(email.length - 1).charCodeAt() + email.charAt(0).charCodeAt()) % 4
+    const backgroundColor = ['#7289da', '#747f8d', '#43b581', '#faa61a', '#f04747', '#ffffff']
+    const num = profile_image_url * 1 ? profile_image_url * 1 : 5;
     const src = checkUrl();
 
     return (<>

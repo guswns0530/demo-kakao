@@ -10,6 +10,7 @@ const FriendInfoFetching = () => {
         return selectFriendList()
     }, {
         suspense: true,
+        enabled: true
     });
     const [isMore, setMore] = useState(true)
 
