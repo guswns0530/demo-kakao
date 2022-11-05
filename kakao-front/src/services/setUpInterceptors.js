@@ -1,6 +1,6 @@
 import client from "../lib/api/client";
 import {refreshToken} from "../lib/api/auth";
-import {setAccessToken} from "../modules/auth";
+import {SET_ACCESS_TOKEN, setAccessToken} from "../modules/auth";
 
 const setup = (store) => {
     const {dispatch} = store
@@ -8,9 +8,14 @@ const setup = (store) => {
     client.interceptors.request.use(
         (config) => {
             const state = store.getState()
+            const {loading} = state
 
             if (!state.auth.auth) {
                 return config;
+            }
+
+            if(config.headers["Authorization"]) {
+                return config
             }
 
             const token = state.auth.auth.access_token
@@ -42,45 +47,27 @@ const setup = (store) => {
                 return Promise.reject(err)
             }
 
-            // modify /auth/refresh 가 에러가 터졌을 경우
-            // if(originalConfig.url === '/auth/refresh') {
-            //     const token = state.auth.auth.access_token
-            //     const accessToken = "Bearer " + token;
-            //
-            //     originalConfig.sent = true;
-            //     originalConfig.headers["Authorization"] = accessToken
-            //
-            //     const {method, url} = originalConfig
-            //
-            //     console.log(originalConfig)
-            //     console.log(url)
-            //
-            //     return client[method](url)
-            // }
-
             if (originalConfig.url !== "/auth/login" && err.response) {
                 if (err.response && err.response.status === 401) {
+
                     originalConfig._retry = true;
 
                     try {
                         if (!state.auth.auth) {
                             return Promise.reject(err)
                         }
+
                         const token = state.auth.auth.access_token;
                         const rs = await refreshToken(token)
+
                         const {access_token} = rs.data.data
 
                         dispatch(setAccessToken(access_token))
 
-                        const accessToken = "Bearer " + access_token;
-                        originalConfig.sent = true;
-                        originalConfig.headers["Authorization"] = accessToken
-
                         const {method, url} = originalConfig
 
-                        return client[method](url)
+                        return client[method](url, originalConfig.data)
                     } catch (_err) {
-                        console.log(_err)
                         return Promise.reject(_err)
                     }
                 }
