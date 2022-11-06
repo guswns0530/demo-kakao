@@ -1,9 +1,9 @@
 import {createAction, handleActions} from 'redux-actions';
 import {takeLatest} from 'redux-saga/effects'
 import * as authAPI from '../lib/api/auth'
-import {put, select, take, call} from 'redux-saga/effects'
+import {put, call} from 'redux-saga/effects'
 import {finishLoading, startLoading} from "./loading";
-import {check, CHECK_FAILURE, CHECK_SUCCESS, initializeUser} from "./user";
+import { initializeUser} from "./user";
 
 export const LOGIN = 'auth/LOGIN'
 export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
@@ -51,40 +51,14 @@ const loginSaga = function* ({type, payload}) {
 }
 const logoutSaga = function* ({type, payload}) {
     yield put(startLoading(type))
-    // yield put({
-    //     type: LOGOUT
-    // })
+
     yield put(initializeUser())
 
-    yield put(finishLoading(type))
-}
-const setAccessTokenSaga = function* ({type, payload}) {
-    const accessToken = payload
-
-    yield put(startLoading(type))
-    yield put(check(accessToken))
-    yield take([CHECK_SUCCESS, CHECK_FAILURE])
-
-    const {checkError} = yield select(state => state.user)
-
-    if (checkError) {
-        yield put({
-            type: SET_ACCESS_TOKEN_FAILURE,
-            payload: checkError,
-            error: true
-        })
-    } else {
-        yield put({
-            type: SET_ACCESS_TOKEN_SUCCESS,
-            payload: accessToken
-        })
-    }
     yield put(finishLoading(type))
 }
 
 export function* authSaga() {
     yield takeLatest(LOGIN, loginSaga)
-    yield takeLatest(SET_ACCESS_TOKEN, setAccessTokenSaga)
     yield takeLatest(LOGOUT, logoutSaga)
 }
 
@@ -106,7 +80,17 @@ const auth = handleActions({
             ...state,
             authPopup: popup
         }
-    }, [SET_ACCESS_TOKEN_SUCCESS]: (state, {payload: access_token}) => {
+    }, [SET_ACCESS_TOKEN]: (state, {payload: access_token}) => {
+        return {
+            ...state,
+            auth:  {
+                access_token,
+                token_type: 'Bearer'
+            },
+            authError: null
+        }
+    },
+    [SET_ACCESS_TOKEN_SUCCESS]: (state, {payload: access_token}) => {
         return {
             ...state,
             auth: {

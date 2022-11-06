@@ -1,6 +1,18 @@
 import client from "../lib/api/client";
+import {setAccessToken} from "../modules/auth";
 import {refreshToken} from "../lib/api/auth";
-import {SET_ACCESS_TOKEN, setAccessToken} from "../modules/auth";
+
+let isTokenRefreshing = false;
+let refreshSubscribers = [];
+
+const onTokenRefreshed = (accessToken) => {
+    refreshSubscribers.map((callback) => callback(accessToken))
+    refreshSubscribers = []
+}
+
+const addRefreshSubscriber = (callback) => {
+    refreshSubscribers.push(callback)
+}
 
 const setup = (store) => {
     const {dispatch} = store
@@ -8,20 +20,15 @@ const setup = (store) => {
     client.interceptors.request.use(
         (config) => {
             const state = store.getState()
-            const {loading} = state
 
             if (!state.auth.auth) {
                 return config;
             }
 
-            if(config.headers["Authorization"]) {
-                return config
-            }
-
             const token = state.auth.auth.access_token
 
             if (token) {
-                if(!config.headers["Authorization"]) {
+                if (!config.headers["Authorization"]) {
                     const accessToken = "Bearer " + token;
                     config.headers["Authorization"] = accessToken
                 }
@@ -39,9 +46,11 @@ const setup = (store) => {
         },
 
         async (err) => {
+            const {
+                config,
+            } = err
+            const originalConfig = config
             const state = store.getState()
-            const originalConfig = err.config
-
 
             if (!originalConfig) {
                 return Promise.reject(err)
@@ -51,22 +60,39 @@ const setup = (store) => {
                 if (err.response && err.response.status === 401) {
 
                     originalConfig._retry = true;
+                    originalConfig.sent = true;
 
                     try {
                         if (!state.auth.auth) {
                             return Promise.reject(err)
                         }
 
-                        const token = state.auth.auth.access_token;
-                        const rs = await refreshToken(token)
+                        const retryOriginalRequest = new Promise((resolve) => {
+                            addRefreshSubscriber((accessToken) => {
+                                originalConfig.headers.Authorization = "Bearer " + accessToken;
+                                const {method, url} = originalConfig
 
-                        const {access_token} = rs.data.data
+                                resolve(client[method](url, originalConfig.data));
+                            });
+                        });
 
-                        dispatch(setAccessToken(access_token))
+                        if(!isTokenRefreshing) {
+                            isTokenRefreshing = true;
 
-                        const {method, url} = originalConfig
+                            const token = state.auth.auth.access_token
+                            const rs = await refreshToken(token)
+                            const {access_token} = rs.data.data
 
-                        return client[method](url, originalConfig.data)
+                            dispatch(setAccessToken(access_token))
+
+                            isTokenRefreshing = false;
+
+
+                            onTokenRefreshed(access_token)
+                        }
+
+                        return retryOriginalRequest;
+
                     } catch (_err) {
                         return Promise.reject(_err)
                     }
