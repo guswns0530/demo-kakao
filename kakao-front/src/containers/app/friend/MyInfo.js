@@ -3,6 +3,7 @@ import React, {Suspense} from "react";
 import MyInfoComponent from "../../../component/app/friend/Profile";
 import {useQuery} from "react-query";
 import {selectMe} from "../../../lib/api/user";
+import LoadingProfile from "../../../component/app/friend/LoadingProfile";
 
 const MyInfoFetch = () => {
     const {data} = useQuery("checkUser", async () => {
@@ -18,7 +19,7 @@ const MyInfoFetch = () => {
 }
 
 const MyInfo = () => {
-    return <Suspense fallback={<div> loading...</div>}>
+    return <Suspense fallback={<LoadingProfile />}>
         <MyInfoFetch/>
     </Suspense>
 }
