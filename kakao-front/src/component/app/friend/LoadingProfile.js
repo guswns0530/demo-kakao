@@ -1,27 +1,46 @@
-import React, {useCallback} from "react";
+import React from "react";
 
 import style from "../../../css/MainPage.module.css"
-import {API_BASE_URL} from "../../../constants";
-import ProfilePng from "../../../assets/profile.png"
-
-import Svg from "../../util/Svg";
 import styled from "styled-components";
+import styleLoading from "../../styled/styleLoading";
 
 const LoadingProfile = () => {
 
     const StyledDiv = styled.div`
-        background-color: #7289da;
+        background-color: #ddd;
         width: 100%;
-        height: 100%
+        height: 100%;
+        position: relative;
+        ${styleLoading}
     `
+    const StyleName = styled.div`
+        background-color: #ddd;
+        width: 100px;
+        height: 16px;
+        border-radius: 2px;
+        position: relative;
+        ${styleLoading}
+    `
+
+    const StyleMsg = styled.div`
+        margin-top: 4px;
+        background-color: #ddd;
+        width: 150px;
+        height: 14px;
+        border-radius: 2px;
+        position: relative;
+        ${styleLoading}
+      }
+    `
+
     return (<>
         <div className={style.profile}>
             <div className={style.image}>
                 <StyledDiv/>
             </div>
             <div className={style.context}>
-                <div className={style.name}>Loading.</div>
-                <div className={style.msg}>Loading.</div>
+                <StyleName/>
+                <StyleMsg/>
             </div>
         </div>
     </>)
