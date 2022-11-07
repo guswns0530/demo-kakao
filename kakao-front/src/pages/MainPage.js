@@ -16,7 +16,6 @@ const MainPageFetch = () => {
             <ul className={style.main_nav}>
                 <li>
                     <Link className={location.pathname === '/app' ? style.select : ''} to={"/app"}>
-
                         <i className="material-icons" id="nav_1">person</i>
                     </Link>
                 </li>

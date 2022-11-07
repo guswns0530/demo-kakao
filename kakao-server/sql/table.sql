@@ -147,7 +147,7 @@ INSERT INTO kakao_chats(chat_id, email, room_id, status, type, content)
 values (kakao_chats_seq.nextval, 'y2010213@naver.com', 3, 1, 2, '');
 
 INSERT INTO kakao_chats(chat_id, email, room_id, status, type, content)
-values (kakao_chats_seq.nextval, 'y2010213@naver.com', 3, 1, 1, '¾È³çÇÏ¼¼¿ä');
+values (kakao_chats_seq.nextval, 'y2010213@naver.com', 3, 1, 1, 'ï¿½È³ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½');
 commit;
 
 INSERT INTO KAKAO_JOIN_USERS(EMAIL, ROOM_ID, STATUS, CREATEAT)

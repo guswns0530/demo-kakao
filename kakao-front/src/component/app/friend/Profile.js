@@ -9,12 +9,14 @@ import Svg from "../../util/Svg";
 const Profile = ({user}) => {
     const {message, name, profile_image_url, email} = user
 
+    console.log(email)
+
     const checkUrl = useCallback(() => {
         if (isValidHttpUrl(profile_image_url)) {
             return profile_image_url
         }
 
-        if(profile_image_url * 1) {
+        if(!isNaN(profile_image_url * 1)) {
             return ProfilePng
         }
 
@@ -26,8 +28,9 @@ const Profile = ({user}) => {
     }, [profile_image_url])
 
     const backgroundColor = ['#7289da', '#747f8d', '#43b581', '#faa61a', '#f04747', '#ffffff']
-    const num = profile_image_url * 1 ? profile_image_url * 1 : 5;
+    const num = !isNaN(profile_image_url) * 1 ? profile_image_url * 1 : 5;
     const src = checkUrl();
+
 
     return (<>
         <div className={style.profile}>

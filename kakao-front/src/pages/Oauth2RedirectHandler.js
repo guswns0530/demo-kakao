@@ -1,11 +1,13 @@
-import React, {useEffect} from "react";
+import React, {
+    useEffect
+} from "react";
 import RequestEndPage from "./RequestEndPage";
 import {useLocation} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {LOGIN_FAILURE, setAccessToken, setPopup} from "../modules/auth";
 
 function useQuery() {
-    const { search } = useLocation();
+    const {search} = useLocation();
 
     return React.useMemo(() => new URLSearchParams(search), [search]);
 }
@@ -13,19 +15,16 @@ function useQuery() {
 const Oauth2RedirectHandler = () => {
     const query = useQuery()
     const dispatch = useDispatch()
-    const {auth} = useSelector(({auth}) => ({
-        auth: auth.auth
-    }))
 
     const token = query.get('token')
     const error = query.get('error')
 
     useEffect(() => {
-        if(token) {
+        if (token) {
             dispatch(setAccessToken(token))
             dispatch(setPopup(null))
-        } else if(error) {
-            const { errorDescription } = JSON.parse(error)
+        } else if (error) {
+            const {errorDescription} = JSON.parse(error)
 
             dispatch({
                 type: LOGIN_FAILURE,
@@ -34,8 +33,10 @@ const Oauth2RedirectHandler = () => {
             })
         }
 
+        console.log("실행")
+
         window.close()
-    }, [dispatch, token, error, auth])
+    }, [dispatch, token, error])
 
     return (
         <>
