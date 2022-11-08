@@ -15,7 +15,7 @@ const AddFriend = () => {
     }
 
     const onClose = () => {
-        navigate("/")
+        navigate("/app")
     }
 
     return <AddFriendComponent onClose={onClose}/>

@@ -23,6 +23,8 @@ const Friend = () => {
         }
     }, [header, section, isOpen])
 
+
+
     return (<>
             <div className={`${style.container} ${style.friends} `}>
                 <header ref={header}>
@@ -69,6 +71,15 @@ const SearchForm = ({onClick}) => {
             })
         )
     }
+
+    useEffect(() => {
+        dispatch(changeField({
+            form: 'friend',
+            key: 'search',
+            value: ''
+        }))
+    }, [dispatch]);
+
 
     return (<div className={style.search_box}>
         <div className={style.search_form}>

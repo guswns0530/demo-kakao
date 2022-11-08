@@ -53,8 +53,8 @@ const MainPageFetch = () => {
 
         <Routes>
             <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
-            <Route path={"/add-friend"} element={<AddFriend/>}/>
-            <Route path={"/add-friend/:type"} element={<AddFriend/>}/>
+            <Route path={"/add-friend"} element={<AddFriend />}/>
+            <Route path={"/add-friend/:type"} element={<AddFriend />}/>
         </Routes>
     </>)
 }
