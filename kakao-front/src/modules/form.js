@@ -41,6 +41,11 @@ const initialState = {
             value: '',
             error: ''
         }
+    }, friend: {
+        search: {
+            value: '',
+            error: ''
+        }
     }
 }
 const form = handleActions({

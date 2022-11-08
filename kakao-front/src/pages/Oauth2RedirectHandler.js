@@ -4,7 +4,8 @@ import React, {
 import RequestEndPage from "./RequestEndPage";
 import {useLocation} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {LOGIN_FAILURE, setAccessToken, setPopup} from "../modules/auth";
+import {LOGIN_FAILURE, SET_ACCESS_TOKEN_FAILURE, setAccessToken, setPopup} from "../modules/auth";
+import {selectMe} from "../lib/api/user";
 
 function useQuery() {
     const {search} = useLocation();
@@ -20,29 +21,44 @@ const Oauth2RedirectHandler = () => {
     const error = query.get('error')
 
     useEffect(() => {
-        if (token) {
-            dispatch(setAccessToken(token))
-            dispatch(setPopup(null))
-        } else if (error) {
-            const {errorDescription} = JSON.parse(error)
+        (async () => {
 
-            dispatch({
-                type: LOGIN_FAILURE,
-                payload: errorDescription,
-                error: true
-            })
-        }
+            if (token) {
+                try {
+                    await selectMe(token)
 
-        console.log("실행")
+                    dispatch(setAccessToken(token))
+                    dispatch(setPopup(null))
+                } catch (err) {
+                    const {response: {data: {error_description}}} = err
 
-        window.close()
+                    dispatch({
+                        type: SET_ACCESS_TOKEN_FAILURE,
+                        payload: error_description
+                    })
+                    dispatch({
+                        type: LOGIN_FAILURE, payload: error_description, error: true
+                    })
+                }
+            } else if (error) {
+                const {errorDescription} = JSON.parse(error)
+
+                dispatch({
+                    type: LOGIN_FAILURE, payload: errorDescription, error: true
+                })
+                dispatch({
+                    type: SET_ACCESS_TOKEN_FAILURE,
+                    payload: errorDescription
+                })
+            }
+
+            window.close()
+        })();
     }, [dispatch, token, error])
 
-    return (
-        <>
-            {!window.closed && <RequestEndPage/>}
-        </>
-    )
+    return (<>
+        {!window.closed && <RequestEndPage/>}
+    </>)
 }
 
 export default Oauth2RedirectHandler

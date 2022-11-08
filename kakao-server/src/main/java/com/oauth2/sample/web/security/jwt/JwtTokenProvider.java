@@ -3,6 +3,7 @@ package com.oauth2.sample.web.security.jwt;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.dto.UserStatus;
+import com.oauth2.sample.web.security.exception.BadRequestException;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import com.oauth2.sample.web.security.util.CookieUtils;
 import io.jsonwebtoken.*;
@@ -78,8 +79,6 @@ public class JwtTokenProvider {
 
         saveRefreshToken(authentication, refreshToken);
 
-        System.out.println("refreshToken = " + refreshToken);
-
         String name = appProperties.getAuth().getRefreshCookieKey();
         Long maxAge = appProperties.getAuth().getRefreshTokenExpireLength() / 1000;
         String domain = appProperties.getCors().getDomain();
@@ -115,6 +114,8 @@ public class JwtTokenProvider {
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
+        } catch (Exception e) {
+            throw new BadRequestException("잘못된 JWT 토큰 값입니다.");
         }
     }
 

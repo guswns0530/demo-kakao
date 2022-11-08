@@ -10,7 +10,7 @@ const MyInfoFetch = () => {
         return selectMe()
     }, {
         suspense: true,
-        enabled: true
+        enabled: true,
     })
 
     return (
@@ -19,7 +19,7 @@ const MyInfoFetch = () => {
 }
 
 const MyInfo = () => {
-    return <Suspense fallback={<LoadingProfile />}>
+    return <Suspense fallback={<LoadingProfile/>}>
         <MyInfoFetch/>
     </Suspense>
 }

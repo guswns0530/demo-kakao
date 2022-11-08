@@ -10,7 +10,6 @@ export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS'
 export const LOGIN_FAILURE = 'auth/LOGIN_FAILURE'
 
 export const SET_ACCESS_TOKEN = 'auth/SET_AUTH'
-export const SET_ACCESS_TOKEN_SUCCESS = 'auth/SET_AUTH_SUCCESS'
 export const SET_ACCESS_TOKEN_FAILURE = 'auth/SET_AUTH_FAILURE'
 export const LOGOUT = 'auth/LOGOUT'
 
@@ -84,16 +83,6 @@ const auth = handleActions({
         return {
             ...state,
             auth:  {
-                access_token,
-                token_type: 'Bearer'
-            },
-            authError: null
-        }
-    },
-    [SET_ACCESS_TOKEN_SUCCESS]: (state, {payload: access_token}) => {
-        return {
-            ...state,
-            auth: {
                 access_token,
                 token_type: 'Bearer'
             },

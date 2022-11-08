@@ -1,26 +1,32 @@
-import React, {Suspense} from "react";
+import React from "react";
 import {useDispatch} from "react-redux";
-import {Route, Routes} from '../../node_modules/react-router-dom/dist/index';
 import {logout} from "../modules/auth";
 
 import style from '../css/MainPage.module.css'
 import {Link, useLocation} from "react-router-dom";
 import Friend from "../component/app/Friend";
 
+import {Route, Routes} from '/node_modules/react-router-dom/dist/index';
+import ProfilePopup from "../containers/app/popup/ProfilePopup";
+import AddFriend from "../containers/app/popup/AddFriend";
+
+
 const MainPageFetch = () => {
     const dispatch = useDispatch()
     const location = useLocation()
+
+    const {state} = location
 
     return (<>
         <nav className={style.fixed_nav}>
             <ul className={style.main_nav}>
                 <li>
-                    <Link className={location.pathname === '/app' ? style.select : ''} to={"/app"}>
+                    <Link className={state !== '1' ? style.select : ''} to={"/app"}>
                         <i className="material-icons" id="nav_1">person</i>
                     </Link>
                 </li>
                 <li>
-                    <Link className={location.pathname === '/app/chatting' ? style.select : ''} to={"/app/chatting"}>
+                    <Link className={state === 1? style.select : ''} to={"/app"} state={1}>
                         <i className="material-icons" id="nav_2"
                         >chat_bubble
                             <div className={style.alert}>1</div>
@@ -37,20 +43,26 @@ const MainPageFetch = () => {
                 </li>
             </ul>
         </nav>
-        <Routes>
-            <Route path={"/*"} element={<Friend/>}/>
-            <Route path={"/chatting"} element={<div>앱</div>}/>
-        </Routes>
+        {
+            state === 1 ?
+                <div>앱</div>
+                :
+                <Friend/>
+        }
         <button style={{zIndex: 1, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
+
+        <Routes>
+            <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
+            <Route path={"/add-friend"} element={<AddFriend/>}/>
+            <Route path={"/add-friend/:type"} element={<AddFriend/>}/>
+        </Routes>
     </>)
 }
 
 const MainPage = () => {
     return (
         <>
-            <Suspense fallback={<div>Loading...</div>}>
-                <MainPageFetch/>
-            </Suspense>
+            <MainPageFetch/>
         </>
     )
 }

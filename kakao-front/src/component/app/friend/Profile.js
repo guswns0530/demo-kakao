@@ -7,9 +7,7 @@ import ProfilePng from "../../../assets/profile.png"
 import Svg from "../../util/Svg";
 
 const Profile = ({user}) => {
-    const {message, name, profile_image_url, email} = user
-
-    console.log(email)
+    const {message, name, profile_image_url} = user
 
     const checkUrl = useCallback(() => {
         if (isValidHttpUrl(profile_image_url)) {

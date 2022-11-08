@@ -2,9 +2,7 @@ import React from "react";
 import style from "../../../css/MainPage.module.css";
 import Profile from "./Profile";
 
-const RecommendFriendInfo = ({resource, onClick, isMore}) => {
-
-    const {data: {data}} = resource
+const RecommendFriendInfo = ({data, onClick, isMore}) => {
 
     return (<>
         <div className={style.disable_box}>
@@ -19,11 +17,12 @@ const RecommendFriendInfo = ({resource, onClick, isMore}) => {
             </div>
         </div>
         {isMore && <ul>
-            {data.map(user => {
-                return (<li key={user.email}>
-                    <Profile user={user}/>
-                </li>)
-            })}
+            {data
+                .map(user => {
+                    return (<li key={user.email}>
+                        <Profile user={user}/>
+                    </li>)
+                })}
         </ul>}
     </>)
 }
