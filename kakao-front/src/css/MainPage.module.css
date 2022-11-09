@@ -127,9 +127,8 @@ li {
     position: fixed;
     width: calc(100% - 80px);
     background-color: #fff;
-    padding: 15px;
-    padding-top: 20px;
-    padding-bottom: 0px;
+    padding: 20px 15px 0px;
+    z-index: 1;
 }
 
 .container > header > .h_title {
@@ -157,9 +156,22 @@ li {
     align-items: center;
 }
 
+.h_nav svg {
+    display: inline-block;
+    color: #000;
+    width: 30px;
+    height: 30px;
+}
+.h_nav svg > path {
+    display: inline-block;
+    color: #000;
+    width: 30px;
+    height: 30px;
+}
 .h_nav i {
     font-size: 30px;
 }
+
 
 /* main */
 
@@ -1086,7 +1098,7 @@ header img {
 
 .spp_buttons button.active {
     background-color: #fee500;
-    border: none;
+    border: 1px solid #fee500;
 }
 
 .spp_buttons button.active:hover {
@@ -1363,13 +1375,56 @@ header img {
     transform: translateY(-50%);
 }
 
-.aff_input ~ p {
+.aff_input p {
+    position: absolute;
     width: 100%;
     color: #5c5c5c;
-    margin-top: 15px;
+    bottom: -22px;
     font-size: 11px;
 }
 
+
 .aff_input input:focus {
     border-bottom: 1px solid #000;
+}
+
+.aff_profile {
+    margin-top: 45px;
+    margin-bottom: 35px;
+    width: 100%;
+    height: 132px;
+    max-height: 132px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.aff_profile .image {
+    width: 85px;
+    height: 85px;
+    overflow: hidden;
+    border-radius: 46%;
+}
+
+.aff_profile .name {
+    margin-top: 12px;
+    font-size: 15px;
+    font-weight: 900;
+}
+.aff_profile .info {
+    margin-top: 3px;
+    font-size: 13px;
+    color: rgb(131, 128, 128);
+}
+
+.aff_profile .error_info {
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgb(131, 128, 128);
+}
+
+#add_friend_popup form {
+    width: 100%;
 }

@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum FriendStatus {
     FRIEND(1),
     BLOCK(2),
-    REMOVE(3);
+    REMOVE(3),
+    NONE(0);
 
     private final int statusCode;
 

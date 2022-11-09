@@ -6,6 +6,8 @@ import {selectRecommendFriendList} from "../../../lib/api/friend";
 import LoadingRecommendFriendInfo from "../../../component/app/friend/LoadingRecommendFriendInfo";
 import {useSelector} from "react-redux";
 import getConstantVowels from "../../../services/createHangulString";
+import {ErrorBoundary} from "react-error-boundary";
+import ErrorHandler from "../../handler/ErrorHandler";
 
 const RecommendFriendInfoFetching = () => {
     const {data: {data: {data}}} = useQuery("selectRecommendFriendList", async () => {
@@ -16,7 +18,7 @@ const RecommendFriendInfoFetching = () => {
     });
     const {search} = useSelector(({form}) => ({
         search: form.friend.search
-    }) )
+    }))
     const [isMore, setMore] = useState(false)
 
     const onClick = (e) => {
@@ -43,7 +45,9 @@ const RecommendFriendInfoFetching = () => {
 const RecommendFriendInfo = () => {
     return (
         <Suspense fallback={<LoadingRecommendFriendInfo/>}>
-            <RecommendFriendInfoFetching />
+            <ErrorBoundary FallbackComponent={ErrorHandler}>
+                <RecommendFriendInfoFetching/>
+            </ErrorBoundary>
         </Suspense>
     )
 }

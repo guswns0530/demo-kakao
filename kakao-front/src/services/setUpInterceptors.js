@@ -2,6 +2,7 @@ import client from "../lib/api/client";
 import {setAccessToken} from "../modules/auth";
 import {refreshToken} from "../lib/api/auth";
 
+const bannedUrl = ["/auth/login", "/auth/refresh"]
 let isTokenRefreshing = false;
 let refreshSubscribers = [];
 
@@ -13,6 +14,7 @@ const onTokenRefreshed = (accessToken) => {
 const addRefreshSubscriber = (callback) => {
     refreshSubscribers.push(callback)
 }
+
 
 const setup = (store) => {
     const {dispatch} = store
@@ -46,28 +48,20 @@ const setup = (store) => {
         },
 
         async (err) => {
-            const {
-                config,
-            } = err
-            const originalConfig = config
+            const originalConfig = err.config
             const state = store.getState()
 
             if (!originalConfig) {
                 return Promise.reject(err)
             }
 
-            if (originalConfig.url !== "/auth/login" && err.response) {
+            if (bannedUrl.indexOf(originalConfig.url) < 0 && err.response) {
                 if (err.response && err.response.status === 401) {
-
-                    originalConfig._retry = true;
-                    originalConfig.sent = true;
-
                     try {
                         if (!state.auth.auth) {
                             return Promise.reject(err)
                         }
-
-                        const retryOriginalRequest = new Promise((resolve) => {
+                        const retryOriginalRequest = new Promise((resolve, reject) => {
                             addRefreshSubscriber((accessToken) => {
                                 originalConfig.headers.Authorization = "Bearer " + accessToken;
                                 const {method, url} = originalConfig
@@ -98,7 +92,6 @@ const setup = (store) => {
                     }
                 }
             }
-
             return Promise.reject(err)
         })
 

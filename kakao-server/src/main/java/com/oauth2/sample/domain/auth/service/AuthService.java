@@ -5,6 +5,7 @@ import com.oauth2.sample.domain.auth.request.SignUpRequest;
 import com.oauth2.sample.domain.email.dto.EmailConfirmToken;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
+import com.oauth2.sample.web.security.exception.OAuth2AuthenticationProcessingException;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import com.oauth2.sample.web.security.dto.AuthProvider;
 import com.oauth2.sample.web.security.dto.User;
@@ -14,10 +15,13 @@ import com.oauth2.sample.web.security.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -41,7 +45,7 @@ public class AuthService {
                 .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("cookie가 존재하지 않습니다."));
 
         if (!tokenProvider.validateToken(oldRefreshToken)) {
-            throw new RuntimeException("잘못된 refresh token 입니다.");
+            throw new OAuth2AuthenticationProcessingException("잘못된 refresh token 입니다.");
         }
 
         // 2. 유저정보 얻기
@@ -54,7 +58,8 @@ public class AuthService {
         String savedToken = userRepository.getRefreshTokenByEmail(email);
 
         if (!savedToken.equals(oldRefreshToken)) {
-            throw new RuntimeException("Refresh Token이 매칭되지 않습니다");
+//            throw new OAuth2AuthenticationProcessingException("Refresh Token이 매칭되지 않습니다");
+            throw new BadRequestException("Refresh Token이 매칭되지 않습니다.");
         }
 
         // 4. JWT 갱신

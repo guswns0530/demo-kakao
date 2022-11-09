@@ -21,7 +21,7 @@ const MainPageFetch = () => {
         <nav className={style.fixed_nav}>
             <ul className={style.main_nav}>
                 <li>
-                    <Link className={state !== '1' ? style.select : ''} to={"/app"}>
+                    <Link className={state !== 1 ? style.select : ''} to={"/app"}>
                         <i className="material-icons" id="nav_1">person</i>
                     </Link>
                 </li>

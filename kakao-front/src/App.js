@@ -10,6 +10,7 @@ import Oauth2RedirectHandler from "./pages/Oauth2RedirectHandler";
 import {useLocation, Navigate} from "react-router-dom";
 import PrivateRoute from "./routes/PrivateRoute";
 import {useSelector} from "react-redux";
+import Logout from "./pages/Logout";
 
 
 function App() {
@@ -48,6 +49,9 @@ function App() {
                     <PrivateRoute isAllowed={true} redirectPath={"/app"}>
                         <Oauth2RedirectHandler/>
                     </PrivateRoute>
+                }/>
+                <Route path={'/logout'} element={
+                    <Logout/>
                 }/>
                 <Route path={'*'} element={
                     <NotFoundPage/>

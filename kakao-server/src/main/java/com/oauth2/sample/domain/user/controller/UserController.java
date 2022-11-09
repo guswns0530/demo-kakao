@@ -35,9 +35,21 @@ public class UserController {
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@CurrentUser UserPrincipal user, @PathVariable String id) {
+    @GetMapping("/{id}/id")
+    public ResponseEntity<?> getUserToId(@CurrentUser UserPrincipal user, @PathVariable String id) {
         User selectUser = userService.selectUserToId(user.getEmail(), id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.builder()
+                        .code(HttpStatus.OK)
+                        .data(selectUser)
+                        .build()
+        );
+    }
+
+    @GetMapping("/{email}/email")
+    public ResponseEntity<?> getUserToEmail(@CurrentUser UserPrincipal user, @PathVariable String email) {
+        User selectUser = userService.selectUserToEmail(user.getEmail(), email);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()

@@ -43,8 +43,7 @@ public class UserService {
         mediaTypeMap.put(MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_PNG);
     }
 
-    public User
-    selectUserToEmail(String email) {
+    public User selectUserToEmail(String email) {
         Optional<User> userOf = userRepository.findByEmail(email);
         User user = userOf.orElseThrow(() -> {
             throw new IllegalStateException("유저를 찾지 못하였습니다.");
@@ -53,21 +52,37 @@ public class UserService {
         return user;
     }
 
-    public User selectUserToId(String email, String id) {
-        Optional<User> userOf = userRepository.findById(id);
+    public User selectUserToEmail(String email, String targetEmail) {
+        Optional<User> userOf = userRepository.findByEmail(targetEmail);
         User user = userOf.orElseThrow(() -> {
             throw new IllegalStateException("유저를 찾지 못하였습니다.");
         });
 
+        updateUserToFriend(email, user);
+
+        return user;
+    }
+
+    private void updateUserToFriend(String email, User user) {
         friendRepository.selectFriend(email, user.getEmail()).ifPresent(friend -> {
             user.setMessage(friend.getMessage());
             user.setProfileImageUrl(friend.getProfileImageUrl());
+            user.setFriendStatus(friend.getStatus());
             switch (friend.getStatus()) {
                 case FRIEND:
                     user.setName(friend.getName());
                     break;
             }
         });
+    }
+
+    public User selectUserToId(String email, String id) {
+        Optional<User> userOf = userRepository.findById(id);
+        User user = userOf.orElseThrow(() -> {
+            throw new IllegalStateException("유저를 찾지 못하였습니다.");
+        });
+
+        updateUserToFriend(email, user);
 
         return user;
     }

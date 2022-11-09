@@ -16,13 +16,12 @@ const Friend = () => {
     const section = useRef()
 
     useEffect(() => {
-        if(header && section) {
+        if (header && section) {
             const {clientHeight} = header.current
 
             section.current.style.paddingTop = clientHeight + 'px'
         }
     }, [header, section, isOpen])
-
 
 
     return (<>
@@ -33,12 +32,13 @@ const Friend = () => {
                         <ul className={style.h_nav}>
                             <li>
                                 <Link onClick={onClick}>
-                                        <i className="material-icons">search</i>
+                                    <i className="material-icons">search</i>
                                 </Link>
                             </li>
                             <li>
                                 <Link to={"./add-friend"}>
-                                        <i className="material-icons">person_add</i>
+                                    <i className="material-icons">person_add</i>
+                                    {/*<PersonAdd/>*/}
                                 </Link>
                             </li>
                         </ul>
@@ -47,8 +47,8 @@ const Friend = () => {
                 </header>
                 <section ref={section}>
                     <MyInfo/>
-                    <RecommendFriendInfo />
-                    <FriendInfo />
+                    <RecommendFriendInfo/>
+                    <FriendInfo/>
                 </section>
             </div>
         </>
@@ -57,12 +57,12 @@ const Friend = () => {
 
 const SearchForm = ({onClick}) => {
     const dispatch = useDispatch();
-    const { form } = useSelector(({form}) => ({
+    const {form} = useSelector(({form}) => ({
         form: form,
     }))
 
     const onChange = e => {
-        const { value, name } = e.target
+        const {value, name} = e.target
         dispatch(
             changeField({
                 form: 'friend',
@@ -86,7 +86,7 @@ const SearchForm = ({onClick}) => {
             <div className={style.icon}>
                 <Svg><i className={"material-icons"}>search</i></Svg>
             </div>
-            <input onChange={onChange} value={form.friend.search.value} name="search" />
+            <input onChange={onChange} value={form.friend.search.value} name="search"/>
         </div>
         <div className={style.search_close} onClick={() => {
             dispatch(changeField({

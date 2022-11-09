@@ -35,11 +35,13 @@ const persist = persistStore(store)
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
+            useErrorBoundary: true,
+            suspense: true,
             retry: 0,
             cacheTime: 0,
         },
         mutations: {
-            useErrorBoundary: true
+            useErrorBoundary: true,
         },
     }
 })

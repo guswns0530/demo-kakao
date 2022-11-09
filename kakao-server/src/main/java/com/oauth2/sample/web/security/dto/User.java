@@ -1,6 +1,7 @@
 package com.oauth2.sample.web.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.oauth2.sample.domain.friend.dto.FriendStatus;
 import lombok.*;
 
 import java.io.Serializable;
@@ -28,4 +29,5 @@ public class User implements Serializable {
     private String refreshToken;
     @JsonIgnore
     private Role role;
+    private FriendStatus friendStatus = FriendStatus.NONE;
 }

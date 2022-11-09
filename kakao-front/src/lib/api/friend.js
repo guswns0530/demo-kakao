@@ -6,6 +6,9 @@ export const selectFriendList = () => {
 export const selectRecommendFriendList = () => {
     return client.get('/friends/added-me', {});
 }
-export const selectUser = (id) => {
-    return client.get('/users/' + id, {})
+export const selectUserToId = (id) => {
+    return client.get('/users/' + id + "/id", {})
+}
+export const selectUserToEmail = (id) => {
+    return client.get('/users/' + id + "/email", {})
 }
