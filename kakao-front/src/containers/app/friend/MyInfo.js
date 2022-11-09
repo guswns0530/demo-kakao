@@ -8,12 +8,12 @@ import {useDispatch} from "react-redux";
 import {CHECK_SUCCESS} from "../../../modules/user";
 import {ErrorBoundary} from "react-error-boundary";
 import ErrorHandler from "../../handler/ErrorHandler";
-import errorHandler from "../../handler/ErrorHandler";
 
 const MyInfoFetch = () => {
     const dispatch = useDispatch()
-    const {data} = useQuery("checkUser", async () => selectMe(), {
+    const {data} = useQuery(["checkUser"], async () => selectMe(), {
         suspense: true,
+        useErrorBoundary: true,
     })
 
     useEffect(() => {

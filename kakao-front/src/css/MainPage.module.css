@@ -1346,7 +1346,6 @@ header img {
 
 .aff_buttons button.active {
     background-color: #fee500;
-    border: none;
 }
 
 .aff_buttons button.active:hover {
@@ -1364,6 +1363,7 @@ header img {
     border: none;
     border-bottom: 1px solid #e6e6e6;
     line-height: 38px;
+    padding-right: 35px;
 }
 
 .aff_input .counter {
@@ -1409,9 +1409,13 @@ header img {
 }
 
 .aff_profile .name {
+    width: 100%;
+    text-align: center;
+    line-height: 20px;
     margin-top: 12px;
     font-size: 15px;
     font-weight: 900;
+    overflow-wrap: break-word;
 }
 .aff_profile .info {
     margin-top: 3px;

@@ -2,18 +2,18 @@ import React, {Suspense} from "react";
 import ProfilePopupComponent from "../../../component/app/popup/ProfilePopup";
 import {Navigate, useParams} from "react-router-dom";
 import {useQuery} from "react-query";
-import {selectUserToId} from "../../../lib/api/friend";
 import {ErrorBoundary} from "react-error-boundary";
+import {selectUserToId} from "../../../lib/api/user";
 
 const ProfilePopupFetching = () => {
     const {id} = useParams()
     const {data} = useQuery("selectUserToId", async () => selectUserToId(id), {
         suspense: true,
+        useErrorBoundary: true,
     })
 
-    return (<>
-        <ProfilePopupComponent resource={data}/>
-    </>)
+    return <ProfilePopupComponent resource={data}/>
+
 }
 
 const ProfilePopup = () => {

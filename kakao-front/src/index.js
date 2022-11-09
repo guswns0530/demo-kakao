@@ -24,6 +24,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 
 // queryClient
 import {QueryClient, QueryClientProvider, setLogger} from "react-query";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -39,6 +41,12 @@ const queryClient = new QueryClient({
             suspense: true,
             retry: 0,
             cacheTime: 0,
+            onError: (err) => {
+                if(err?.response?.config?.url === '/auth/refresh') {
+                    const {response: {data: {error_description: info}}} = err
+                    toast.error(info)
+                }
+            }
         },
         mutations: {
             useErrorBoundary: true,
@@ -58,6 +66,7 @@ root.render(<React.StrictMode>
         <BrowserRouter>
             <PersistGate loading={<NotFoundPage/>} persistor={persist}>
                 <QueryClientProvider client={queryClient}>
+                    <ToastContainer position={"top-right"}/>
                     <App/>
                 </QueryClientProvider>
             </PersistGate>

@@ -15,33 +15,35 @@ const addRefreshSubscriber = (callback) => {
     refreshSubscribers.push(callback)
 }
 
+export const initRefreshSubscriber = () => {
+    isTokenRefreshing = false;
+    refreshSubscribers = []
+}
+
 
 const setup = (store) => {
     const {dispatch} = store
 
-    client.interceptors.request.use(
-        (config) => {
-            const state = store.getState()
+    client.interceptors.request.use((config) => {
+        const state = store.getState()
 
-            if (!state.auth.auth) {
-                return config;
-            }
-
-            const token = state.auth.auth.access_token
-
-            if (token) {
-                if (!config.headers["Authorization"]) {
-                    const accessToken = "Bearer " + token;
-                    config.headers["Authorization"] = accessToken
-                }
-            }
-
+        if (!state.auth.auth) {
             return config;
-        },
-        (error) => {
-            return Promise.reject(error)
         }
-    )
+
+        const token = state.auth.auth.access_token
+
+        if (token) {
+            if (!config.headers["Authorization"]) {
+                const accessToken = "Bearer " + token;
+                config.headers["Authorization"] = accessToken
+            }
+        }
+
+        return config;
+    }, (error) => {
+        return Promise.reject(error)
+    })
 
     client.interceptors.response.use((res) => {
             return res;
@@ -61,16 +63,19 @@ const setup = (store) => {
                         if (!state.auth.auth) {
                             return Promise.reject(err)
                         }
+
                         const retryOriginalRequest = new Promise((resolve, reject) => {
                             addRefreshSubscriber((accessToken) => {
-                                originalConfig.headers.Authorization = "Bearer " + accessToken;
-                                const {method, url} = originalConfig
+                                const token = "Bearer " + accessToken;
 
-                                resolve(client[method](url, originalConfig.data));
+                                originalConfig.headers = {...originalConfig.headers}
+                                originalConfig.headers["Authorization"] = token
+
+                                resolve(client(originalConfig))
                             });
                         });
 
-                        if(!isTokenRefreshing) {
+                        if (!isTokenRefreshing) {
                             isTokenRefreshing = true;
 
                             const token = state.auth.auth.access_token
@@ -86,15 +91,15 @@ const setup = (store) => {
                         }
 
                         return retryOriginalRequest;
-
                     } catch (_err) {
+                        initRefreshSubscriber()
                         return Promise.reject(_err)
                     }
                 }
             }
+            initRefreshSubscriber()
             return Promise.reject(err)
         })
-
 }
 
 

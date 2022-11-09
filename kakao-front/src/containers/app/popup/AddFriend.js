@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import AddFriendComponent from "../../../component/app/popup/AddFriend"
 import {Navigate, useNavigate, useParams} from "react-router-dom";
-import { useQuery} from "react-query";
-import {selectUserToId, selectUserToEmail} from "../../../lib/api/friend";
+import {useMutation, useQuery} from "react-query";
+import {insertFriendToEmail, insertFriendToId} from "../../../lib/api/friend";
 import {useSelector} from "react-redux";
+import {selectUserToEmail, selectUserToId} from "../../../lib/api/user";
 
 const AddFriend = () => {
     const {type} = useParams()
@@ -26,8 +27,20 @@ const AddFriend = () => {
     }, {
         enabled: false,
         suspense: false,
+        useErrorBoundary: false
     })
-    // const {isLoading: isLoadingInsertFriend, datafriendData, friendError, } = useMutation();
+    const {isLoading: isLoadingInsertFriend, error: insertError, mutate } = useMutation(async () => {
+        if(type === matchType[0]) {
+            return insertFriendToId(id)
+        }
+
+        if(type === matchType[1]) {
+            return insertFriendToEmail(id)
+        }
+    }, {
+        useErrorBoundary: false
+    });
+
 
     useEffect(() => {
         setId('')
@@ -55,6 +68,10 @@ const AddFriend = () => {
 
     const onClick = (e) => {
         e.preventDefault()
+
+        mutate()
+
+        refetch()
     }
 
     const onSubmit = (e) => {

@@ -36,6 +36,9 @@ const FriendInfoFetching = () => {
         const consonantName = name.map(name => name[0]).join('').replace(' ', '')
         const consonantSearch = searchArr.map(search => search[0]).join('').replace(' ', '')
 
+        console.log(consonantName)
+        console.log(consonantSearch)
+
         return consonantName.includes(consonantSearch) || consonantVowelName.includes(consonantVowelSearch)
     })
 

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/friends")
@@ -74,7 +75,8 @@ public class FriendController {
     }
 
     @PostMapping
-    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody String param, @RequestParam("option") String option) {
+    public ResponseEntity<?> insertFriend(@CurrentUser UserPrincipal user, @RequestBody Map<String, String> map, @RequestParam("option") String option) {
+        String param = map.get("id");
         if(!StringUtils.hasText(option)) {
             throw new BadRequestException("옵션을 지정해주세요");
         }
