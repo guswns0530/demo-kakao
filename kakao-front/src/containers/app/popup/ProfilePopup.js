@@ -1,6 +1,6 @@
-import React, { useEffect} from "react";
+import React from "react";
 import ProfilePopupComponent from "../../../component/app/popup/ProfilePopup";
-import {Navigate, useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import {useQuery} from "react-query";
 import {selectUserToId} from "../../../lib/api/user";
 import {useSelector} from "react-redux";
@@ -39,15 +39,5 @@ const ProfilePopup = () => {
     return <ProfilePopupComponent resource={resource} onClose={onClose} isMe={isMe} isFriend={isFriend}/>
 
 }
-
-// const ProfilePopup = () => {
-//     return (
-//         <Suspense fallback={<div></div>}>
-//             <ErrorBoundary FallbackComponent={ErrorHandler}>
-//                 <ProfilePopupFetching/>
-//             </ErrorBoundary>
-//         </Suspense>
-//     )
-// }
 
 export default ProfilePopup

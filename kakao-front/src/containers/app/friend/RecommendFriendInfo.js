@@ -9,6 +9,8 @@ import {ErrorBoundary} from "react-error-boundary";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
 
+export const queryName = "selectRecommendFriendList"
+
 const RecommendFriendInfoFetching = () => {
     const {data: {data: {data}}} = useQuery("selectRecommendFriendList", async () => {
         return selectRecommendFriendList()

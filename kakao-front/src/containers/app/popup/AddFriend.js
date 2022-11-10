@@ -6,7 +6,9 @@ import {insertFriendToEmail, insertFriendToId} from "../../../lib/api/friend";
 import {useSelector} from "react-redux";
 import {selectUserToEmail, selectUserToId} from "../../../lib/api/user";
 import {toast} from "react-toastify";
-import {queryName} from "../friend/FriendInfo";
+import {queryName as friendInfoQueryName} from "../friend/FriendInfo";
+import {queryName as recommendFriendInfoQueryName} from "../friend/RecommendFriendInfo";
+
 import queryClient from "../../../services/queryClient";
 
 const AddFriend = () => {
@@ -42,9 +44,11 @@ const AddFriend = () => {
         }
     }, {
         useErrorBoundary: false,
-        onSuccess: (data) => {
-            queryClient.refetchQueries(queryName)
+        onSuccess: async (data) => {
             onSubmit()
+
+            await queryClient.refetchQueries(friendInfoQueryName)
+            await queryClient.refetchQueries(recommendFriendInfoQueryName)
         },
         onError: (error) => {
             const {response: {data: {data: {error_description}}}} = error
