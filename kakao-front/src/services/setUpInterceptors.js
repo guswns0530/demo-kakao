@@ -92,12 +92,16 @@ const setup = (store) => {
 
                         return retryOriginalRequest;
                     } catch (_err) {
-                        initRefreshSubscriber()
+                        if(_err.response.config.url === bannedUrl[1]) {
+                            initRefreshSubscriber()
+                        }
                         return Promise.reject(_err)
                     }
                 }
             }
-            initRefreshSubscriber()
+            if(err.response.config.url === bannedUrl[1]) {
+                initRefreshSubscriber()
+            }
             return Promise.reject(err)
         })
 }

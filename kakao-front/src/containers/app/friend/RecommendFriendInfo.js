@@ -5,16 +5,18 @@ import {useQuery} from "react-query";
 import {selectRecommendFriendList} from "../../../lib/api/friend";
 import LoadingRecommendFriendInfo from "../../../component/app/friend/LoadingRecommendFriendInfo";
 import {useSelector} from "react-redux";
-import getConstantVowels from "../../../services/createHangulString";
 import {ErrorBoundary} from "react-error-boundary";
 import ErrorHandler from "../../handler/ErrorHandler";
+import searchServiceToFriend from "../../../services/searchService";
 
 const RecommendFriendInfoFetching = () => {
     const {data: {data: {data}}} = useQuery("selectRecommendFriendList", async () => {
         return selectRecommendFriendList()
     }, {
         suspense: true,
-        enabled: true
+        enabled: true,
+        retry: false,
+        cacheTime: 0
     });
     const {search} = useSelector(({form}) => ({
         search: form.friend.search
@@ -26,18 +28,7 @@ const RecommendFriendInfoFetching = () => {
         setMore(!isMore)
     }
 
-    const searchArr = getConstantVowels(search.value.replace(/\s/g, ""))
-    const filterData = data.filter(user => {
-        const name = getConstantVowels(user.name)
-
-        const consonantVowelName = name.join('').replace(' ', '')
-        const consonantVowelSearch = searchArr.join('').replace(' ', '')
-
-        const consonantName = name.map(name => name[0]).join('').replace(' ', '')
-        const consonantSearch = searchArr.map(search => search[0]).join('').replace(' ', '')
-
-        return consonantName.includes(consonantSearch) || consonantVowelName.includes(consonantVowelSearch)
-    })
+    const filterData = searchServiceToFriend(data, search)
 
     return <RecommendFriendInfoComponent data={filterData} isMore={isMore} onClick={onClick}/>
 }
@@ -45,7 +36,7 @@ const RecommendFriendInfoFetching = () => {
 const RecommendFriendInfo = () => {
     return (
         <Suspense fallback={<LoadingRecommendFriendInfo/>}>
-            <ErrorBoundary FallbackComponent={ErrorHandler}>
+            <ErrorBoundary FallbackComponent={ErrorHandler({path: "/logout"})}>
                 <RecommendFriendInfoFetching/>
             </ErrorBoundary>
         </Suspense>

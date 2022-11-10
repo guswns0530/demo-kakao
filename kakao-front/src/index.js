@@ -23,9 +23,11 @@ import setUpInterceptors from "./services/setUpInterceptors";
 import NotFoundPage from "./pages/NotFoundPage";
 
 // queryClient
-import {QueryClient, QueryClientProvider, setLogger} from "react-query";
-import {toast, ToastContainer} from "react-toastify";
+import {QueryClientProvider} from "react-query";
+import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"
+import queryClient from "./services/queryClient";
+
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -34,34 +36,11 @@ sagaMiddleware.run(rootSaga)
 initMessageListener(store)
 
 const persist = persistStore(store)
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            useErrorBoundary: true,
-            suspense: true,
-            retry: 0,
-            cacheTime: 0,
-            onError: (err) => {
-                if(err?.response?.config?.url === '/auth/refresh') {
-                    const {response: {data: {error_description: info}}} = err
-                    toast.error(info)
-                }
-            }
-        },
-        mutations: {
-            useErrorBoundary: true,
-        },
-    }
-})
-setLogger({
-    error: () => {},
-    log: () => {},
-    warn: () => {}
-})
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-root.render(<React.StrictMode>
+root.render(
     <Provider store={store}>
         <BrowserRouter>
             <PersistGate loading={<NotFoundPage/>} persistor={persist}>
@@ -72,7 +51,7 @@ root.render(<React.StrictMode>
             </PersistGate>
         </BrowserRouter>
     </Provider>
-</React.StrictMode>,);
+);
 
 setUpInterceptors(store)
 reportWebVitals();

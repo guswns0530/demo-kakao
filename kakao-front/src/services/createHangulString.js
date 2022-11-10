@@ -13,10 +13,12 @@ const getConstantVowels = (kor) => {
     const ga = 44032;
 
     const map = kor.split('').map(char => {
-        console.log(char)
         let uni = char.charCodeAt(0);
-
         uni = uni - ga;
+
+        if(uni < 0) {
+            return char
+        }
 
         let fn = parseInt(uni / 588);
         let sn = parseInt((uni - (fn * 588)) / 28);

@@ -10,14 +10,24 @@ import {ErrorBoundary} from "react-error-boundary";
 import ErrorHandler from "../../handler/ErrorHandler";
 
 const MyInfoFetch = () => {
-    const dispatch = useDispatch()
-    const {data} = useQuery(["checkUser"], async () => selectMe(), {
-        suspense: true,
-        useErrorBoundary: true,
-    })
+        const dispatch = useDispatch()
+        const {data} = useQuery(["checkUser"], async () => selectMe(), {
+            suspense: true,
+            useErrorBoundary: true,
+            retry: false,
+            cacheTime: 0,
+            onSuccess: (data) => {
+                if (data) {
+                    dispatch({
+                        type: CHECK_SUCCESS,
+                        payload: data.data.data
+                    })
+                }
+            }
+        })
 
     useEffect(() => {
-        if (data) {
+        if(data) {
             dispatch({
                 type: CHECK_SUCCESS,
                 payload: data.data.data
@@ -26,15 +36,15 @@ const MyInfoFetch = () => {
     }, [dispatch, data]);
 
 
-    return (
-        <MyInfoComponent user={data.data.data}/>
-    )
+        return (
+            <MyInfoComponent user={data.data.data}/>
+        )
 }
 
 const MyInfo = () => {
     return (
         <Suspense fallback={<LoadingProfile/>}>
-            <ErrorBoundary FallbackComponent={ErrorHandler}>
+            <ErrorBoundary FallbackComponent={ErrorHandler({path: "/logout"})}>
                 <MyInfoFetch/>
             </ErrorBoundary>
         </Suspense>

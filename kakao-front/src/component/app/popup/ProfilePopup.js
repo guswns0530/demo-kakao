@@ -2,13 +2,14 @@ import React from "react";
 
 import style from "../../../css/MainPage.module.css"
 import {Link} from "react-router-dom";
+import ProfileImage from "../../util/ProfileImage";
 
-const ProfilePopup = () => {
+const ProfilePopup = ({resource: {profile_image_url, name}, onClose, isFriend, isMe}) => {
 
     return (
         <div id={style.profile_popup}>
             <div className={style.tab}>
-                <div className={style.exit}>
+                <div className={style.exit} onClick={onClose}>
                     <div></div>
                     <div></div>
                 </div>
@@ -18,25 +19,39 @@ const ProfilePopup = () => {
 
             <div className={style.pfile}>
                 <div className={style.image}>
-                    <img src="./image/profile.png" alt=""/>
+                    <ProfileImage profile_image_url={profile_image_url}/>
                 </div>
-                <div className={style.name}>박현준</div>
+                <div className={style.name}>{name}</div>
             </div>
 
             <nav className={style.pfile_nav}>
                 <ul>
-                    <li>
-                        <Link>
-                            <i className="material-icons">chat_bubble</i>
-                            <span>1:1 채팅</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link>
-                            <i className="material-icons">edit</i>
-                            <span>프로필 관리</span>
-                        </Link>
-                    </li>
+                    {isFriend &&
+                        <li>
+                            <Link to={"/app"}>
+                                <i className="material-icons">chat_bubble</i>
+                                <span>1:1 채팅</span>
+                            </Link>
+                        </li>
+                    }
+                    {
+                        isMe &&
+                        <li>
+                            <Link to={"/app"}>
+                                <i className="material-icons">edit</i>
+                                <span>프로필 관리</span>
+                            </Link>
+                        </li>
+                    }
+                    {
+                        (!isMe && !isFriend) &&
+                        < li>
+                            < Link to={"/app"}>
+                                <i className="material-icons">edit</i>
+                                <span>프로필 관리</span>
+                            </Link>
+                        </li>
+                    }
                 </ul>
             </nav>
         </div>

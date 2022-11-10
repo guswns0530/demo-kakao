@@ -1,10 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Navigate} from "react-router-dom";
-import {initRefreshSubscriber} from "../../services/setUpInterceptors";
+import {toast} from "react-toastify";
 
-const ErrorHandler = () => {
-    initRefreshSubscriber()
-    return <Navigate to={"/logout"}/>
+const ErrorHandler = ({error, path}) => {
+
+    useEffect(() => {
+        if(error) {
+            toast.error(error.response.data.error_description)
+        }
+    }, [error]);
+
+    return <Navigate to={path}/>
 }
 
 export default ErrorHandler;

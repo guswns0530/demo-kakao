@@ -52,6 +52,7 @@
         ON A.email = B.TO_ID
         where B.status = 1
         and A.status = 1
+        order by name
     </select>
 
     <!-- 나를 추가한 친구 ( -나는 추가하지 않은 친구 ) -->
