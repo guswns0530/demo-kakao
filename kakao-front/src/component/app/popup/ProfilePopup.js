@@ -1,10 +1,9 @@
 import React from "react";
 
 import style from "../../../css/MainPage.module.css"
-import {Link} from "react-router-dom";
 import ProfileImage from "../../util/ProfileImage";
 
-const ProfilePopup = ({resource: {profile_image_url, name}, onClose, isFriend, isMe}) => {
+const ProfilePopup = ({resource: {profile_image_url, name}, onClose, button}) => {
 
     return (
         <div id={style.profile_popup}>
@@ -26,32 +25,9 @@ const ProfilePopup = ({resource: {profile_image_url, name}, onClose, isFriend, i
 
             <nav className={style.pfile_nav}>
                 <ul>
-                    {isFriend &&
-                        <li>
-                            <Link to={"/app"}>
-                                <i className="material-icons">chat_bubble</i>
-                                <span>1:1 채팅</span>
-                            </Link>
-                        </li>
-                    }
-                    {
-                        isMe &&
-                        <li>
-                            <Link to={"/app"}>
-                                <i className="material-icons">edit</i>
-                                <span>프로필 관리</span>
-                            </Link>
-                        </li>
-                    }
-                    {
-                        (!isMe && !isFriend) &&
-                        < li>
-                            < Link to={"/app"}>
-                                <i className="material-icons">edit</i>
-                                <span>프로필 관리</span>
-                            </Link>
-                        </li>
-                    }
+                    <li>
+                        {button}
+                    </li>
                 </ul>
             </nav>
         </div>

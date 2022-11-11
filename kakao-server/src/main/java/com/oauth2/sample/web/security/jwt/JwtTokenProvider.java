@@ -83,6 +83,8 @@ public class JwtTokenProvider {
         Long maxAge = appProperties.getAuth().getRefreshTokenExpireLength() / 1000;
         String domain = appProperties.getCors().getDomain();
 
+        System.out.println("새로 발급된 토큰 refreshToken = " + refreshToken);
+
         CookieUtils.addCookie(response, name, refreshToken, maxAge.intValue(), domain);
     }
 

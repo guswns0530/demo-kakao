@@ -19,7 +19,8 @@ const Friend = () => {
         if (header && section) {
             const {clientHeight} = header.current
 
-            section.current.style.paddingTop = clientHeight + 'px'
+            section.current.style.marginTop = clientHeight + 'px'
+            section.current.style.height = `calc(100% - ${clientHeight}px)`
         }
     }, [header, section, isOpen])
 

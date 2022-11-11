@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!--https://maivve.tistory.com/348-->
 
 <mapper namespace="friend">
     <select id="selectFriend" parameterType="java.util.Map" resultMap="dto.friend">
@@ -52,7 +51,7 @@
         ON A.email = B.TO_ID
         where B.status = 1
         and A.status = 1
-        order by name
+        ORDER BY CONVERT(name,'US8ICL'), name asc
     </select>
 
     <!-- 나를 추가한 친구 ( -나는 추가하지 않은 친구 ) -->
@@ -79,6 +78,7 @@
         (select to_id
         from kakao_friends
         where from_id = #{email} )
+        ORDER BY CONVERT(name,'US8ICL'), name asc
     </select>
 
     <!--  차단 목록  -->
@@ -101,6 +101,7 @@
         on A.email = B.to_id
         where B.status = 2
         and A.status = 1
+        ORDER BY CONVERT(name,'US8ICL'), name asc
     </select>
 
 

@@ -43,7 +43,6 @@ const AddFriend = () => {
             return insertFriendToEmail(id)
         }
     }, {
-        useErrorBoundary: false,
         onSuccess: async (data) => {
             onSubmit()
 

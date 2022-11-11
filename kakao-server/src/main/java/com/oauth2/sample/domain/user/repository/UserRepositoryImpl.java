@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User save(User user) {
         if (!StringUtils.hasText(user.getId())) {
             String uuid = UUID.randomUUID().toString();
-            user.setId(user.getProvider() + ":" + uuid + "_" + new Date().toString());
+            user.setId(user.getProvider() + ":" + uuid + "_" + new Date().getTime());
         }
 
         int result = sqlSession.insert("user.save", user);

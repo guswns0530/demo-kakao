@@ -1,7 +1,19 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useRef} from "react";
 import Svg from "./Svg";
 import ProfilePng from "../../assets/profile.png";
 import {API_BASE_URL} from "../../constants";
+import styled from "styled-components";
+import styleLoading from "../styled/styleLoading";
+
+const StyledDiv = styled.div`
+    background-color: #ddd;
+    width: 100%;
+    height: 100% 
+    ${styleLoading}
+`
+const StyleImg = styled.img`
+    display: none;
+`
 
 function isValidHttpUrl(string) {
     let url;
@@ -34,9 +46,15 @@ const ProfileImage = ({profile_image_url}) => {
     const num = !isNaN(profile_image_url) * 1 ? profile_image_url * 1 : 5;
     const src = checkUrl();
 
+    const loading = useRef()
+
 
     return (<Svg backgroundColor={backgroundColor[num]}>
-        <img src={src} alt="img"/>
+        <StyledDiv ref={loading}/>
+        <StyleImg src={src} alt="img" onLoad={(e) => {
+            loading.current.remove()
+            e.target.style.display = 'block'
+        }}/>
     </Svg>)
 }
 

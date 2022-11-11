@@ -1,22 +1,19 @@
-import React, {Suspense, useState} from "react";
+import React, { useState} from "react";
 
 import RecommendFriendInfoComponent from "../../../component/app/friend/RecommendFriendInfo";
 import {useQuery} from "react-query";
 import {selectRecommendFriendList} from "../../../lib/api/friend";
 import LoadingRecommendFriendInfo from "../../../component/app/friend/LoadingRecommendFriendInfo";
 import {useSelector} from "react-redux";
-import {ErrorBoundary} from "react-error-boundary";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
 
 export const queryName = "selectRecommendFriendList"
 
-const RecommendFriendInfoFetching = () => {
-    const {data: {data: {data}}} = useQuery("selectRecommendFriendList", async () => {
+const RecommendFriendInfo = () => {
+    const {data, isError, isLoading, error} = useQuery("selectRecommendFriendList", async () => {
         return selectRecommendFriendList()
     }, {
-        suspense: true,
-        enabled: true,
         retry: false,
         cacheTime: 0
     });
@@ -25,24 +22,27 @@ const RecommendFriendInfoFetching = () => {
     }))
     const [isMore, setMore] = useState(false)
 
+    if (isLoading) {
+        return <LoadingRecommendFriendInfo/>
+    }
+
+    if (isError) {
+        if (error.response.status === 401 || error.response.status === 400) {
+            return <ErrorHandler error={error} path={"/logout"}/>
+        }
+
+        return <ErrorHandler error={error} path={"/app"}/>
+    }
+
     const onClick = (e) => {
         e.preventDefault()
         setMore(!isMore)
     }
 
-    const filterData = searchServiceToFriend(data, search)
+    const resource = data.data.data
+    const filterData = searchServiceToFriend(resource, search)
 
     return <RecommendFriendInfoComponent data={filterData} isMore={isMore} onClick={onClick}/>
-}
-
-const RecommendFriendInfo = () => {
-    return (
-        <Suspense fallback={<LoadingRecommendFriendInfo/>}>
-            <ErrorBoundary FallbackComponent={ErrorHandler({path: "/logout"})}>
-                <RecommendFriendInfoFetching/>
-            </ErrorBoundary>
-        </Suspense>
-    )
 }
 
 export default RecommendFriendInfo
