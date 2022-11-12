@@ -42,7 +42,7 @@ public class AuthService {
 
     public String refreshTokenToAccessToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
         String oldRefreshToken = CookieUtils.getCookie(request, appProperties.getAuth().getRefreshCookieKey())
-                .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("cookie가 존재하지 않습니다."));
+                .map(Cookie::getValue).orElseThrow(() -> new OAuth2AuthenticationProcessingException("refresh token cookie가 존재하지 않습니다."));
 
         if (!tokenProvider.validateToken(oldRefreshToken)) {
             throw new OAuth2AuthenticationProcessingException("잘못된 refresh token 입니다.");
@@ -62,7 +62,7 @@ public class AuthService {
 
         if (!savedToken.equals(oldRefreshToken)) {
 //            throw new OAuth2AuthenticationProcessingException("Refresh Token이 매칭되지 않습니다");
-            throw new BadRequestException("Refresh Token이 매칭되지 않습니다.");
+            throw new OAuth2AuthenticationProcessingException("Refresh Token이 매칭되지 않습니다.");
         }
 
         // 4. JWT 갱신

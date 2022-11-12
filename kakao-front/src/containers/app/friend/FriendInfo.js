@@ -7,31 +7,31 @@ import LoadingFriendInfo from "../../../component/app/friend/LoadingFriendInfo";
 import {useSelector} from "react-redux";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
+import {Item, Menu, Separator, Submenu, useContextMenu} from "react-contexify";
 
 export const queryName = "selectFriendList"
+export const menuId = "FriendInfoMenuId"
 
 const FriendInfo = () => {
     const {data, isLoading, isError, error} = useQuery(queryName, async () => {
         return selectFriendList()
     }, {
-        retry: false,
-        cacheTime: 0
+        retry: false, cacheTime: 0
     });
     const {search} = useSelector(({form}) => ({
         search: form.friend.search
     }))
     const [isMore, setMore] = useState(true)
+    const {show} = useContextMenu({
+        id: menuId
+    })
 
     if (isLoading) {
         return <LoadingFriendInfo/>
     }
 
     if (isError) {
-        if (error.response.status === 401 || error.response.status === 400) {
-            return <ErrorHandler error={error} path={"/logout"}/>
-        }
-
-        return <ErrorHandler error={error} path={"/app"}/>
+        return <ErrorHandler error={error} path={"/logout"}/>
     }
 
 
@@ -40,10 +40,29 @@ const FriendInfo = () => {
         setMore(!isMore)
     }
 
+    const handleContextMenu = (e) => {
+        e.preventDefault()
+        show(e, {})
+    }
+
     const resource = data.data.data
     const filterData = searchServiceToFriend(resource, search)
 
-    return <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick}/>
+    return (<>
+            <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onContextMenu={handleContextMenu}/>
+            <Menu id={menuId}>
+                <Item>Item1</Item>
+                <Item>Item 2</Item>
+                <Separator/>
+                <Item disabled>Disabled</Item>
+                <Separator/>
+                <Submenu label="Foobar">
+                    <Item>Sub Item 1</Item>
+                    <Item>Sub Item 2</Item>
+                </Submenu>
+            </Menu>
+        </>
+    )
 }
 
 export default FriendInfo

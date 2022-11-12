@@ -170,3 +170,23 @@ WHERE type = '1'
   AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = 'test2')
   AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = 'test1');
 
+
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010212@naver.com', '', 'test1', '안녕', '박현준', 1, 'local', 1, sysdate);
+
+
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010210@naver.com', '', 'test8', 'hello world', '김태현', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010211@naver.com', '', 'test2', 'fps game', '박인환', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010213@naver.com', '', 'test3', 'byungsin', '박홍신', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010214@naver.com', '', 'test4', 'you', '송유신', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010215@naver.com', '', 'test7', '좋은 날', '이창연', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010216@naver.com', '', 'test6', '병신', '이주성', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider,  status, createAt)
+values ('y2010217@naver.com', '', 'test5', '친구1', '김우석', 1, 'local', 1, sysdate);
+

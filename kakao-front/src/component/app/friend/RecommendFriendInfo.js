@@ -2,7 +2,7 @@ import React from "react";
 import style from "../../../css/MainPage.module.css";
 import Profile from "./Profile";
 
-const RecommendFriendInfo = ({data, onClick, isMore}) => {
+const RecommendFriendInfo = ({data, onClick, isMore, onAuxClick}) => {
 
     return (<>
         <div className={style.disable_box}>
@@ -19,7 +19,7 @@ const RecommendFriendInfo = ({data, onClick, isMore}) => {
         {isMore && <ul>
             {data
                 .map(user => {
-                    return (<li key={user.email}>
+                    return (<li key={user.email} onAuxClick={onAuxClick}>
                         <Profile user={user}/>
                     </li>)
                 })}

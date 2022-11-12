@@ -27,11 +27,7 @@ const RecommendFriendInfo = () => {
     }
 
     if (isError) {
-        if (error.response.status === 401 || error.response.status === 400) {
-            return <ErrorHandler error={error} path={"/logout"}/>
-        }
-
-        return <ErrorHandler error={error} path={"/app"}/>
+        return <ErrorHandler error={error} path={"/logout"}/>
     }
 
     const onClick = (e) => {
@@ -39,10 +35,15 @@ const RecommendFriendInfo = () => {
         setMore(!isMore)
     }
 
+    const handleContextMenu = (e) => {
+        e.preventDefault()
+        console.log('우클릭')
+    }
+
     const resource = data.data.data
     const filterData = searchServiceToFriend(resource, search)
 
-    return <RecommendFriendInfoComponent data={filterData} isMore={isMore} onClick={onClick}/>
+    return <RecommendFriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onAuxClick={handleContextMenu}/>
 }
 
 export default RecommendFriendInfo

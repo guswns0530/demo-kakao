@@ -21,7 +21,7 @@ repositories {
 dependencies {
 	implementation fileTree(dir: 'src/main/resources/libs', include: ['*.jar'])
 
-	implementation 'commons-io:commons-io:2.6'
+	implementation 'commons-io:commons-io:2.11.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation group: 'org.springframework.security', name: 'spring-security-messaging', version: '5.7.3'
@@ -35,6 +35,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'

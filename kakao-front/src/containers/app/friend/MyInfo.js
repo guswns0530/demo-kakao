@@ -30,11 +30,7 @@ const MyInfo = () => {
     }
 
     if (isError) {
-        if (error.response.status === 401 || error.response.status === 400) {
-            return <ErrorHandler error={error} path={"/logout"}/>
-        }
-
-        return <ErrorHandler error={error} path={"/app"}/>
+        return <ErrorHandler error={error} path={"/logout"}/>
     }
 
     return (

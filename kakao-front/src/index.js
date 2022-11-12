@@ -25,9 +25,10 @@ import NotFoundPage from "./pages/NotFoundPage";
 // queryClient
 import {QueryClientProvider} from "react-query";
 import {ToastContainer} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"
 import queryClient from "./services/queryClient";
 
+import "react-toastify/dist/ReactToastify.css"
+import "react-contexify/dist/ReactContexify.css"
 
 const sagaMiddleware = createSagaMiddleware()
 
