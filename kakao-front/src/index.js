@@ -28,7 +28,8 @@ import {ToastContainer} from "react-toastify";
 import queryClient from "./services/queryClient";
 
 import "react-toastify/dist/ReactToastify.css"
-import "react-contexify/dist/ReactContexify.css"
+import "./css/ReactContexify.css"
+
 
 const sagaMiddleware = createSagaMiddleware()
 

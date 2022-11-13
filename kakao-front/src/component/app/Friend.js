@@ -1,32 +1,15 @@
-import React, {useEffect, useRef, useState} from "react";
+import React from "react";
 
 import style from "../../css/MainPage.module.css"
 import {Link} from "react-router-dom";
 import MyInfo from "../../containers/app/friend/MyInfo";
 import FriendInfo from "../../containers/app/friend/FriendInfo";
 import RecommendFriendInfo from "../../containers/app/friend/RecommendFriendInfo";
-import Svg from "../util/Svg";
-import {useDispatch, useSelector} from "react-redux";
-import {changeField} from "../../modules/form";
+import SearchForm from "../../containers/app/friend/SearchForm";
 
-const Friend = () => {
-    const [isOpen, setOpen] = useState(false)
-    const onClick = () => setOpen(!isOpen)
-    const header = useRef()
-    const section = useRef()
-
-    useEffect(() => {
-        if (header && section) {
-            const {clientHeight} = header.current
-
-            section.current.style.marginTop = clientHeight + 'px'
-            section.current.style.height = `calc(100% - ${clientHeight}px)`
-        }
-    }, [header, section, isOpen])
-
-
+const Friend = ({header, onClick, isOpen, section, onScroll}) => {
     return (<>
-            <div className={`${style.container} ${style.friends} `}>
+            <div className={`${style.container} ${style.friends} `} >
                 <header ref={header}>
                     <div className={style.h_title}>
                         <h2>친구</h2>
@@ -39,14 +22,13 @@ const Friend = () => {
                             <li>
                                 <Link to={"./add-friend"}>
                                     <i className="material-icons">person_add</i>
-                                    {/*<PersonAdd/>*/}
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     {isOpen && <SearchForm onClick={onClick}/>}
                 </header>
-                <section ref={section}>
+                <section ref={section} onScroll={onScroll}>
                     <MyInfo/>
                     <RecommendFriendInfo/>
                     <FriendInfo/>
@@ -56,53 +38,5 @@ const Friend = () => {
     )
 }
 
-const SearchForm = ({onClick}) => {
-    const dispatch = useDispatch();
-    const {form} = useSelector(({form}) => ({
-        form: form,
-    }))
-
-    const onChange = e => {
-        const {value, name} = e.target
-        dispatch(
-            changeField({
-                form: 'friend',
-                key: name,
-                value
-            })
-        )
-    }
-
-    useEffect(() => {
-        dispatch(changeField({
-            form: 'friend',
-            key: 'search',
-            value: ''
-        }))
-    }, [dispatch]);
-
-
-    return (<div className={style.search_box}>
-        <div className={style.search_form}>
-            <div className={style.icon}>
-                <Svg><i className={"material-icons"}>search</i></Svg>
-            </div>
-            <input onChange={onChange} value={form.friend.search.value} name="search"/>
-        </div>
-        <div className={style.search_close} onClick={() => {
-            dispatch(changeField({
-                form: 'friend',
-                key: 'search',
-                value: ''
-            }))
-            onClick()
-        }}>
-            <div>
-                <div/>
-                <div/>
-            </div>
-        </div>
-    </div>)
-}
 
 export default Friend

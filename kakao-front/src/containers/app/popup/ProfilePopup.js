@@ -9,6 +9,7 @@ import {insertFriendToId} from "../../../lib/api/friend";
 import queryClient from "../../../services/queryClient";
 import {queryName as friendInfoQueryName} from "../friend/FriendInfo";
 import {queryName as recommendFriendInfoQueryName} from "../friend/RecommendFriendInfo";
+import LayerPopup from "../../../component/util/LayerPopup";
 
 const ProfilePopup = () => {
     const {id} = useParams()
@@ -84,7 +85,11 @@ const ProfilePopup = () => {
         }
     })(isMe, isFriend)
 
-    return <ProfilePopupComponent resource={resource} onClose={onClose} button={button}/>
+    return (
+        <LayerPopup>
+            <ProfilePopupComponent resource={resource} onClose={onClose} button={button}/>
+        </LayerPopup>
+    )
 }
 
 

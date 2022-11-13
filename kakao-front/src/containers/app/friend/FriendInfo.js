@@ -7,7 +7,7 @@ import LoadingFriendInfo from "../../../component/app/friend/LoadingFriendInfo";
 import {useSelector} from "react-redux";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
-import {Item, Menu, Separator, Submenu, useContextMenu} from "react-contexify";
+import {Item, Menu, Separator, useContextMenu} from "react-contexify";
 
 export const queryName = "selectFriendList"
 export const menuId = "FriendInfoMenuId"
@@ -40,9 +40,13 @@ const FriendInfo = () => {
         setMore(!isMore)
     }
 
-    const handleContextMenu = (e) => {
+    const handleContextMenu = (e, email) => {
         e.preventDefault()
-        show(e, {})
+        show(e, {
+            props: () => ({
+                email
+            })
+        })
     }
 
     const resource = data.data.data
@@ -50,16 +54,13 @@ const FriendInfo = () => {
 
     return (<>
             <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onContextMenu={handleContextMenu}/>
-            <Menu id={menuId}>
-                <Item>Item1</Item>
-                <Item>Item 2</Item>
+            <Menu id={menuId} animation={false}>
+                <Item>채팅하기</Item>
                 <Separator/>
-                <Item disabled>Disabled</Item>
+                <Item>프로필 보기</Item>
+                <Item>이름 변경</Item>
                 <Separator/>
-                <Submenu label="Foobar">
-                    <Item>Sub Item 1</Item>
-                    <Item>Sub Item 2</Item>
-                </Submenu>
+                <Item>차단</Item>
             </Menu>
         </>
     )

@@ -4,7 +4,7 @@ import {logout} from "../modules/auth";
 
 import style from '../css/MainPage.module.css'
 import {Link, useLocation} from "react-router-dom";
-import Friend from "../component/app/Friend";
+import Friend from "../containers/app/Friend";
 
 import {Route, Routes} from '/node_modules/react-router-dom/dist/index';
 import ProfilePopup from "../containers/app/popup/ProfilePopup";

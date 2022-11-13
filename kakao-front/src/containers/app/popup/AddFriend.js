@@ -10,6 +10,7 @@ import {queryName as friendInfoQueryName} from "../friend/FriendInfo";
 import {queryName as recommendFriendInfoQueryName} from "../friend/RecommendFriendInfo";
 
 import queryClient from "../../../services/queryClient";
+import Popup from "../../../component/util/Popup";
 
 const AddFriend = () => {
     const {type} = useParams()
@@ -102,17 +103,21 @@ const AddFriend = () => {
     }
 
 
-    return (<AddFriendComponent
-        onClose={onClose}
-        onChange={onChange}
-        id={id}
-        onSubmit={onSubmit}
-        isLoadingSearch={isLoadingSearch}
-        data={data}
-        error={error}
-        onClick={onClick}
-        isLoadingInsertFriend={isLoadingInsertFriend}
-        user={user}/>)
+    return (
+        <Popup>
+            <AddFriendComponent
+            onClose={onClose}
+            onChange={onChange}
+            id={id}
+            onSubmit={onSubmit}
+            isLoadingSearch={isLoadingSearch}
+            data={data}
+            error={error}
+            onClick={onClick}
+            isLoadingInsertFriend={isLoadingInsertFriend}
+            user={user}/>
+        </Popup>
+    )
 }
 
 export default AddFriend

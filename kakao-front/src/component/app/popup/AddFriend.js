@@ -3,8 +3,8 @@ import {Link, useParams} from "react-router-dom";
 import ProfileImage from "../../util/ProfileImage";
 
 function buttonSwitch(data, onClick, user, able) {
-    if(data?.data?.data?.email === user?.email) {
-        return <button className={style.active} >나와의 채팅</button>
+    if (data?.data?.data?.email === user?.email) {
+        return <button className={style.active}>나와의 채팅</button>
     }
     switch (data.data.data['friend_status']) {
         case 'NONE' :
@@ -20,11 +20,21 @@ function buttonSwitch(data, onClick, user, able) {
     }
 }
 
-const AddFriend = ({onClose, onChange, id, onSubmit, isLoadingSearch, data, error, onClick, user, isLoadingInsertFriend}) => {
+const AddFriend = ({
+                       onClose,
+                       onChange,
+                       id,
+                       onSubmit,
+                       isLoadingSearch,
+                       data,
+                       error,
+                       onClick,
+                       user,
+                       isLoadingInsertFriend
+                   }) => {
     const {type} = useParams()
 
-    return (<div className={style.body}>
-        <div id={style.add_friend_popup} className={`${style.popup} ${style.focus}`}>
+    return (<div id={style.add_friend_popup} className={`${style.popup} ${style.focus}`}>
             <div className={style.tab}>
                 <div className={style.exit} onClick={onClose}>
                     <div></div>
@@ -69,16 +79,12 @@ const AddFriend = ({onClose, onChange, id, onSubmit, isLoadingSearch, data, erro
 
                     </div>
                     <div className={style.aff_buttons}>
-                        {data ?
-                            buttonSwitch(data, onClick, user, isLoadingInsertFriend || isLoadingSearch)
-                            :
-                            <button>친구 검색</button>
-                        }
+                        {data ? buttonSwitch(data, onClick, user, isLoadingInsertFriend || isLoadingSearch) :
+                            <button>친구 검색</button>}
                     </div>
                 </form>
             </section>
-        </div>
-    </div>)
+        </div>)
 }
 
 export default AddFriend
