@@ -4,7 +4,7 @@ import style from "../../../css/MainPage.module.css"
 import styled from "styled-components";
 import styleLoading from "../../styled/styleLoading";
 
-const StyledDiv = styled.div`
+const StyleImage = styled.div`
     background-color: #ddd;
     width: 100%;
     height: 100%;
@@ -32,7 +32,7 @@ const LoadingProfile = () => {
     return (<>
         <div className={style.profile}>
             <div className={style.image}>
-                <StyledDiv/>
+                <StyleImage/>
             </div>
             <div className={style.context}>
                 <StyleName/>

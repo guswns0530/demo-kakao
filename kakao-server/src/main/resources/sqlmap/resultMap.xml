@@ -19,6 +19,7 @@
         <result column="ID" property="id" jdbcType="VARCHAR"/>
         <result column="EMAIL" property="email" jdbcType="VARCHAR"/>
         <result column="NAME" property="name" jdbcType="VARCHAR"/>
+        <result column="REALNAME" property="realname" jdbcType="VARCHAR"/>
         <result column="MESSAGE" property="message" jdbcType="VARCHAR"/>
         <result column="PROFILE_IMAGE_URL" property="profileImageUrl" jdbcType="VARCHAR"/>
         <result column="STATUS" property="status" jdbcType="VARCHAR"/>

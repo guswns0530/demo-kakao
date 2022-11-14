@@ -1,15 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import ProfilePopupComponent from "../../../component/app/popup/ProfilePopup";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {useMutation, useQuery} from "react-query";
+import {useQuery} from "react-query";
 import {selectUserToId} from "../../../lib/api/user";
 import {useSelector} from "react-redux";
 import ErrorHandler from "../../handler/ErrorHandler";
-import {insertFriendToId} from "../../../lib/api/friend";
-import queryClient from "../../../services/queryClient";
-import {queryName as friendInfoQueryName} from "../friend/FriendInfo";
-import {queryName as recommendFriendInfoQueryName} from "../friend/RecommendFriendInfo";
-import LayerPopup from "../../../component/util/LayerPopup";
+import {useInsertFriend} from "../../../lib/query";
+
+export const queryName = "selectUserToId"
 
 const ProfilePopup = () => {
     const {id} = useParams()
@@ -18,8 +16,7 @@ const ProfilePopup = () => {
         isLoading,
         isError,
         error,
-        refetch
-    } = useQuery(["selectUserToId", id], async () => selectUserToId(id), {
+    } = useQuery([queryName, id], async () => selectUserToId(id), {
         suspense: false,
         useErrorBoundary: false,
         retry: false,
@@ -28,40 +25,43 @@ const ProfilePopup = () => {
     const {user} = useSelector(({user}) => ({
         user: user.user
     }))
-    const {mutate, isLoading: isInsertLoading, isError: isInsertError, error: insertError} = useMutation(async () => {
-        return insertFriendToId(id)
-    }, {
-        onSuccess: async (data) => {
-            await refetch()
+    const {mutate, isLoading: isInsertLoading, isError: isInsertError, error: insertError} = useInsertFriend()
+    const [{x, y}, setPosition] = useState({x: 0, y: 0})
 
-            await queryClient.refetchQueries(friendInfoQueryName)
-            await queryClient.refetchQueries(recommendFriendInfoQueryName)
+
+    const onInsertFriend = () => mutate({id, type: 'id'});
+    const onClose = () => {
+        navigate("/app")
+    }
+    const trackPos = (e, data) => {
+        if (x < 0 || y < 0) {
+            e.preventDefault()
+            return
         }
-    })
-
-
-    if (isLoading || isInsertLoading) {
-        return <div></div>
+        setPosition({x: data.x, y: data.y})
     }
 
     if (isError) {
         return <ErrorHandler error={error} path={"/app"}/>
     }
+
     if (isInsertError) {
         return <ErrorHandler error={insertError} path={"/app"}/>
     }
 
-    const onInsertFriend = () => mutate();
-    const onClose = () => {
-        navigate("/app")
-    }
-
-    const resource = data.data.data
+    const resource = data?.data?.data
 
     const isMe = user?.id === resource?.id
     const isFriend = resource?.friend_status === "FRIEND";
 
     const button = ((isMe, isFriend) => {
+        if(isLoading || isInsertLoading) {
+            // eslint-disable-next-line jsx-a11y/anchor-is-valid
+            return <a>
+                <i className="material-icons">refresh</i>
+                <span>로딩중..</span>
+            </a>
+        }
         if (isMe) {
             return (<Link to={"/app"}>
                 <i className="material-icons">edit</i>
@@ -70,7 +70,7 @@ const ProfilePopup = () => {
         }
 
         if (isFriend) {
-            return (<Link to={"/app"} >
+            return (<Link to={"/app"}>
                 <i className="material-icons">chat_bubble</i>
                 <span>1:1 채팅</span>
             </Link>)
@@ -85,10 +85,10 @@ const ProfilePopup = () => {
         }
     })(isMe, isFriend)
 
+
     return (
-        <LayerPopup>
-            <ProfilePopupComponent resource={resource} onClose={onClose} button={button}/>
-        </LayerPopup>
+        <ProfilePopupComponent resource={resource} onClose={onClose} button={button} trackPos={trackPos}
+                               isLoading={isInsertLoading || isLoading}/>
     )
 }
 

@@ -14,6 +14,7 @@ public class Friend {
     private String id;
     private String email;
     private String name;
+    private String realname;
     private String profileImageUrl;
     private String message;
     private String roomId;

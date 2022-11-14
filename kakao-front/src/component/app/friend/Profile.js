@@ -8,7 +8,7 @@ const Profile = ({user}) => {
     const {message, name, profile_image_url, id} = user
 
     return (<>
-        <div className={style.profile}>
+        <div className={style.profile} >
             <div className={style.image}>
                 <Link to={"/app/profile/" + id}>
                     <ProfileImage profile_image_url={profile_image_url}/>

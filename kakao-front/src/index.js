@@ -27,6 +27,8 @@ import {QueryClientProvider} from "react-query";
 import {ToastContainer} from "react-toastify";
 import queryClient from "./services/queryClient";
 
+import LayerPopupContainer from "./containers/util/LayerPopupContainer";
+
 import "react-toastify/dist/ReactToastify.css"
 import "./css/ReactContexify.css"
 
@@ -48,6 +50,7 @@ root.render(
             <PersistGate loading={<NotFoundPage/>} persistor={persist}>
                 <QueryClientProvider client={queryClient}>
                     <ToastContainer position={"top-right"}/>
+                    <LayerPopupContainer/>
                     <App/>
                 </QueryClientProvider>
             </PersistGate>

@@ -19,7 +19,7 @@ const FriendInfo = ({data, onClick, isMore, onContextMenu}) => {
         {isMore && <ul>
             {data
                 .map(user => {
-                    return (<li key={user.email} onContextMenu={onContextMenu}>
+                    return (<li key={user.email} onContextMenu={(e) => onContextMenu(e, user)}>
                         <Profile user={user}/>
                     </li>)
                 })}

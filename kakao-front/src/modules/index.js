@@ -7,6 +7,7 @@ import auth, {SET_ACCESS_TOKEN, authSaga, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE} 
 import loading from "./loading";
 import user, {userSaga} from './user'
 import form from './form'
+import popup from "./popup";
 
 
 export function* rootSaga() {
@@ -35,7 +36,8 @@ const rootReducer = combineReducers({
   auth: persistReducer(authConfig, auth),
   loading,
   user,
-  form
+  form,
+  popup
 });
 
 export default persistReducer(persistConfig, rootReducer)

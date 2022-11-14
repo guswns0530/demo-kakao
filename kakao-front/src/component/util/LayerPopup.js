@@ -1,48 +1,48 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
+import "../../css/MainPage.module.css"
+import style from "../../css/MainPage.module.css";
 
-const Body = styled.div`
+const PopupStyled = styled.div`
+    width: 100%;
+    height: 100%;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background-color: rgb(0, 0, 0, 0.2);
+
+    z-index: 6;
+    
+    & > div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    
+        transform: translate(-50%, -50%);
+    }
 `
 
-const LayerPopup = ({children, initX = 0, initY = 0}) => {
-    const [x, setX] = useState(initX)
-    const [y, setY] = useState(initY)
-    const [isMove, setMove] = useState(false)
-    let clickX, clickY
+const LayerPopup = ({children, onClose, onSubmit}) => {
 
-    const mouseDown =  (e) => {
-        if (!(e.target === eventTarget || e.target === header)) return
-        setMove(true)
-
-        const { offsetX, offsetY } = e
-
-        clickX = offsetX
-        clickY = offsetY
-
-        if (e.target === header) {
-            clickX += 15
-            clickY += 15
-        }
-    }
-
-    const mouseUp = (e) => {
-        setMove(false)
-        clickX = 0
-        clickY = 0
-    }
-
-    const mousemove = (e) => {
-        if (!isMove) return
-
-        const { clientX, clientY } = e
-
-        this.popup.style.left = clientX - clickX + 'px'
-        this.popup.style.top = clientY - clickY + 'px'
-    }
-
-
-    return children
+    return (
+        <PopupStyled>
+            <div id={style.layer_popup} className={`${style.popup} ${style.focus}`}>
+                <div className={style.tab} onClick={onClose}>
+                    <div className={style.exit}>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                {children}
+                <div className={style.btns}>
+                    <button onClick={onSubmit}>확인</button>
+                    <button onClick={onClose}>취소</button>
+                </div>
+            </div>
+        </PopupStyled>
+    )
 }
 
 export default LayerPopup
-
