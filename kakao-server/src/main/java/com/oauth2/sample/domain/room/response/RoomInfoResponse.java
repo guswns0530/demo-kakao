@@ -21,6 +21,8 @@ public class RoomInfoResponse {
 
     private String joinUserCnt;
 
+    private String unreadCnt;
+
     private List<JoinUser> users;
 
     private String chatContent;

@@ -9,6 +9,7 @@ import Friend from "../containers/app/Friend";
 import {Route, Routes} from '/node_modules/react-router-dom/dist/index';
 import ProfilePopup from "../containers/app/popup/ProfilePopup";
 import AddFriend from "../containers/app/popup/AddFriend";
+import Chatting from "../containers/app/Chatting";
 
 
 const MainPageFetch = () => {
@@ -29,7 +30,7 @@ const MainPageFetch = () => {
                     <Link className={state === 1? style.select : ''} to={"/app"} state={1}>
                         <i className="material-icons" id="nav_2"
                         >chat_bubble
-                            <div className={style.alert}>1</div>
+                            <div className={style.alert}>2</div>
                         </i>
                     </Link>
                 </li>
@@ -45,7 +46,7 @@ const MainPageFetch = () => {
         </nav>
         {
             state === 1 ?
-                <div>앱</div>
+                <Chatting/>
                 :
                 <Friend/>
         }

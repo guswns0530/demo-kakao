@@ -12,7 +12,7 @@ const StyleDiv = styled.div`
     ${styleLoading}
 `
 
-const LoadingFriendInfo = () => {
+const LoadingFriendList = () => {
     return (
         <>
             <div className={style.disable_box}>
@@ -24,4 +24,4 @@ const LoadingFriendInfo = () => {
     )
 }
 
-export default LoadingFriendInfo
+export default LoadingFriendList

@@ -1,16 +1,16 @@
 import React, { useState} from "react";
 
-import RecommendFriendInfoComponent from "../../../component/app/friend/RecommendFriendInfo";
+import RecommendFriendInfoComponent from "../../../component/app/friend/RecommendFriendList";
 import {useQuery} from "react-query";
 import {selectRecommendFriendList} from "../../../lib/api/friend";
-import LoadingRecommendFriendInfo from "../../../component/app/friend/LoadingRecommendFriendInfo";
+import LoadingRecommendFriendInfo from "../../../component/app/friend/LoadingRecommendFriendList";
 import {useSelector} from "react-redux";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
 
 export const queryName = "selectRecommendFriendList"
 
-const RecommendFriendInfo = () => {
+const RecommendFriendList = () => {
     const {data, isError, isLoading, error} = useQuery("selectRecommendFriendList", async () => {
         return selectRecommendFriendList()
     }, {
@@ -46,4 +46,4 @@ const RecommendFriendInfo = () => {
     return <RecommendFriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onAuxClick={handleContextMenu}/>
 }
 
-export default RecommendFriendInfo
+export default RecommendFriendList

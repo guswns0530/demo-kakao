@@ -65,7 +65,7 @@
         where E.TYPE in (1, 2)
         and E.CREATEAT >= (select NVL(B.CREATEAT, sysdate)
         from KAKAO_READ_USERS B
-        where B.EMAIL = 'y2010214@naver.com'
+        where B.EMAIL = #{email}
         and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
@@ -142,7 +142,7 @@
         where E.TYPE in (1, 2)
         and E.CREATEAT >= (select NVL(B.CREATEAT, sysdate)
         from KAKAO_READ_USERS B
-        where B.EMAIL = 'y2010214@naver.com'
+        where B.EMAIL = #{email}
         and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
         join kakao_join_users D on C.ROOM_ID = D.ROOM_ID

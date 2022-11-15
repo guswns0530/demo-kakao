@@ -1,9 +1,9 @@
 import React, {useRef, useState} from "react";
 
-import FriendInfoComponent from "../../../component/app/friend/FriendInfo";
+import FriendInfoComponent from "../../../component/app/friend/FriendList";
 import {useQuery} from "react-query";
 import {selectFriendList} from "../../../lib/api/friend";
-import LoadingFriendInfo from "../../../component/app/friend/LoadingFriendInfo";
+import LoadingFriendList from "../../../component/app/friend/LoadingFriendList";
 import {useDispatch, useSelector} from "react-redux";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
@@ -16,7 +16,7 @@ import {oepnPopup} from "../../../modules/popup";
 export const queryName = "selectFriendList"
 export const menuId = "FriendInfoMenuId"
 
-const FriendInfo = () => {
+const FriendList = () => {
     const dispatch = useDispatch()
     const inputRef = useRef()
     const {data, isLoading, isError, error} = useQuery(queryName, async () => {
@@ -36,7 +36,7 @@ const FriendInfo = () => {
     const {mutate: updateNickMutate} = useChangeNickname();
 
     if (isLoading) {
-        return <LoadingFriendInfo/>
+        return <LoadingFriendList/>
     }
 
     if (isError) {
@@ -78,6 +78,8 @@ const FriendInfo = () => {
             </>),
             submit: () => {
                 mutate({email: user.email})
+
+                return true
             }
         })
         dispatch(action)
@@ -145,4 +147,4 @@ const InputForm = ({user, inputRef}) => {
     </>)
 }
 
-export default FriendInfo
+export default FriendList

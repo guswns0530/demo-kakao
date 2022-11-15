@@ -3,8 +3,8 @@ import React from "react";
 import style from "../../css/MainPage.module.css"
 import {Link} from "react-router-dom";
 import MyInfo from "../../containers/app/friend/MyInfo";
-import FriendInfo from "../../containers/app/friend/FriendInfo";
-import RecommendFriendInfo from "../../containers/app/friend/RecommendFriendInfo";
+import FriendList from "../../containers/app/friend/FriendList";
+import RecommendFriendList from "../../containers/app/friend/RecommendFriendList";
 import SearchForm from "../../containers/app/friend/SearchForm";
 
 const Friend = ({header, onClick, isOpen, section, onScroll}) => {
@@ -30,8 +30,8 @@ const Friend = ({header, onClick, isOpen, section, onScroll}) => {
                 </header>
                 <section ref={section} onScroll={onScroll}>
                     <MyInfo/>
-                    <RecommendFriendInfo/>
-                    <FriendInfo/>
+                    <RecommendFriendList/>
+                    <FriendList/>
                 </section>
             </div>
         </>

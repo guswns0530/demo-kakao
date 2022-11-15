@@ -19,7 +19,7 @@ const LayerPopupContainer = () => {
     }
 
     const onSubmit = () => {
-        if(submit()) {
+        if(submit && submit()) {
             onClose()
         }
     }

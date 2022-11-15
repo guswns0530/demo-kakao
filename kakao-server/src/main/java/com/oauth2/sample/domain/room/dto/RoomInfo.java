@@ -22,6 +22,8 @@ public class RoomInfo {
 
     private String users;
 
+    private String unreadCnt;
+
     private String chatContent;
 
     private ChatType chatType;

@@ -201,6 +201,7 @@ public class RoomService {
                 .chatContent(roomInfo.getChatContent())
                 .chatStatus(roomInfo.getChatStatus())
                 .chatType(roomInfo.getChatType())
+                .unreadCnt(roomInfo.getUnreadCnt())
                 .users(arrayList)
                 .roomType(roomInfo.getRoomType())
                 .joinUserCnt(roomInfo.getJoinUserCnt()).build();

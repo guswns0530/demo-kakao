@@ -4,8 +4,8 @@ import queryClient from "../../services/queryClient";
 import {blockFriendToEmail, insertFriendToEmail, insertFriendToId, updateFriendName} from "../api/friend";
 
 import {queryName as myInfoQueryName} from "../../containers/app/friend/MyInfo";
-import {queryName as friendInfoQueryName} from "../../containers/app/friend/FriendInfo";
-import {queryName as recommendFriendInfoQueryName} from "../../containers/app/friend/RecommendFriendInfo";
+import {queryName as friendInfoQueryName} from "../../containers/app/friend/FriendList";
+import {queryName as recommendFriendInfoQueryName} from "../../containers/app/friend/RecommendFriendList";
 import {queryName as selectToUserId} from "../../containers/app/popup/ProfilePopup";
 import {updateUserToEmail} from "../api/user";
 

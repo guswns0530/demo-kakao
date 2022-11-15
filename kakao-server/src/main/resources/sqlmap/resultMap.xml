@@ -37,6 +37,7 @@
         <result column="JOIN_USER_CNT" property="joinUserCnt" jdbcType="VARCHAR" />
         <result column="CHAT_CREATEAT" property="chatCreateAt" jdbcType="VARCHAR" />
         <result column="ROOM_CREATEAT" property="roomCreateAt" jdbcType="VARCHAR" />
+        <result column="UNREAD_CNT" property="unreadCnt" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="chat" type="com.oauth2.sample.domain.chat.dto.Chat">

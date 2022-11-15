@@ -89,9 +89,6 @@ li {
 
     font-size: 12px;
     color: #fff;
-
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .fixed_nav ul.main_nav li:nth-child(2) i .alert {
@@ -639,7 +636,6 @@ li {
 }
 
 .rooms header {
-    padding-bottom: 0;
 }
 .rooms section {
     padding-top: 70px;
@@ -1566,3 +1562,50 @@ header img {
 #layer_popup .layer_input input:focus {
     border-bottom: 1px solid #000;
 }
+
+.rooms .context {
+    width: 100%;
+}
+
+.sub_info {
+    padding-left: 10px;
+    height: 56px;
+
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.sub_info .date{
+    color: #bfbfbf;
+
+    font-size: 11px;
+    margin-top: 12px;
+
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+.sub_info .alert {
+    margin-top: 7px;
+    width: 17px;
+    height: 17px;
+
+    border-radius: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: 600;
+
+    background-color: #ff5442;
+
+    font-size: 12px;
+    color: #fff;
+}
+
+.rooms .profile{
+    padding: 6px 20px !important;
+}
+
