@@ -18,6 +18,7 @@ public class User implements Serializable {
     private String name;
     private String profileImageUrl;
     private String message;
+    private String roomId;
     @JsonIgnore
     private String password;
     private AuthProvider provider;

@@ -2,16 +2,17 @@ import React from "react";
 import style from "../../css/MainPage.module.css"
 import {Link} from "react-router-dom";
 import ChattingList from "../../containers/app/chatting/ChattingList";
+import SearchForm from "../../containers/app/chatting/SearchForm";
 
-const Chatting = () => {
+const Chatting = ({header, onClick, isOpen, section, onScroll}) => {
     return (<>
             <div className={`${style.container} ${style.rooms}`}>
-                <header>
+                <header ref={header}>
                     <div className={style.h_title}>
                         <h2>채팅</h2>
                         <ul className={style.h_nav}>
                             <li>
-                                <Link to={"/app"}>
+                                <Link onClick={onClick}>
                                     <i className="material-icons">search</i>
                                 </Link>
                             </li>
@@ -22,8 +23,9 @@ const Chatting = () => {
                             </li>
                         </ul>
                     </div>
+                    {isOpen && <SearchForm onClick={onClick}/>}
                 </header>
-                <section>
+                <section ref={section} onScroll={onScroll}>
                     <ChattingList/>
                 </section>
             </div>

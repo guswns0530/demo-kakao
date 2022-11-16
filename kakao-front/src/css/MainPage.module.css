@@ -333,14 +333,32 @@ li {
     border-radius: 46%;
 }
 
+.p_name > .name {
+
+}
+.p_name > .p_count {
+    margin-top: 4px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    color: #4a4c4e;
+    line-height: 14px;
+}
+.p_name > .p_count i{
+    color: #4a4c4e;
+    font-size: 13px;
+    margin-right: 2px;
+    display: flex;
+}
 .p_name {
-    margin-top: 3px;
+    margin-top: 8px;
     margin-left: 10px;
 
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 900;
     color: #4a4c4e;
 }
+
 
 #popup .tab {
     position: absolute;
@@ -638,7 +656,6 @@ li {
 .rooms header {
 }
 .rooms section {
-    padding-top: 70px;
 }
 
 .rooms .profile {
@@ -1589,7 +1606,7 @@ header img {
     margin-top: 11px;
 
     white-space: nowrap;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .sub_info .alert {

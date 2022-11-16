@@ -27,7 +27,7 @@ const ProfilePopup = ({resource, onClose, button, trackPos, isLoading}) => {
 
     return (
         <Draggable onDrag={trackPos} bounds={"parent"}>
-            <div id={style.profile_popup} >
+            <div id={style.profile_popup}>
                 <div className={style.tab}>
                     <div className={style.exit} onClick={onClose}>
                         <div></div>

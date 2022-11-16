@@ -43,6 +43,9 @@ const FriendList = () => {
     }
 
 
+    const onProfileClick = (e, room_id) => {
+        navigate("/app/chatting/" + room_id)
+    }
     const onClick = (e) => {
         e.preventDefault()
         setMore(!isMore)
@@ -112,7 +115,7 @@ const FriendList = () => {
     const filterData = searchServiceToFriend(resource, search)
 
     return (<>
-        <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onContextMenu={handleContextMenu}/>
+        <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onContextMenu={handleContextMenu} onProfileClick={onProfileClick}/>
         <Menu id={menuId} animation={false}>
             <Item>채팅하기</Item>
             <Separator/>

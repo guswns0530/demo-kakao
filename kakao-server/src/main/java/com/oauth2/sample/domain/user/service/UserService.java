@@ -68,6 +68,7 @@ public class UserService {
             user.setMessage(friend.getMessage());
             user.setProfileImageUrl(friend.getProfileImageUrl());
             user.setFriendStatus(friend.getStatus());
+            user.setRoomId(friend.getRoomId());
             switch (friend.getStatus()) {
                 case FRIEND:
                     user.setName(friend.getName());

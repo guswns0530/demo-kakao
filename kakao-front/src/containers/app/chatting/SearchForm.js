@@ -13,7 +13,7 @@ const SearchForm = ({onClick}) => {
         const {value, name} = e.target
         dispatch(
             changeField({
-                form: 'friend',
+                form: 'chatting',
                 key: name,
                 value
             })
@@ -22,7 +22,7 @@ const SearchForm = ({onClick}) => {
 
     const onClose = () => {
         dispatch(changeField({
-            form: 'friend',
+            form: 'chatting',
             key: 'search',
             value: ''
         }))
@@ -31,13 +31,13 @@ const SearchForm = ({onClick}) => {
 
     useEffect(() => {
         dispatch(changeField({
-            form: 'friend',
+            form: 'chatting',
             key: 'search',
             value: ''
         }))
     }, [dispatch]);
 
-    return <SearchFormComponent onChange={onChange} onClick={onClick} value={form.friend.search.value} onClose={onClose}/>
+    return <SearchFormComponent onChange={onChange} onClick={onClick} value={form.chatting.search.value} onClose={onClose}/>
 }
 
 export default SearchForm

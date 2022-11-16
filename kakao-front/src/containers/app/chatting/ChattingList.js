@@ -4,6 +4,10 @@ import {useQueries} from "react-query";
 import {selectRoomList} from "../../../lib/api/room";
 import ErrorHandler from "../../handler/ErrorHandler";
 import {selectMe} from "../../../lib/api/user";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import searchServiceToFriend from "../../../services/searchService";
+import roomService from "../../../services/RoomInfo";
 
 export const roomQueryName = "selectChattingList"
 const userQueryName = "checkUser"
@@ -24,6 +28,11 @@ const ChattingList = () => {
         ], {
         }
     )
+    const {search} = useSelector(({form}) => ({
+        search: form.chatting.search
+    }))
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const isLoading = isRoomLoading || isUserLoading
     const isError = isRoomError || isUserError
@@ -42,10 +51,18 @@ const ChattingList = () => {
         }
     }
 
+    const onDoubleClick = (e, roomId) => {
+        navigate("/app/chatting/" + roomId, {state: location.state})
+    }
+
     const data = roomData.data.data
     const user = userData.data.data
 
-    return <ChattingListComponent data={data} user={user}/>
+    const filterData = searchServiceToFriend(data.map(room => {
+        return roomService(user, room)
+    }), search)
+
+    return <ChattingListComponent data={filterData} onDoubleClick={onDoubleClick}/>
 }
 
 export default ChattingList

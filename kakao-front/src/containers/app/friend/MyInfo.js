@@ -1,12 +1,7 @@
 import React, {useRef, useState} from "react";
 
 import MyInfoComponent from "../../../component/app/friend/Profile";
-import {useQuery} from "react-query";
-import {selectMe} from "../../../lib/api/user";
-import LoadingProfile from "../../../component/app/friend/LoadingProfile";
-import {useDispatch} from "react-redux";
-import {CHECK_SUCCESS} from "../../../modules/user";
-import ErrorHandler from "../../handler/ErrorHandler";
+import {useDispatch, useSelector} from "react-redux";
 import {Item, Menu,  useContextMenu} from "react-contexify";
 import {useNavigate} from "react-router-dom";
 import style from "../../../css/MainPage.module.css";
@@ -14,35 +9,19 @@ import {oepnPopup} from "../../../modules/popup";
 import {toast} from "react-toastify";
 import {useUpdateUser} from "../../../lib/query";
 
-export const queryName = "checkUser"
 export const menuId = "MyInfoMenuId"
 
 const MyInfo = () => {
     const dispatch = useDispatch()
     const navigate =useNavigate()
     const inputRef = useRef()
-    const {data, isLoading, isError, error} = useQuery(queryName, async () => selectMe(), {
-        onSuccess: (data) => {
-            if (data) {
-                dispatch({
-                    type: CHECK_SUCCESS,
-                    payload: data.data.data
-                })
-            }
-        }
-    })
+    const {user} = useSelector(({user}) => ({
+        user: user.user
+    }))
     const {show} = useContextMenu({
         id: menuId
     })
     const {mutate} = useUpdateUser()
-
-    if (isLoading) {
-        return <LoadingProfile/>
-    }
-
-    if (isError) {
-        return <ErrorHandler error={error} path={"/logout"}/>
-    }
 
     const handleContextMenu = (e, user) => {
         e.preventDefault()
@@ -78,12 +57,10 @@ const MyInfo = () => {
         dispatch(action)
     }
 
-    const resource = data.data.data
-
     return (
         <>
-            <div onContextMenu={(e) => handleContextMenu(e, resource)}>
-                <MyInfoComponent user={resource}/>
+            <div onContextMenu={(e) => handleContextMenu(e, user)}>
+                <MyInfoComponent user={user}/>
             </div>
             <Menu id={menuId} animation={false}>
                 <Item onClick={goProfile}>프로필 보기</Item>

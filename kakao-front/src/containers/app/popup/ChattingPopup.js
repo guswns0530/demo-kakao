@@ -1,27 +1,42 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ChattingPopupComponent from "../../../component/app/popup/ChattingPopup";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useQuery} from "react-query";
-import {selectRoom, selectRoomList} from "../../../lib/api/room";
+import {selectRoom} from "../../../lib/api/room";
 import ErrorHandler from "../../handler/ErrorHandler";
+import {useSelector} from "react-redux";
 
-export const queryName = "selectRoom"
+export const queryName = "checkRoom"
 
 const ChattingPopup = () => {
     const {id} = useParams()
+    const {data, isLoading, isError, error, refetch} = useQuery(queryName, async () => selectRoom(id))
+    const {user} = useSelector(({user}) => ({
+            user: user.user
+        })
+    )
     const navigate = useNavigate()
     const location = useLocation()
     const inputRef = useRef()
-    const {data, isLoading, isError, error} = useQuery(queryName, async () => selectRoom(id))
-    const [{x, y}, setPosition] = useState({x: 0, y: 0})
+    const [initX, initY] = [
+        location?.state?.locate ? location.state.locate.x : 0,
+        location?.state?.locate ? location.state.locate.y : 0
+    ]
+    const [{x, y}, setPosition] = useState({x: initX, y: initY})
 
-    if(isError) {
+    useEffect(() => {
+        refetch().then()
+    }, [id, refetch]);
+
+
+    if (isError) {
         return <ErrorHandler path={"/app"} error={error} location={location}/>
     }
 
     const onClose = () => {
         const {state} = location
-        navigate("/app", {state})
+
+        navigate("/app", {state: state})
     }
 
     const trackPos = (e, data) => {
@@ -49,7 +64,10 @@ const ChattingPopup = () => {
         elem.style.height = line * 18 + 'px'
     }
 
-    return <ChattingPopupComponent trackPos={trackPos} onClose={onClose} onChange={onChange} inputRef={inputRef}/>
+    const resource = data?.data?.data
+
+    return <ChattingPopupComponent x={x} y={y} room={resource} isLoading={isLoading} trackPos={trackPos} onClose={onClose}
+                                   onChange={onChange} inputRef={inputRef} user={user}/>
 }
 
 export default ChattingPopup

@@ -3,7 +3,7 @@ import React from "react";
 import style from "../../../css/MainPage.module.css"
 import Profile from "./Profile";
 
-const FriendList = ({data, onClick, isMore, onContextMenu}) => {
+const FriendList = ({data, onClick, isMore, onContextMenu, onProfileClick}) => {
     return (<>
         <div className={style.disable_box}>
             <div className={style.content}>
@@ -19,7 +19,7 @@ const FriendList = ({data, onClick, isMore, onContextMenu}) => {
         {isMore && <ul>
             {data
                 .map(user => {
-                    return (<li key={user.email} onContextMenu={(e) => onContextMenu(e, user)}>
+                    return (<li key={user.email} onDoubleClick={(e) => onProfileClick(e, user.room_id)} onContextMenu={(e) => onContextMenu(e, user)}>
                         <Profile user={user}/>
                     </li>)
                 })}

@@ -46,6 +46,11 @@ const initialState = {
             value: '',
             error: ''
         }
+    }, chatting : {
+        search: {
+            value: '',
+            error: ''
+        }
     }
 }
 const form = handleActions({
