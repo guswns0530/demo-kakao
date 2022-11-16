@@ -1,27 +1,51 @@
 import React from "react";
 import ChattingListComponent from "../../../component/app/chatting/ChattingList";
-import {useQuery} from "react-query";
+import {useQueries} from "react-query";
 import {selectRoomList} from "../../../lib/api/room";
 import ErrorHandler from "../../handler/ErrorHandler";
+import {selectMe} from "../../../lib/api/user";
 
-const queryName = "selectChattingList"
+export const roomQueryName = "selectChattingList"
+const userQueryName = "checkUser"
+
 
 const ChattingList = () => {
-    const {data, isLoading, isError, error} = useQuery(queryName, (async () => selectRoomList()))
+    const [{data: roomData, isLoading: isRoomLoading, isError: isRoomError, error: roomError},
+        {data: userData, isLoading: isUserLoading, isError: isUserError, error: userError}] = useQueries(
+        [
+            {
+                queryKey: roomQueryName,
+                queryFn: async () => selectRoomList(),
+            },
+            {
+                queryKey: userQueryName,
+                queryFn: async () => selectMe(),
+            }
+        ], {
+        }
+    )
 
-    if(isLoading) {
+    const isLoading = isRoomLoading || isUserLoading
+    const isError = isRoomError || isUserError
+
+
+    if (isLoading) {
         return <div></div>
     }
 
-    if(isError) {
-        return <ErrorHandler error={error} path={"/logout"}/>
+    if (isError) {
+        if (isRoomError) {
+            return <ErrorHandler error={roomError} path={"/logout"}/>
+        }
+        if (isUserError) {
+            return <ErrorHandler error={userError} path={"/logout"}/>
+        }
     }
 
-    const resource = data.data.data
+    const data = roomData.data.data
+    const user = userData.data.data
 
-    console.log(resource)
-
-    return <ChattingListComponent data={resource}/>
+    return <ChattingListComponent data={data} user={user}/>
 }
 
 export default ChattingList

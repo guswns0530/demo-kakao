@@ -10,6 +10,7 @@ import {Route, Routes} from '/node_modules/react-router-dom/dist/index';
 import ProfilePopup from "../containers/app/popup/ProfilePopup";
 import AddFriend from "../containers/app/popup/AddFriend";
 import Chatting from "../containers/app/Chatting";
+import ChattingPopup from "../containers/app/popup/ChattingPopup";
 
 
 const MainPageFetch = () => {
@@ -22,12 +23,12 @@ const MainPageFetch = () => {
         <nav className={style.fixed_nav}>
             <ul className={style.main_nav}>
                 <li>
-                    <Link className={state !== 1 ? style.select : ''} to={"/app"}>
+                    <Link className={state !== 1 ? style.select : ''} to={location.pathname} state={0}>
                         <i className="material-icons" id="nav_1">person</i>
                     </Link>
                 </li>
                 <li>
-                    <Link className={state === 1? style.select : ''} to={"/app"} state={1}>
+                    <Link className={state === 1? style.select : ''} to={location.pathname} state={1}>
                         <i className="material-icons" id="nav_2"
                         >chat_bubble
                             <div className={style.alert}>2</div>
@@ -54,6 +55,7 @@ const MainPageFetch = () => {
 
         <Routes>
             <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
+            <Route path={"/chatting/:id"} element={<ChattingPopup/>}/>
             <Route path={"/add-friend"} element={<AddFriend />}/>
             <Route path={"/add-friend/:type"} element={<AddFriend />}/>
         </Routes>

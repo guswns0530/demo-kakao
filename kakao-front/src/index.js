@@ -32,16 +32,17 @@ import LayerPopupContainer from "./containers/util/LayerPopupContainer";
 import "react-toastify/dist/ReactToastify.css"
 import "./css/ReactContexify.css"
 
+import initProperty from "./services/initProperty";
 
 const sagaMiddleware = createSagaMiddleware()
 
 const store = legacy_createStore(rootReducer, {}, composeWithDevTools(applyMiddleware(createStateSyncMiddleware(syncConfig), sagaMiddleware)))
+
 sagaMiddleware.run(rootSaga)
 initMessageListener(store)
+initProperty()
 
 const persist = persistStore(store)
-
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -60,3 +61,5 @@ root.render(
 
 setUpInterceptors(store)
 reportWebVitals();
+
+

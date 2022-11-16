@@ -11,12 +11,12 @@ const Chatting = () => {
                         <h2>채팅</h2>
                         <ul className={style.h_nav}>
                             <li>
-                                <Link>
+                                <Link to={"/app"}>
                                     <i className="material-icons">search</i>
                                 </Link>
                             </li>
                             <li>
-                                <Link>
+                                <Link to={"/app"}>
                                     <i className="material-icons">add_comment</i>
                                 </Link>
                             </li>
@@ -25,7 +25,6 @@ const Chatting = () => {
                 </header>
                 <section>
                     <ChattingList/>
-
                 </section>
             </div>
         </>

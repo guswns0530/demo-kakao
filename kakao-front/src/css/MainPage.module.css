@@ -299,12 +299,12 @@ li {
     top: 0;
     left: 0;
     background-color: rgb(178, 199, 217);
-    border: 1px solid rgb(0, 0, 0, 0.4);
+    border: 1px solid #ccc;
     min-width: 350px;
     min-height: 300px;
 
     width: 350px;
-    height: 500px;
+    height: 580px;
 
     resize: both;
     overflow: auto;
@@ -649,6 +649,8 @@ li {
 .rooms .profile .image {
     min-width: 50px;
     min-height: 50px;
+    width: 50px;
+    height: 50px;
 }
 
 .rooms .profile .name {
@@ -662,6 +664,10 @@ li {
     max-height: 36px;
     line-height: 18px;
     overflow: hidden;
+    margin-top: 2px;
+
+    word-break: break-all;
+    white-space: break-spaces;
 }
 
 header img {
@@ -1580,14 +1586,14 @@ header img {
     color: #bfbfbf;
 
     font-size: 11px;
-    margin-top: 12px;
+    margin-top: 11px;
 
     white-space: nowrap;
     letter-spacing: 1px;
 }
 
 .sub_info .alert {
-    margin-top: 7px;
+    margin-top: 6px;
     width: 17px;
     height: 17px;
 
@@ -1609,3 +1615,89 @@ header img {
     padding: 6px 20px !important;
 }
 
+.rooms .profile .image {
+    overflow: unset;
+    position: relative;
+}
+
+.rooms .profile .image svg {
+    overflow: hidden;
+    border-radius: 46%;
+}
+
+.rooms .profile svg:first-child:nth-last-child(1) {
+}
+
+.rooms .profile svg:first-child:nth-last-child(2),
+.rooms .profile svg:first-child:nth-last-child(2) ~ svg {
+    border: 2px solid #fff;
+    width: 65%;
+    height: 65%;
+
+    position: absolute;
+
+}
+.rooms .profile svg:first-child:nth-last-child(2) {
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+}
+
+
+.rooms .profile svg:first-child:nth-last-child(3),
+.rooms .profile svg:first-child:nth-last-child(3) ~ svg {
+    border: 2px solid #fff;
+    width: 58%;
+    height: 58%;
+
+    position: absolute;
+}
+
+.rooms .profile svg:first-child:nth-last-child(3) {
+    bottom: 0;
+}
+.rooms .profile svg:first-child:nth-last-child(3) ~ svg:nth-child(2) {
+    right: 0;
+    bottom: 0;
+}
+.rooms .profile svg:first-child:nth-last-child(3) ~ svg:nth-child(3) {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.rooms .profile svg:first-child:nth-last-child(4),
+.rooms .profile svg:first-child:nth-last-child(4) ~ svg {
+    width: 48%;
+    height: 48%;
+
+    position: absolute;
+}
+.rooms .profile svg:first-child:nth-last-child(4) {
+    top: 0;
+    left: 0;
+}
+.rooms .profile svg:first-child:nth-last-child(4) ~ svg:nth-child(2) {
+    top: 0;
+    right: 0;
+}
+.rooms .profile svg:first-child:nth-last-child(4) ~ svg:nth-child(3) {
+    bottom: 0;
+    left: 0;
+}
+.rooms .profile svg:first-child:nth-last-child(4) ~ svg:nth-child(4) {
+    right: 0;
+    bottom: 0;
+}
+
+.rooms .profile .name {
+    display: flex;
+    align-items: center;
+}
+
+.rooms .profile .name .count{
+    margin-left: 5px;
+    font-size: 12px;
+    color: #bfbfbf;
+    font-weight: 500;
+}

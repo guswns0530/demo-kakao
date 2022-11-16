@@ -22,7 +22,6 @@ const FriendList = () => {
     const {data, isLoading, isError, error} = useQuery(queryName, async () => {
         return selectFriendList()
     }, {
-        retry: false, cacheTime: 0
     });
     const {search} = useSelector(({form}) => ({
         search: form.friend.search

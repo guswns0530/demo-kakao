@@ -22,8 +22,6 @@ const MyInfo = () => {
     const navigate =useNavigate()
     const inputRef = useRef()
     const {data, isLoading, isError, error} = useQuery(queryName, async () => selectMe(), {
-        retry: false,
-        cacheTime: 0,
         onSuccess: (data) => {
             if (data) {
                 dispatch({

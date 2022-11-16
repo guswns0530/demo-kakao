@@ -14,8 +14,6 @@ const RecommendFriendList = () => {
     const {data, isError, isLoading, error} = useQuery("selectRecommendFriendList", async () => {
         return selectRecommendFriendList()
     }, {
-        retry: false,
-        cacheTime: 0
     });
     const {search} = useSelector(({form}) => ({
         search: form.friend.search

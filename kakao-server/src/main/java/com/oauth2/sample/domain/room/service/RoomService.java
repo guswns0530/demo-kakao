@@ -41,13 +41,17 @@ public class RoomService {
 
 
     public RoomInfoResponse selectRoom(String email, String roomId) {
-        Optional<RoomInfo> roomInfoOf = roomRepository.selectRoom(email, roomId);
+        try {
+            Optional<RoomInfo> roomInfoOf = roomRepository.selectRoom(email, roomId);
 
-        RoomInfo roomInfo = roomInfoOf.orElseThrow(() -> {
+            RoomInfo roomInfo = roomInfoOf.orElseThrow(() -> {
+                throw new BadRequestException("잘못된 접근입니다.");
+            });
+
+            return getRoomInfoResponse(roomInfo);
+        } catch (Exception e) {
             throw new BadRequestException("잘못된 접근입니다.");
-        });
-
-        return getRoomInfoResponse(roomInfo);
+        }
     }
 
 

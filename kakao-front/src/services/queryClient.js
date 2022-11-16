@@ -3,7 +3,7 @@ import {QueryClient, setLogger} from "react-query";
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            useErrorBoundary: false, suspense: false, retry: false, cacheTime: 99999, staleTime: 99999
+            useErrorBoundary: false, suspense: false, retry: false, cacheTime: 0, staleTime: 99999
         },
         mutations: {
             useErrorBoundary: true, retry: false
