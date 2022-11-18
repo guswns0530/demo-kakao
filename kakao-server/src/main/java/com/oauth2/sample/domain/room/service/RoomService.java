@@ -192,9 +192,9 @@ public class RoomService {
     private RoomInfoResponse getRoomInfoResponse(RoomInfo roomInfo) {
         List<JoinUser> arrayList = null;
         try {
-            arrayList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {
-            });
+            arrayList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {});
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new BadRequestException("서버 오류 발생 관리자에게 문의주세요");
         }
         return RoomInfoResponse.builder()

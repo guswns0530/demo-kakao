@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum FriendStatus {
+    NONE(0),
     FRIEND(1),
     BLOCK(2),
-    REMOVE(3),
-    NONE(0);
+    REMOVE(3);
 
     private final int statusCode;
 

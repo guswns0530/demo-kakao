@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {changeField} from "../../../modules/form";
-import SearchFormComponent from "../../../component/app/friend/SearchForm";
+import SearchFormComponent from "../../../component/app/SearchForm";
 
 const SearchForm = ({onClick}) => {
     const dispatch = useDispatch();

@@ -14,11 +14,12 @@ const roomService = (user, room) => {
 
     if (createAt.isSameMonth(now)) {
         if (createAt.getDate() === now.getDate()) {
-            date = `${createAt.amPm()} ${createAt.getHours()}:${createAt.getMinutes()}`
+            date = `${createAt.amPm()} ${createAt.getHours() > 12 ? createAt.getHours() - 12 : createAt.getHours()}:${createAt.getMinutes()}`
         } else if (createAt.getDate() === now.getDate() - 1) {
             date = '어제'
+        } else {
+            date = `${createAt.getFullYear()}-${createAt.getMonth() + 1}-${createAt.getDate()}`
         }
-        date = `${createAt.getFullYear()}-${createAt.getMonth() + 1}-${createAt.getDate()}`
     } else {
         date = `${createAt.getFullYear()}-${createAt.getMonth() + 1}-${createAt.getDate()}`
     }

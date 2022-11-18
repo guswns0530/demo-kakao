@@ -2,6 +2,7 @@ import React from "react";
 import style from "../../../css/MainPage.module.css"
 import Draggable from "react-draggable";
 import roomService from "../../../services/RoomInfo";
+import ChatLog from "../../../containers/app/chatting/ChatLog";
 
 
 const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onChange, x, y}) => {
@@ -34,7 +35,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
 
                     <div className={style.content}>
                         <div className={style.chat_log}>
-
+                            <ChatLog/>
                         </div>
                         <div className={style.form}>
                             <form>

@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Item, Menu,  useContextMenu} from "react-contexify";
 import {useNavigate} from "react-router-dom";
 import style from "../../../css/MainPage.module.css";
-import {oepnPopup} from "../../../modules/popup";
+import {openPopup} from "../../../modules/popup";
 import {toast} from "react-toastify";
 import {useUpdateUser} from "../../../lib/query";
 
@@ -38,7 +38,7 @@ const MyInfo = () => {
     const changeName = (e) => {
         const user = e.props().user
 
-        const action = oepnPopup({
+        const action = openPopup({
             element: <InputForm user={user} inputRef={inputRef}/>,
 
             submit: () => {

@@ -5,7 +5,7 @@ import {selectRoomList} from "../../../lib/api/room";
 import ErrorHandler from "../../handler/ErrorHandler";
 import {selectMe} from "../../../lib/api/user";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import searchServiceToFriend from "../../../services/searchService";
 import roomService from "../../../services/RoomInfo";
 
@@ -14,19 +14,22 @@ const userQueryName = "checkUser"
 
 
 const ChattingList = () => {
+    const dispatch = useDispatch()
     const [{data: roomData, isLoading: isRoomLoading, isError: isRoomError, error: roomError},
         {data: userData, isLoading: isUserLoading, isError: isUserError, error: userError}] = useQueries(
         [
             {
                 queryKey: roomQueryName,
                 queryFn: async () => selectRoomList(),
+                onSuccess: (data) => {
+                    console.log(data.data.data)
+                }
             },
             {
                 queryKey: userQueryName,
                 queryFn: async () => selectMe(),
             }
-        ], {
-        }
+        ]
     )
     const {search} = useSelector(({form}) => ({
         search: form.chatting.search
@@ -52,7 +55,9 @@ const ChattingList = () => {
     }
 
     const onDoubleClick = (e, roomId) => {
-        navigate("/app/chatting/" + roomId, {state: location.state})
+        console.log(e)
+        const [x, y] = [e.pageX, e.pageY]
+        navigate("/app/chatting/" + roomId, {state: {...location.state, locate: {x, y}}})
     }
 
     const data = roomData.data.data

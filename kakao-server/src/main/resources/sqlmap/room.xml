@@ -14,12 +14,13 @@
         '[' || LISTAGG(
         '{' ||
         ' "id" : "' || F.ID || '",' ||
-        ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
         ' "email" : "' || D.EMAIL || '",' ||
+        ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+        ' "profileImageUrl" : "' || F.profile_image_url || '",' ||
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
+        ' "status" : "' || NVL(E.status, 0) || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
         C.type as ROOM_TYPE,
@@ -103,7 +104,8 @@
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "profileImageUrl" : "' || F.profile_image_url || '"' ||
+        ' "profileImageUrl" : "' || F.profile_image_url || '",' ||
+        ' "status" : "' || NVL(E.status, 0) || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
         C.type as ROOM_TYPE,

@@ -13,7 +13,6 @@ const RecommendFriendList = ({data, onClick, isMore, onAuxClick}) => {
             <div className={style.content_more} onClick={onClick}>
                 {isMore ? <span className="material-symbols-outlined">expand_more</span> :
                     <span className="material-symbols-outlined">expand_less</span>}
-
             </div>
         </div>
         {isMore && <ul>

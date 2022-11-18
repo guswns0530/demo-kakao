@@ -1,6 +1,6 @@
 import React from "react";
-import style from "../../../css/MainPage.module.css";
-import Svg from "../../util/Svg";
+import style from "../../css/MainPage.module.css";
+import Svg from "../util/Svg";
 
 const SearchForm = ({onClick, onChange, value, onClose}) => {
     return (<div className={style.search_box}>

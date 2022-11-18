@@ -12,7 +12,7 @@ const ChattingList = ({data, onDoubleClick}) => {
                 </div>
                 <div className={style.context}>
                     <div className={style.name}>{name}
-                        {join_user_cnt > 2 && <div className={style.count}>{join_user_cnt - 1}</div>}
+                        {join_user_cnt > 2 && <div className={style.count}>{ join_user_cnt - 1}</div>}
                     </div>
                     <div className={style.msg}>
                         {chat_content}
@@ -20,7 +20,7 @@ const ChattingList = ({data, onDoubleClick}) => {
                 </div>
                 <div className={style.sub_info}>
                     <div className={style.date}>{date}</div>
-                    {unread_cnt && <div className={style.alert}>{unread_cnt}</div>}
+                    {unread_cnt && <div className={style.alert}>{unread_cnt >= 100 ? '99' : unread_cnt}</div>}
                 </div>
             </div>
         </li>)

@@ -8,10 +8,10 @@ import {useDispatch, useSelector} from "react-redux";
 import ErrorHandler from "../../handler/ErrorHandler";
 import searchServiceToFriend from "../../../services/searchService";
 import {Item, Menu, Separator, useContextMenu} from "react-contexify";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useBlockFriend, useChangeNickname} from "../../../lib/query";
 import style from "../../../css/MainPage.module.css";
-import {oepnPopup} from "../../../modules/popup";
+import {openPopup} from "../../../modules/popup";
 
 export const queryName = "selectFriendList"
 export const menuId = "FriendInfoMenuId"
@@ -19,6 +19,7 @@ export const menuId = "FriendInfoMenuId"
 const FriendList = () => {
     const dispatch = useDispatch()
     const inputRef = useRef()
+    const location = useLocation()
     const {data, isLoading, isError, error} = useQuery(queryName, async () => {
         return selectFriendList()
     }, {
@@ -44,7 +45,8 @@ const FriendList = () => {
 
 
     const onProfileClick = (e, room_id) => {
-        navigate("/app/chatting/" + room_id)
+        const [x, y] = [e.pageX, e.pageY]
+        navigate("/app/chatting/" + room_id, {state: {...location.state, locate: {x, y}}})
     }
     const onClick = (e) => {
         e.preventDefault()
@@ -60,12 +62,14 @@ const FriendList = () => {
     }
     const goProfile = (e) => {
         const user = e.props().user
-        navigate("/app/profile/" + user.id)
+        const [x, y] = [e.event.pageX, e.event.pageY]
+        console.log(x, y)
+        navigate("/app/profile/" + user.id, {state: {...location.state, locate: {x, y}}})
     }
     const onBlock = (e) => {
         const user = e.props().user
 
-        const action = oepnPopup({
+        const action = openPopup({
             element: (<>
                 <header className={style.center}>
                     차단하시겠습니까?
@@ -90,7 +94,7 @@ const FriendList = () => {
     const changeName = (e) => {
         const user = e.props().user
 
-        const action = oepnPopup({
+        const action = openPopup({
             element: <InputForm user={user} inputRef={inputRef}/>,
 
             submit: () => {

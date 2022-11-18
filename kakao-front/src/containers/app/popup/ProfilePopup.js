@@ -22,8 +22,11 @@ const ProfilePopup = () => {
         user: user.user
     }))
     const {mutate, isLoading: isInsertLoading, isError: isInsertError, error: insertError} = useInsertFriend()
-
-    const [{x, y}, setPosition] = useState({x: 0, y: 0})
+    const [initX, initY] = [
+        location?.state?.locate ? location.state.locate.x : 0,
+        location?.state?.locate ? location.state.locate.y : 0
+    ]
+    const [{x, y}, setPosition] = useState({x: initX, y: initY})
 
 
     const onInsertFriend = () => mutate({id, type: 'id'});
@@ -83,7 +86,7 @@ const ProfilePopup = () => {
 
 
     return (<ProfilePopupComponent resource={resource} onClose={onClose} button={button} trackPos={trackPos}
-                                   isLoading={isInsertLoading || isLoading}/>)
+                                   isLoading={isInsertLoading || isLoading} x={x} y={y}/>)
 }
 
 

@@ -3,7 +3,7 @@ import {createAction, handleActions} from "redux-actions";
 const OPEN_POPUP = "popup/OPEN_POPUP"
 const CLOSE_POPUP = "popup/CLOSE_POPUP"
 
-export const oepnPopup = createAction(
+export const openPopup = createAction(
     OPEN_POPUP,
     ({element, submit}) => ({element, submit})
 )

@@ -23,10 +23,10 @@ const StyleDiv = styled.div`
     ${styleLoading}
 `
 
-const ProfilePopup = ({resource, onClose, button, trackPos, isLoading}) => {
+const ProfilePopup = ({resource, onClose, button, trackPos, isLoading, x, y}) => {
 
     return (
-        <Draggable onDrag={trackPos} bounds={"parent"}>
+        <Draggable onDrag={trackPos} bounds={"parent"} position={{x, y}}>
             <div id={style.profile_popup}>
                 <div className={style.tab}>
                     <div className={style.exit} onClick={onClose}>

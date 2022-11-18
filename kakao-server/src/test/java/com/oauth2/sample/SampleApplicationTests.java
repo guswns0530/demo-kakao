@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oauth2.sample.domain.chat.request.SelectChatListRequest;
 import com.oauth2.sample.domain.email.dto.EmailConfirmToken;
 import com.oauth2.sample.domain.email.service.EmailConfirmService;
+import com.oauth2.sample.domain.friend.dto.FriendStatus;
 import com.oauth2.sample.web.config.AppProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ class SampleApplicationTests {
 
 	@Test
 	void listToString() throws JsonProcessingException {
-		System.out.println("SelectChatListRequest.SelectType.LOAD.name() = " + SelectChatListRequest.SelectType.LOAD.name());
+		System.out.println("FriendStatus.NONE = " + FriendStatus.valueOf("0"));
     }
 
 }
