@@ -296,6 +296,8 @@ group by C.ROOM_ID,
          G.CHAT_CREATEAT
 order by CHAT_CREATEAT desc
 
+
+-- 수정 본
 select *
     from (select a.chat_id,
         a.room_id,
