@@ -7,7 +7,7 @@ import ChatLog from "../../../containers/app/chatting/ChatLog";
 
 const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onChange, x, y}) => {
 
-    if(isLoading) {
+    if (isLoading) {
         return <>
             <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"} position={{x, y}}>
                 <div id={style.popup} className={style.popup}>
@@ -35,7 +35,6 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
 
                     <div className={style.content}>
                         <div className={style.chat_log}>
-                            <ChatLog/>
                         </div>
                         <div className={style.form}>
                             <form>
@@ -48,7 +47,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
             </Draggable>
         </>
     } else {
-        const {profileImageList, name, join_user_cnt} = roomService(user , room)
+        const {profileImageList, name, join_user_cnt, room_id} = roomService(user, room)
 
         return <>
             <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"}>
@@ -61,7 +60,8 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
 
                             <div className={style.p_name}>
                                 <div className={style.name}>{name}</div>
-                                <div className={style.p_count}><i className="material-icons">person</i>{join_user_cnt}</div>
+                                <div className={style.p_count}><i className="material-icons">person</i>{join_user_cnt}
+                                </div>
                             </div>
 
                             <div className={style.tab}>
@@ -79,9 +79,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
                     </header>
 
                     <div className={style.content}>
-                        <div className={style.chat_log}>
-
-                        </div>
+                        <ChatLog roomId={room_id}/>
                         <div className={style.form}>
                             <form>
                                 <textarea name="" id="" ref={inputRef} onChange={onChange}></textarea>

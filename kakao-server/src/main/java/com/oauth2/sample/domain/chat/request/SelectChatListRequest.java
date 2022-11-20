@@ -14,10 +14,4 @@ public class SelectChatListRequest {
     private String chatId;
     private String roomId;
     private String email;
-    private SelectType selectType;
-
-    public enum SelectType {
-        RELOAD,
-        LOAD
-    }
 }

@@ -60,43 +60,31 @@
     </delete>
 
     <select id="selectChatList" parameterType="com.oauth2.sample.domain.chat.request.SelectChatListRequest" resultMap="dto.chat">
-        select a.chat_id,
+        select *
+        from (select a.chat_id,
         a.room_id,
         a.email,
         DECODE(A.STATUS, '1', A.CONTENT, null) as content,
         a.status,
         a.type,
         a.createAt,
-        'true' as sync
+        'true'                                 as sync
         from (select A.chat_id,
         A.ROOM_ID,
         A.content,
         A.EMAIL,
         A.status,
         A.type,
-        dense_rank() over (order by A.createAt desc) as seq, A.createAt --sub start
+        A.createAt --sub start
         from kakao_chats A
         where A.createAt >= (select NVL(B.CREATEAT, sysdate)
         from KAKAO_READ_USERS B
         where B.EMAIL = #{email}
         and B.ROOM_ID = A.ROOM_ID)
         and A.room_id = #{roomId}
-        <choose>
-            <when test="selectType.name == 'LOAD'">
-                <if test="chatId != '' and chatId != null">
-                    and A.CHAT_ID > #{chatId}
-                </if>
-            </when>
-            <when test="selectType.name == 'RELOAD'">
-                and A.CHAT_ID &lt; #{chatId}
-            </when>
-        </choose>
-        ) A --sub end
-        <if test="selectType.name == 'LOAD'">
-            where seq &lt;= 20
-        </if>
-        order by seq,
-        chat_id desc
+        and A.CHAT_ID &lt; #{chatId}) A
+        order by chat_id desc)
+        where rownum &lt;= 30
     </select>
 
 

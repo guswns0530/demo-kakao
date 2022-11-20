@@ -1,69 +1,52 @@
 import React from "react";
 import ChattingListComponent from "../../../component/app/chatting/ChattingList";
-import {useQueries} from "react-query";
-import {selectRoomList} from "../../../lib/api/room";
-import ErrorHandler from "../../handler/ErrorHandler";
-import {selectMe} from "../../../lib/api/user";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import searchServiceToFriend from "../../../services/searchService";
 import roomService from "../../../services/RoomInfo";
+import {useQuery} from "react-query";
+import {selectRoomList} from "../../../lib/api/room";
+import ErrorHandler from "../../handler/ErrorHandler";
+import {rooms as roomsAction} from "../../../modules/rooms";
 
 export const roomQueryName = "selectChattingList"
-const userQueryName = "checkUser"
-
 
 const ChattingList = () => {
     const dispatch = useDispatch()
-    const [{data: roomData, isLoading: isRoomLoading, isError: isRoomError, error: roomError},
-        {data: userData, isLoading: isUserLoading, isError: isUserError, error: userError}] = useQueries(
-        [
-            {
-                queryKey: roomQueryName,
-                queryFn: async () => selectRoomList(),
-                onSuccess: (data) => {
-                    console.log(data.data.data)
+    const {isLoading, isError, error} = useQuery(
+        roomQueryName,
+        async () => selectRoomList()
+        , {
+            onSuccess: (data) => {
+                if (data) {
+                    dispatch(roomsAction(data.data.data))
                 }
-            },
-            {
-                queryKey: userQueryName,
-                queryFn: async () => selectMe(),
             }
-        ]
+        }
     )
-    const {search} = useSelector(({form}) => ({
-        search: form.chatting.search
+    const {search, user, rooms} = useSelector(({form, user, rooms}) => ({
+        search: form.chatting.search,
+        user: user.user,
+        rooms: rooms.rooms
     }))
     const navigate = useNavigate()
     const location = useLocation()
 
-    const isLoading = isRoomLoading || isUserLoading
-    const isError = isRoomError || isUserError
-
-
-    if (isLoading) {
+    if(isLoading) {
         return <div></div>
     }
 
-    if (isError) {
-        if (isRoomError) {
-            return <ErrorHandler error={roomError} path={"/logout"}/>
-        }
-        if (isUserError) {
-            return <ErrorHandler error={userError} path={"/logout"}/>
-        }
+    if(isError) {
+        return <ErrorHandler path={"/logout"} error={error}/>
     }
 
+
     const onDoubleClick = (e, roomId) => {
-        console.log(e)
         const [x, y] = [e.pageX, e.pageY]
         navigate("/app/chatting/" + roomId, {state: {...location.state, locate: {x, y}}})
     }
 
-    const data = roomData.data.data
-    const user = userData.data.data
-
-    const filterData = searchServiceToFriend(data.map(room => {
+    const filterData = searchServiceToFriend(rooms.map(room => {
         return roomService(user, room)
     }), search)
 

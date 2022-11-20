@@ -63,7 +63,6 @@ const FriendList = () => {
     const goProfile = (e) => {
         const user = e.props().user
         const [x, y] = [e.event.pageX, e.event.pageY]
-        console.log(x, y)
         navigate("/app/profile/" + user.id, {state: {...location.state, locate: {x, y}}})
     }
     const onBlock = (e) => {
@@ -114,6 +113,14 @@ const FriendList = () => {
         })
         dispatch(action)
     }
+    const onProfileClickItem = (e) => {
+        const {user} = e.props()
+        const {event} = e
+
+        const [x, y] = [event.pageX, event.pageY]
+
+        navigate("/app/chatting/" + user.room_id, {state: {...location.state, locate: {x, y}}})
+    }
 
     const resource = data.data.data
     const filterData = searchServiceToFriend(resource, search)
@@ -121,7 +128,7 @@ const FriendList = () => {
     return (<>
         <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onContextMenu={handleContextMenu} onProfileClick={onProfileClick}/>
         <Menu id={menuId} animation={false}>
-            <Item>채팅하기</Item>
+            <Item onClick={onProfileClickItem}>채팅하기</Item>
             <Separator/>
             <Item onClick={goProfile}>프로필 보기</Item>
             <Item onClick={changeName}>이름 변경</Item>

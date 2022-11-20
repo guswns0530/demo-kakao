@@ -6,6 +6,7 @@ function buttonSwitch(data, onClick, user, able) {
     if (data?.data?.data?.email === user?.email) {
         return <button className={style.active}>나와의 채팅</button>
     }
+
     switch (data.data.data['friend_status']) {
         case 'NONE' :
             return <button onClick={onClick} className={`${style.active} ${able && style.disable}`}>친구 추가</button>
@@ -14,7 +15,7 @@ function buttonSwitch(data, onClick, user, able) {
         case 'REMOVE' :
             return <button onClick={onClick} className={`${style.active} ${able && style.disable}`}>친구 추가</button>
         case 'FRIEND' :
-            return <button className={`${style.active} ${able && style.disable}`}>채팅하기</button>
+            return <button className={`${style.active} ${able && style.disable}`}><Link to={"/app/chatting/" + data.data.data.room_id}>채팅하기</Link></button>
         default :
             return <button className={`${style.disable} ${able && style.disable}`}>error</button>
     }

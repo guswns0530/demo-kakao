@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage";
 import auth, {SET_ACCESS_TOKEN, authSaga, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE} from './auth';
 import loading from "./loading";
 import user, {userSaga} from './user'
+import rooms from "./rooms";
 import form from './form'
 import popup from "./popup";
 
@@ -37,7 +38,8 @@ const rootReducer = combineReducers({
   loading,
   user,
   form,
-  popup
+  popup,
+  rooms
 });
 
 export default persistReducer(persistConfig, rootReducer)

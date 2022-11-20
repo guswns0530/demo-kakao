@@ -18,6 +18,7 @@ const AddFriend = () => {
     const {user} = useSelector(({user}) => ({
         user: user.user
     }))
+
     const {isLoading: isLoadingSearch, data, error, refetch} = useQuery(["selectUser", type, id], async () => {
         if (type === matchType[0]) {
             return selectUserToId(id)
@@ -28,7 +29,7 @@ const AddFriend = () => {
         }
 
     }, {
-        enabled: false, suspense: false, useErrorBoundary: false, retry: false
+        enabled: false, suspense: false, useErrorBoundary: false, retry: false,
     })
     const {isLoading: isLoadingInsertFriend, mutate} = useInsertFriend(() => {
         onSubmit()

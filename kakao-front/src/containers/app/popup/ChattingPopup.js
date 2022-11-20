@@ -10,18 +10,14 @@ export const queryName = "checkRoom"
 
 const ChattingPopup = () => {
     const {id} = useParams()
-    const {data, isLoading, isError, error, refetch} = useQuery(queryName, async () => selectRoom(id))
+    const {data, isLoading, isError, error, refetch} = useQuery(queryName, async () => selectRoom(id), {})
     const {user} = useSelector(({user}) => ({
-            user: user.user
-        })
-    )
+        user: user.user
+    }))
     const navigate = useNavigate()
     const location = useLocation()
     const inputRef = useRef()
-    const [initX, initY] = [
-        location?.state?.locate ? location.state.locate.x : 0,
-        location?.state?.locate ? location.state.locate.y : 0
-    ]
+    const [initX, initY] = [location?.state?.locate ? location.state.locate.x : 0, location?.state?.locate ? location.state.locate.y : 0]
     const [{x, y}, setPosition] = useState({x: initX, y: initY})
 
     useEffect(() => {
@@ -66,7 +62,8 @@ const ChattingPopup = () => {
 
     const resource = data?.data?.data
 
-    return <ChattingPopupComponent x={x} y={y} room={resource} isLoading={isLoading} trackPos={trackPos} onClose={onClose}
+    return <ChattingPopupComponent x={x} y={y} room={resource} isLoading={isLoading} trackPos={trackPos}
+                                   onClose={onClose}
                                    onChange={onChange} inputRef={inputRef} user={user}/>
 }
 

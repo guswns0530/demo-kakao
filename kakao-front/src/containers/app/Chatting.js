@@ -18,7 +18,7 @@ const Chatting = () => {
     }, [header, section, isOpen])
 
 
-    const onClick = (e) => {
+    const onClick = (e = {preventDefault: () => {}}) => {
         e.preventDefault()
         setOpen(!isOpen)
     }

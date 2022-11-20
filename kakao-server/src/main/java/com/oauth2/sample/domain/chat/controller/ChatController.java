@@ -24,49 +24,26 @@ public class ChatController {
     @GetMapping("/{roomId}/load/{chatId}")
     public ResponseEntity<?> selectChatListLoad(@CurrentUser UserPrincipal user, @PathVariable String roomId, @PathVariable String chatId) {
         SelectChatListRequest selectChatListRequest = SelectChatListRequest.builder()
-                .selectType(SelectChatListRequest.SelectType.LOAD)
                 .chatId(chatId)
                 .roomId(roomId)
                 .email(user.getEmail())
                 .build();
 
-        List<Chat> list = chatService.selectChatList(selectChatListRequest);
-
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .code(HttpStatus.OK)
-                .data(list)
-                .build();
-
-        return ResponseEntity.ok().body(apiResponse);
+        return selectChatList(selectChatListRequest);
     }
 
     @GetMapping("/{roomId}/load")
     public ResponseEntity<?> selectChatListLoad(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
         SelectChatListRequest selectChatListRequest = SelectChatListRequest.builder()
-                .selectType(SelectChatListRequest.SelectType.LOAD)
+                .chatId("999999999999")
                 .roomId(roomId)
                 .email(user.getEmail())
                 .build();
 
-        List<Chat> list = chatService.selectChatList(selectChatListRequest);
-
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .code(HttpStatus.OK)
-                .data(list)
-                .build();
-
-        return ResponseEntity.ok().body(apiResponse);
+        return selectChatList(selectChatListRequest);
     }
 
-    @GetMapping("/{roomId}/reload/{chatId}")
-    public ResponseEntity<?> selectChatListReload(@CurrentUser UserPrincipal user, @PathVariable String roomId, @PathVariable String chatId) {
-        SelectChatListRequest selectChatListRequest = SelectChatListRequest.builder()
-                .selectType(SelectChatListRequest.SelectType.RELOAD)
-                .chatId(chatId)
-                .roomId(roomId)
-                .email(user.getEmail())
-                .build();
-
+    private ResponseEntity<?> selectChatList(SelectChatListRequest selectChatListRequest) {
         List<Chat> list = chatService.selectChatList(selectChatListRequest);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
@@ -88,11 +65,6 @@ public class ChatController {
 
         return ResponseEntity.ok().body(apiResponse);
     }
-
-//    @PostMapping("/{roomId}/update")
-//    public ResponseEntity<?> insertChatFileUpload(@CurrentUser UserPrincipal user, @PathVariable String roomId, @RequestPart MultipartFile file) {
-//        return ResponseEntity.ok().body("");
-//    }
 
     @PostMapping("/{roomId}/read")
     public ResponseEntity<?> readChat(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
