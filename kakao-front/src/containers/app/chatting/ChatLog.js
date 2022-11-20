@@ -21,10 +21,16 @@ const ChatLog = ({roomId}) => {
         async ({pageParam = 0}) => {
             const data = (await selectChatList(roomId, pageParam)).data.data
 
+            if(data.length === 0) {
+                return {
+                    result: [],
+                    nextPage: 0,
+                    isLast: true
+                }
+            }
+
             const nextPage = data[data.length - 1]['chat_id']
             const isLast = data[data.length - 1]['chat_id'] * 1 === 1
-
-            console.log(nextPage)
 
             return {
                 result: data,

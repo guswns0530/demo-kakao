@@ -39,7 +39,7 @@ const ChatLog = ({children, chats, content, onScroll}) => {
                         }}
                         key={project.chat_id}
                     >
-                        {project.email}: {project.content}
+                        {project.chat_id}: {project.content}
                     </p>
                 ))}
             </React.Fragment>
