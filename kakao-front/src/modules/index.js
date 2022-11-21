@@ -9,6 +9,8 @@ import user, {userSaga} from './user'
 import rooms from "./rooms";
 import form from './form'
 import popup from "./popup";
+import chat from "./chat";
+
 
 
 export function* rootSaga() {
@@ -39,7 +41,8 @@ const rootReducer = combineReducers({
   user,
   form,
   popup,
-  rooms
+  rooms,
+  chat
 });
 
 export default persistReducer(persistConfig, rootReducer)

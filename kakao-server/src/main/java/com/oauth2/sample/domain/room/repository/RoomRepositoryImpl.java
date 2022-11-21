@@ -95,4 +95,9 @@ public class RoomRepositoryImpl implements RoomRepository {
 
         return result;
     }
+
+    @Override
+    public List<String> selectReaderChat(String email) {
+        return sqlSession.selectList("selectReaderChat", email);
+    }
 }

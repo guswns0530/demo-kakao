@@ -8,6 +8,7 @@ import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +82,18 @@ public class RoomController {
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.ACCEPTED)
                 .data(true)
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
+    }
+
+    @GetMapping("/reader/{roomId}")
+    public ResponseEntity<?> getReaderUser(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
+        List<String> list = roomService.selectReader(user.getEmail(), roomId);
+
+        ApiResponse<Object> apiResponse = ApiResponse.builder()
+                .code(HttpStatus.OK)
+                .data(list)
                 .build();
 
         return ResponseEntity.ok().body(apiResponse);

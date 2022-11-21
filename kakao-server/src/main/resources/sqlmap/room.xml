@@ -243,4 +243,10 @@
           AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = #{fromId})
           AND EXISTS(select 1 from kakao_join_users B where A.ROOM_ID = B.ROOM_ID AND email = #{toId})
     </select>
+
+    <select id="selectReaderChat" parameterType="java.lang.String" resultType="java.lang.String">
+        select chat_id
+        from kakao_read_users
+        where room_id = #{roomId}
+    </select>
 </mapper>

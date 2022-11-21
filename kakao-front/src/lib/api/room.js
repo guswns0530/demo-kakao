@@ -7,3 +7,7 @@ export const selectRoom = (id) => {
 export const selectRoomList = () => {
     return client.get('/rooms');
 }
+
+export const selectReaderChat = (id) => {
+    return client.get("/rooms/reader/" + id)
+}

@@ -449,6 +449,7 @@ li {
 #popup > .content > .chat_log {
     width: 100%;
     height: 100%;
+    padding-top: 1px;
     flex: 1 1 auto;
     /* min-height: 0; 후에 채팅 컨텐츠 오류 실행 */
 }
@@ -1717,4 +1718,21 @@ header img {
     font-size: 12px;
     color: #bfbfbf;
     font-weight: 500;
+}
+
+
+.chat_notice {
+    padding: 8px 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.chat_date {
+    font-size: 12px;
+    padding: 5px 11px;
+    background-color: #a9bdce;
+    color: #4c4c4c;
+
+    border-radius: 50px
 }

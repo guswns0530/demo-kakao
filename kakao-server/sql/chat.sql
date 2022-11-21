@@ -298,3 +298,18 @@ order by seq,
 
 select A.*, true as sync
 from kakao_chats A;
+
+insert into kakao_chats (chat_id,
+                         EMAIL,
+                         room_id,
+                         content,
+                         status,
+                         type,
+                         createAt)
+values (KAKAO_CHATS_SEQ.nextval,
+        조인 아이디,
+        ,
+        컨텐트,
+        1, -- 기본
+        타입,
+        sysdate);

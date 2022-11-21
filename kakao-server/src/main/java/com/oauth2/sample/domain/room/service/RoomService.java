@@ -261,4 +261,12 @@ public class RoomService {
             throw new BadRequestException(ex.getMessage());
         }
     }
+
+    public List<String> selectReader(String email, String roomId) {
+        roomRepository.selectRoom(email, roomId).orElseThrow(() -> {
+            throw new BadRequestException("권한이 없습니다.");
+        });
+
+        return roomRepository.selectReaderChat(roomId);
+    }
 }

@@ -17,6 +17,11 @@ const initProperty = () => {
     window.Date.prototype.isSameYear = function (date) {
         return date.getFullYear() === this.getFullYear()
     }
+    window.Date.prototype.isSame = function (date) {
+        return this.isSameMonth(date) &&
+            date.getHours() === this.getHours() &&
+            date.getMinutes() === this.getMinutes()
+    }
 }
 
 export default initProperty

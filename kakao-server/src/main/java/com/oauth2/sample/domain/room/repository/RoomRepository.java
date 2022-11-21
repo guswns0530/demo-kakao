@@ -18,4 +18,6 @@ public interface RoomRepository {
     boolean removeJoinUser(String roomId, String email);
     boolean isPresent(String roomId);
     Integer selectFriendRoomId(String fromId, String toId);
+
+    List<String> selectReaderChat(String email);
 }

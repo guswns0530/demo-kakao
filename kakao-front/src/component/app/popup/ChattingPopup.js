@@ -3,7 +3,15 @@ import style from "../../../css/MainPage.module.css"
 import Draggable from "react-draggable";
 import roomService from "../../../services/RoomInfo";
 import ChatLog from "../../../containers/app/chatting/ChatLog";
+import styled from "styled-components";
+import styleLoading from "../../styled/styleLoading";
 
+const StyleImage = styled.div`
+    background-color: #ddd;
+    width: 100%;
+    height: 100%;
+    ${styleLoading}
+`
 
 const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onChange, x, y}) => {
 
@@ -14,10 +22,11 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
                     <header className="handle">
                         <div className={style.h}>
                             <div className={style.image}>
-                                <img src="./image/profile.png" alt=""/>
+                                <StyleImage/>
                             </div>
 
-                            <div className={style.p_name}>현준</div>
+                            <div className={style.p_name}>
+                            </div>
 
                             <div className={style.tab}>
                                 <div className={style.full_screen}></div>
