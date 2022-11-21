@@ -3,6 +3,8 @@ import {useInView} from "react-intersection-observer";
 import {useInfiniteQuery} from "react-query";
 import {selectChatList} from "../../../lib/api/chat";
 import ChatLogComponent from "../../../component/app/chatting/ChatLog";
+import ChatLog2Component from "../../../component/app/chatting/ChatLog2";
+
 import ErrorHandler from "../../handler/ErrorHandler";
 import {useDispatch, useSelector} from "react-redux";
 import {addChat} from "../../../modules/chat";
@@ -94,11 +96,12 @@ const ChatLog = ({roomId}) => {
         setScrollTop(contentRef.current.scrollTop)
     }
 
+    return <ChatLogComponent chats={chats} users={users} user={user} reader={reader} content={contentRef} onScroll={onScroll}>
 
-    return <ChatLogComponent chats={chats} users={users} user={user} reader={reader} content={contentRef}
-                             onScroll={onScroll}>
         <ObservationComponent/>
     </ChatLogComponent>
+
+    // return <ChatLog2Component chats={chats} users={users} user={user} reader={reader}/>
 }
 
 export default React.memo(ChatLog)

@@ -191,11 +191,11 @@ insert into kakao_users(email, password, id, message, name, profile_image_url, p
 values ('y2010217@naver.com', '', 'test5', '친구1', '김우석', 1, 'local', 1, sysdate);
 
 insert into kakao_chats (chat_id, email, room_id, status, type, file_id, content, createAt)
-values (KAKAO_CHATS_SEQ.nextval, 'y2010214@naver.com', 38, 1, 1, null, '더미 데이터1', sysdate);
+values (KAKAO_CHATS_SEQ.nextval, 'ury0530@naver.com', 1, 1, 1, null, '더미 데이터1', sysdate);
 insert into kakao_chats (chat_id, email, room_id, status, type, file_id, content, createAt)
-values (KAKAO_CHATS_SEQ.nextval, 'y2010214@naver.com', 38, 1, 1, null, '더미 데이터2', sysdate);
+values (KAKAO_CHATS_SEQ.nextval, 'ury0530@naver.com', 1, 1, 1, null, '더미 데이터2', sysdate);
 insert into kakao_chats (chat_id, email, room_id, status, type, file_id, content, createAt)
-values (KAKAO_CHATS_SEQ.nextval, 'y2010212@naver.com', 38, 1, 1, null, '더미 데이터3', sysdate);
+values (KAKAO_CHATS_SEQ.nextval, 'y2010212@naver.com', 1, 1, 1, null, '더미 데이터3', sysdate);
 
 
 WITH CUTOFF_RS AS (select FR.*,
