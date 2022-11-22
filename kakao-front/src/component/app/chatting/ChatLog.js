@@ -45,11 +45,9 @@ const ChatDate = ({createAt}) => {
 
 
 const ChatLog = ({children, chats, reader, users, user, content, onScroll, onContextMenu}) => {
-
     const [list, child] = useMemo(() => {
         const list = []
         const child = []
-        let read = users.length
         chats.forEach((chat, i) => {
             const {chat_id, chat_status, chat_type, content, create_at, email} = chat
             const createAt = new Date(create_at)
@@ -87,7 +85,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
         return list.map((userInfo, i) => {
             const data = []
 
-            if (userInfo?.email === user?.email) {
+            if (userInfo.email === user.email) {
                 data.push(<MyChat style={style} key={i}>
                     {child[i].sort((a, b) => {
                         return a.chat_id - b.chat_id

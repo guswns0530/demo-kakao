@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import "../../css/MainPage.module.css"
 import style from "../../css/MainPage.module.css";
 
 const PopupStyled = styled.div`

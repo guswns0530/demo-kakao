@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import ChatFormComponent from "../../../component/app/chatting/ChatForm";
 import {useInsertChatText} from "../../../lib/query";
 
@@ -6,6 +6,11 @@ const ChatForm = ({roomId, content}) => {
     const inputRef = useRef()
     const [input, setInput] = useState('')
     const { mutate, isLoading } = useInsertChatText()
+
+    useEffect(() => {
+        inputRef.current.focus()
+    }, [input]);
+
 
     const onChange = (e) => {
         setInput(e.target.value)

@@ -1,21 +1,20 @@
 import {Client} from "@stomp/stompjs"
 
 import {useEffect, useRef} from "react";
-import {SOCKET_BASE_URL} from "../constants";
+import {SOCKET_BASE_URL} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
-import {addChat} from "../modules/chat";
-import {useReadChat} from "../lib/query";
-import queryClient from "./queryClient";
-import {readerQuery} from "../containers/app/popup/ChattingPopup";
-import {toast} from "react-toastify";
-import {Toast} from "../containers/app/popup/ToastContainer";
+import {addChat} from "../../modules/chat";
+import {useReadChat} from "../../lib/query";
+import queryClient from "../../services/queryClient";
+import {readerQuery} from "../app/popup/ChattingPopup";
+import {addAlert} from "../../modules/alert";
 
 const Socket = () => {
     const client = useRef({})
     const dispatch = useDispatch()
     const state = useSelector(({user, chat}) => ({
         user: user.user,
-        chat: chat
+        chat: chat,
     }))
     const stateRef = useRef(state)
     const {mutate: readChatMutate} = useReadChat()
@@ -55,19 +54,21 @@ const Socket = () => {
 
     const onChat = async (body) => {
         const data = JSON.parse(body.body)
-        const {room} = stateRef.current.chat
+        const {chat: {room}, user} = stateRef.current
 
         if (room) {
             if (room.room_id*1 === data.room_id*1) {
                 dispatch(addChat([data]))
                 readChatMutate(room.room_id)
-
                 return
             }
         }
 
-        // toast.info(data.content)
-        Toast()
+        if(user.email !== data.email) {
+            dispatch(addAlert(data))
+        } else {
+            readChatMutate(data.room_id)
+        }
     }
 
     const onRead = async (body) => {

@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React from "react";
 import {Item, Menu} from "react-contexify";
 import {menuId as chatLogMenuId} from "../app/chatting/ChatLog";
 import {useSelector} from "react-redux";

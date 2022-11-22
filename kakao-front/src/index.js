@@ -33,6 +33,7 @@ import "react-toastify/dist/ReactToastify.css"
 import "./css/ReactContexify.css"
 
 import initProperty from "./services/initProperty";
+import ChatAlert from "./containers/app/popup/ChatAlert";
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -52,6 +53,7 @@ root.render(
                 <QueryClientProvider client={queryClient}>
                     <ToastContainer position={"top-right"}/>
                     <LayerPopupContainer/>
+                    <ChatAlert />
                     <App/>
                 </QueryClientProvider>
             </PersistGate>

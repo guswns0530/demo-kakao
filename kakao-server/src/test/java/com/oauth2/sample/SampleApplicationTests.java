@@ -55,7 +55,7 @@ class SampleApplicationTests {
 
 	@Test
 	void listToString() throws JsonProcessingException {
-		System.out.println("FriendStatus.NONE = " + FriendStatus.valueOf("0"));
+		System.out.println("passwordEncoder = " + passwordEncoder.encode("1234"));
     }
 
 }

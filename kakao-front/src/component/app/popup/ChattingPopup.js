@@ -11,6 +11,7 @@ const StyleImage = styled.div`
     background-color: #ddd;
     width: 100%;
     height: 100%;
+    border-radius: 46%;
     ${styleLoading}
 `
 

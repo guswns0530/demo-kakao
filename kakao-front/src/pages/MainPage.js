@@ -11,12 +11,12 @@ import ProfilePopup from "../containers/app/popup/ProfilePopup";
 import AddFriend from "../containers/app/popup/AddFriend";
 import Chatting from "../containers/app/Chatting";
 import ChattingPopup from "../containers/app/popup/ChattingPopup";
-import {useQueries} from "react-query";
+import {useQuery} from "react-query";
 import {selectMe} from "../lib/api/user";
 import {CHECK_SUCCESS} from "../modules/user";
 import ErrorHandler from "../containers/handler/ErrorHandler";
 import ContextMenu from "../containers/handler/ContextMenu";
-import Socket from "../services/Socket";
+import Socket from "../containers/socket/Socket";
 
 export const queryName = "selectUserInfo"
 
@@ -24,21 +24,25 @@ const MainPage = () => {
     const dispatch = useDispatch()
     const location = useLocation()
 
-    const [{isLoading: isUserLoading, isError: isUserError, error: userError}] = useQueries([{
-        queryName, queryFn: async () => selectMe(), onSuccess: (data) => {
-            if (data) {
-                dispatch({
-                    type: CHECK_SUCCESS, payload: data.data.data
-                })
+    const {isLoading: isUserLoading, isError: isUserError, error: userError} = useQuery(
+        queryName,
+        async () => selectMe(),
+        {
+            onSuccess: (data) => {
+                if (data) {
+                    dispatch({
+                        type: CHECK_SUCCESS, payload: data.data.data
+                    })
+                }
             }
         }
-    }])
+    )
 
     const isError = isUserError
     const isLoading = isUserLoading
 
     if (isError) {
-        if(isUserError) {
+        if (isUserError) {
             return <ErrorHandler path={"/logout"} error={userError}/>
         }
     }

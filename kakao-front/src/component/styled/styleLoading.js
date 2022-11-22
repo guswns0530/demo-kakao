@@ -6,7 +6,7 @@ const loadingStyle = `
           background-color: rgba(165, 165, 165, 0.1);
         }
         50% {
-          background-color: rgba(165, 165, 165, 0.3);
+          background-color: rgba(165, 165, 165, 0.5);
         }
         100% {
           background-color: rgba(165, 165, 165, 0.1);

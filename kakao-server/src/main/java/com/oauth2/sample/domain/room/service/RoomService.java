@@ -18,12 +18,14 @@ import com.oauth2.sample.domain.room.response.JoinUser;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +36,7 @@ import java.util.stream.Stream;
 @Service
 @RequestMapping
 @RequiredArgsConstructor
+@Slf4j
 public class RoomService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;

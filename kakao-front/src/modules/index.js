@@ -10,6 +10,7 @@ import rooms from "./rooms";
 import form from './form'
 import popup from "./popup";
 import chat from "./chat";
+import alert from "./alert";
 
 
 
@@ -42,7 +43,8 @@ const rootReducer = combineReducers({
   form,
   popup,
   rooms,
-  chat
+  chat,
+  alert
 });
 
 export default persistReducer(persistConfig, rootReducer)

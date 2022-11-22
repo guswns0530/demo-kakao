@@ -56,7 +56,6 @@ const ChattingPopup = () => {
 
     useEffect(() => {
         if(isFullscreen) {
-            console.log('실행')
             setPosition({x: 0, y: 0})
         }
     }, [isFullscreen])
