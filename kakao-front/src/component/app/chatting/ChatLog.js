@@ -1,6 +1,7 @@
 import React, {useMemo} from "react";
 import style from "../../../css/MainPage.module.css"
 import ProfileImage from "../../util/ProfileImage";
+import {Link, useLocation} from "react-router-dom";
 
 const MyChat = ({children}) => {
     return <div className={`${style.chat} ${style.me}`}>
@@ -9,10 +10,14 @@ const MyChat = ({children}) => {
 }
 
 const YouChat = ({children, user}) => {
+    const location = useLocation()
+
     return <div className={`${style.chat} ${style.you}`}>
         <div className={style.c_pro}>
             <div className={style.image}>
-                <ProfileImage profile_image_url={user.profile_image_url}/>
+                <Link to={"/app/profile/"+user.id} state={location.state}>
+                    <ProfileImage profile_image_url={user.profile_image_url}/>
+                </Link>
             </div>
             <div className={style.name}>{user.name}</div>
         </div>
