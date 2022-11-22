@@ -6,6 +6,7 @@ import {selectReaderChat, selectRoom} from "../../../lib/api/room";
 import ErrorHandler from "../../handler/ErrorHandler";
 import {useDispatch, useSelector} from "react-redux";
 import {initializeChat, setReader, setRoom} from "../../../modules/chat";
+import {useReadChat} from "../../../lib/query";
 
 export const checkRoomQuery = "checkRoom"
 export const readerQuery = "readerUser"
@@ -37,19 +38,36 @@ const ChattingPopup = () => {
     }))
     const navigate = useNavigate()
     const location = useLocation()
-    const inputRef = useRef()
     const [initX, initY] = [location?.state?.locate ? location.state.locate.x : 0, location?.state?.locate ? location.state.locate.y : 0]
     const [{x, y}, setPosition] = useState({x: initX, y: initY})
     const isError = isError1 || isError2
     const isLoading = isLoading1 || isLoading2
+    const {mutate} = useReadChat()
+    const [isFullscreen, setScreen] = useState(false)
+    const content = useRef();
+
+    useEffect(() => {
+        mutate(id)
+    }, [])
 
     useEffect(() => {
         dispatch(initializeChat())
     }, [id, dispatch]);
 
+    useEffect(() => {
+        if(isFullscreen) {
+            console.log('실행')
+            setPosition({x: 0, y: 0})
+        }
+    }, [isFullscreen])
+
 
     if (isError) {
         return <ErrorHandler path={"/app"} error={error1 || error2} location={location}/>
+    }
+
+    const toggleScreen = () => {
+        setScreen(!isFullscreen)
     }
 
     const onClose = () => {
@@ -67,26 +85,8 @@ const ChattingPopup = () => {
         setPosition({x: data.x, y: data.y})
     }
 
-    const onChange = (e) => {
-        const elem = inputRef.current
-        elem.style.height = '0px'
-        const {scrollHeight} = elem
-
-        let line = scrollHeight / 18
-
-        if (line > 5) {
-            elem.style.overflowY = 'scroll'
-            line = 5
-        } else {
-            elem.style.overflowY = 'hidden'
-        }
-
-        elem.style.height = line * 18 + 'px'
-    }
-
     return <ChattingPopupComponent x={x} y={y} room={room} isLoading={isLoading} trackPos={trackPos}
-                                   onClose={onClose}
-                                   onChange={onChange} inputRef={inputRef} user={user}/>
+                                   onClose={onClose} user={user} toggleScreen={toggleScreen} isFullscreen={isFullscreen} content={content}/>
 }
 
 export default ChattingPopup

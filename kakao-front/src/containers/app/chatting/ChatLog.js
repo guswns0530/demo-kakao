@@ -1,18 +1,18 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 import {useInfiniteQuery} from "react-query";
 import {selectChatList} from "../../../lib/api/chat";
 import ChatLogComponent from "../../../component/app/chatting/ChatLog";
-import ChatLog2Component from "../../../component/app/chatting/ChatLog2";
 
 import ErrorHandler from "../../handler/ErrorHandler";
 import {useDispatch, useSelector} from "react-redux";
 import {addChat} from "../../../modules/chat";
+import { useContextMenu} from "react-contexify";
 
+export const menuId = "ChatLogMenu"
 export const queryName = "ChatLog/selectChattingList"
 
-const ChatLog = ({roomId}) => {
-    const contentRef = useRef();
+const ChatLog = ({roomId, content}) => {
     const dispatch = useDispatch()
     const [scrollTop, setScrollTop] = useState(0)
     const {
@@ -60,10 +60,13 @@ const ChatLog = ({roomId}) => {
         reader: chat.reader,
         user: user.user
     }))
+    const {show, hideAll} = useContextMenu({
+        id: menuId
+    })
 
     useEffect(() => {
-        if (scrollTop && contentRef.current) {
-            contentRef.current.scrollTop = scrollTop
+        if (scrollTop && content.current) {
+            content.current.scrollTop = scrollTop
         }
     }, [scrollTop, data])
 
@@ -93,13 +96,23 @@ const ChatLog = ({roomId}) => {
     }
 
     const onScroll = () => {
-        setScrollTop(contentRef.current.scrollTop)
+        setScrollTop(content.current.scrollTop)
+        hideAll()
+    }
+    const handleContextMenu = (e, chat) => {
+        e.preventDefault()
+        show(e, {
+            props: () => ({
+                chat
+            })
+        })
     }
 
-    return <ChatLogComponent chats={chats} users={users} user={user} reader={reader} content={contentRef} onScroll={onScroll}>
-
-        <ObservationComponent/>
-    </ChatLogComponent>
+    return <>
+        <ChatLogComponent chats={chats} users={users} user={user} reader={reader} content={content} onScroll={onScroll} onContextMenu={handleContextMenu}>
+            <ObservationComponent/>
+        </ChatLogComponent>
+    </>
 
     // return <ChatLog2Component chats={chats} users={users} user={user} reader={reader}/>
 }

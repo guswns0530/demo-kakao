@@ -5,6 +5,7 @@ import roomService from "../../../services/RoomInfo";
 import ChatLog from "../../../containers/app/chatting/ChatLog";
 import styled from "styled-components";
 import styleLoading from "../../styled/styleLoading";
+import ChatForm from "../../../containers/app/chatting/ChatForm";
 
 const StyleImage = styled.div`
     background-color: #ddd;
@@ -13,7 +14,7 @@ const StyleImage = styled.div`
     ${styleLoading}
 `
 
-const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onChange, x, y}) => {
+const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleScreen, isFullscreen, content}) => {
 
     if (isLoading) {
         return <>
@@ -29,11 +30,15 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
                             </div>
 
                             <div className={style.tab}>
-                                <div className={style.full_screen}></div>
-                                <div className={`${style.min_screen} ${style.none}`}>
-                                    <div></div>
-                                    <div></div>
-                                </div>
+                                {!isFullscreen ?
+                                    <div className={style.full_screen} onClick={toggleScreen}></div>
+                                    :
+                                    <div className={style.min_screen} onClick={toggleScreen}>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                }
+
                                 <div className={style.exit} onClick={onClose}>
                                     <div></div>
                                     <div></div>
@@ -47,8 +52,8 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
                         </div>
                         <div className={style.form}>
                             <form>
-                                <textarea name="" id="" ref={inputRef} onChange={onChange}></textarea>
-                                <button className={style.able}>전송</button>
+                                <textarea name="" id="" disabled={true}></textarea>
+                                <button className={style.disable}>전송</button>
                             </form>
                         </div>
                     </div>
@@ -59,8 +64,8 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
         const {profileImageList, name, join_user_cnt, room_id} = roomService(user, room)
 
         return <>
-            <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"}>
-                <div id={style.popup} className={style.popup}>
+            <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"} disabled={isFullscreen} position={{x, y}}>
+                <div id={style.popup} className={`${style.popup} ${isFullscreen && style.fullscreen}`}>
                     <header className="handle">
                         <div className={style.h}>
                             <div className={style.image}>
@@ -74,11 +79,14 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
                             </div>
 
                             <div className={style.tab}>
-                                <div className={style.full_screen}></div>
-                                <div className={`${style.min_screen} ${style.none}`}>
-                                    <div></div>
-                                    <div></div>
-                                </div>
+                                {!isFullscreen ?
+                                    <div className={style.full_screen} onClick={toggleScreen} />
+                                    :
+                                    <div className={style.min_screen} onClick={toggleScreen}>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                }
                                 <div className={style.exit} onClick={onClose}>
                                     <div></div>
                                     <div></div>
@@ -88,12 +96,9 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, inputRef, onCh
                     </header>
 
                     <div className={style.content}>
-                        <ChatLog roomId={room_id}/>
+                        <ChatLog roomId={room_id} content={content}/>
                         <div className={style.form}>
-                            <form>
-                                <textarea name="" id="" ref={inputRef} onChange={onChange}></textarea>
-                                <button className={style.able}>전송</button>
-                            </form>
+                            <ChatForm roomId={room_id} content={content}/>
                         </div>
                     </div>
                 </div>

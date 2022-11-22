@@ -15,6 +15,8 @@ import {useQueries} from "react-query";
 import {selectMe} from "../lib/api/user";
 import {CHECK_SUCCESS} from "../modules/user";
 import ErrorHandler from "../containers/handler/ErrorHandler";
+import ContextMenu from "../containers/handler/ContextMenu";
+import Socket from "../services/Socket";
 
 export const queryName = "selectUserInfo"
 
@@ -77,6 +79,8 @@ const MainPage = () => {
             </ul>
         </nav>
         {state?.page === 1 ? <Chatting/> : <Friend/>}
+        <ContextMenu/>
+        <Socket/>
         <button style={{zIndex: 1, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
 
         <Routes>

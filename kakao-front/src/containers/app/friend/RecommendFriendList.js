@@ -35,7 +35,6 @@ const RecommendFriendList = () => {
 
     const handleContextMenu = (e) => {
         e.preventDefault()
-        console.log('우클릭')
     }
 
     const resource = data.data.data

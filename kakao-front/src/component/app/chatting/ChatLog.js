@@ -1,5 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import produce from "immer";
+import React, {useMemo} from "react";
 import style from "../../../css/MainPage.module.css"
 import ProfileImage from "../../util/ProfileImage";
 
@@ -21,10 +20,12 @@ const YouChat = ({children, user}) => {
     </div>
 }
 
-const Block = ({chat: {chat_id, content, read, date}, isLast}) => {
+const Block = ({chat, isLast, onContextMenu}) => {
+    const {chat_id, content, read, date} = chat
+
     return <div className={style.chat_block} key={chat_id}>
-        <div className={style.chat_content}>
-            <span> {chat_id} {content} </span>
+        <div className={style.chat_content} onContextMenu={(e) => onContextMenu(e, chat)}>
+            <span>{content} </span>
             <div className={style.chat_info}>
                 <div className={style.chat_read}>{read === 0 ? undefined : read}</div>
                 {isLast && <div className={style.chat_data}>{date}</div>}
@@ -43,11 +44,12 @@ const ChatDate = ({createAt}) => {
 }
 
 
-const ChatLog = ({children, chats, reader, users, user, content, onScroll}) => {
+const ChatLog = ({children, chats, reader, users, user, content, onScroll, onContextMenu}) => {
 
     const [list, child] = useMemo(() => {
         const list = []
         const child = []
+        let read = users.length
         chats.forEach((chat, i) => {
             const {chat_id, chat_status, chat_type, content, create_at, email} = chat
             const createAt = new Date(create_at)
@@ -55,7 +57,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll}) => {
             let read = 0;
 
             reader.forEach(id => {
-                if (id < chat_id) read++
+                if (id * 1 < chat_id * 1) read++
             })
 
             const chatObj = {date, read, content, chat_id, email, chat_status, chat_type, createAt}
@@ -89,13 +91,21 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll}) => {
                 data.push(<MyChat style={style} key={i}>
                     {child[i].sort((a, b) => {
                         return a.chat_id - b.chat_id
-                    }).map((chat, j) => <Block chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}/>)}
+                    }).map((chat, j) => {
+                        chat.user = userInfo
+                        return <Block chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}
+                                      onContextMenu={onContextMenu}/>
+                    })}
                 </MyChat>)
             } else {
                 data.push(<YouChat user={userInfo} style={style} key={i}>
                     {child[i].sort((a, b) => {
                         return a.chat_id - b.chat_id
-                    }).map((chat, j) => <Block chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}/>)}
+                    }).map((chat, j) => {
+                        chat.user = userInfo
+                        return <Block chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}
+                                      onContextMenu={onContextMenu}/>
+                    })}
                 </YouChat>)
             }
 

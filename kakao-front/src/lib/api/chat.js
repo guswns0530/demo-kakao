@@ -6,3 +6,14 @@ export const selectChatList = (roomId, id) => {
     }
     return client.get("/chats/" + roomId + "/load/" + id)
 }
+
+export const insertChatText = (roomId, content) => {
+    return client.post("/chats", {
+        roomId,
+        content
+    })
+}
+
+export const readChat = (roomId) => {
+    return client.post("/chats/" + roomId + "/read")
+}

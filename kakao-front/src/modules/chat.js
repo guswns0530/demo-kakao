@@ -35,7 +35,7 @@ export default handleActions({
                     if (acc.findIndex(({chat_id}) => chat_id === current.chat_id) === -1) {
                         acc.push(current);
                     }
-                    return acc;
+                    return acc.sort((a,b) => b.chat_id - a.chat_id);
                 }, [])
             }
         },

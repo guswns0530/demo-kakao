@@ -8,6 +8,7 @@ import {queryName as friendInfoQueryName} from "../../containers/app/friend/Frie
 import {queryName as recommendFriendInfoQueryName} from "../../containers/app/friend/RecommendFriendList";
 import {queryName as selectToUserId} from "../../containers/app/popup/ProfilePopup";
 import {updateUserToEmail} from "../api/user";
+import {insertChatText, readChat} from "../api/chat";
 
 export const useInsertFriend = (onSuccess, onError) => {
     return useMutation(async ({id, type}) => {
@@ -84,6 +85,41 @@ export const useUpdateUser = (onSuccess, onError) => {
             }
 
             await queryClient.refetchQueries(myInfoQueryName)
+        }),
+        onError: (error) => {
+            if (onError) {
+                onError(error)
+            }
+        }
+    })
+}
+
+export const useInsertChatText = (onSuccess, onError) => {
+    return useMutation(async ({roomId, content}) => {
+        return insertChatText(roomId, content)
+    }, {
+        onSuccess: (async (data) => {
+            if (onSuccess) {
+                onSuccess(data)
+            }
+        }),
+        onError: (error) => {
+            if (onError) {
+                onError(error)
+            }
+        }
+    })
+}
+
+export const useReadChat = (onSuccess, onError) => {
+    return useMutation(async (roomId) => {
+        return readChat(roomId)
+    }, {
+        onSuccess: (async (data) => {
+            if (onSuccess) {
+                onSuccess(data)
+            }
+
         }),
         onError: (error) => {
             if (onError) {

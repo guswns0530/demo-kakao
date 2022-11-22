@@ -6,8 +6,10 @@ import com.oauth2.sample.domain.chat.dto.ChatType;
 import com.oauth2.sample.domain.chat.repository.ChatRepository;
 import com.oauth2.sample.domain.chat.request.*;
 import com.oauth2.sample.domain.room.repository.RoomRepository;
+import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -21,20 +23,23 @@ import java.util.Optional;
 public class ChatService {
 
     private final ChatRepository chatRepository;
+    private final RoomRepository roomRepository;
+    private final RoomService roomService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public Chat insertChatText(InsertChatRequest request, String email) {
-        Chat chat = Chat.builder()
-                .email(email)
-                .roomId(request.getRoomId())
-                .content(request.getContent())
-                .chatType(ChatType.TEXT)
-                .chatStatus(ChatStatus.EXIST)
-                .build();
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String nowStr = sdf.format(new Date());
+        Chat chat = Chat.builder().email(email).roomId(request.getRoomId()).content(request.getContent()).chatType(ChatType.TEXT).chatStatus(ChatStatus.EXIST).createAt(nowStr).build();
         boolean insertChatResult = chatRepository.insertChat(chat);
 
         if (!insertChatResult) {
             throw new BadRequestException("메시지 전달에 실패하였습니다.");
         }
+
+        roomService.selectRoom(email, request.getRoomId()).getUsers().forEach(joinUser -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUser.getEmail() + "/chat", chat);
+        });
 
         return chat;
     }
@@ -59,7 +64,7 @@ public class ChatService {
 
             double compare = (now.getTime() - createAt.getTime()) / 1000 / 60;
 
-            if(compare > 5) {
+            if (compare > 5) {
                 throw new BadRequestException("5분이 지나 삭제할 수 없습니다.");
             }
         } catch (Exception ex) {
@@ -74,9 +79,13 @@ public class ChatService {
 
     public void readChat(ReadChatRequest readChatRequest) {
         boolean result = chatRepository.readChat(readChatRequest);
-        if(!result) {
+        if (!result) {
             throw new BadRequestException("수신중 오류가 발생하였습니다.");
         }
+
+        roomService.selectRoom(readChatRequest.getEmail(), readChatRequest.getRoomId()).getUsers().forEach(joinUser -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUser.getEmail() + "/read", 1);
+        });
     }
 
     public List<Chat> selectChatList(SelectChatListRequest selectChatListRequest) {

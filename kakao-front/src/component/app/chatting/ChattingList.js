@@ -20,7 +20,7 @@ const ChattingList = ({data, onDoubleClick}) => {
                 </div>
                 <div className={style.sub_info}>
                     <div className={style.date}>{date}</div>
-                    {unread_cnt && <div className={style.alert}>{unread_cnt >= 100 ? '99' : unread_cnt}</div>}
+                    {unread_cnt * 1 !== 0 && <div className={style.alert}>{unread_cnt >= 100 ? '99' : unread_cnt }</div>}
                 </div>
             </div>
         </li>)

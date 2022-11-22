@@ -7,10 +7,12 @@ import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.web.payload.ApiResponse;
 import com.oauth2.sample.web.security.annotation.CurrentUser;
 import com.oauth2.sample.web.security.principal.UserPrincipal;
+import com.oauth2.sample.web.socket.dto.Message;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +24,7 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping
     public ResponseEntity<?> selectRoomList(@CurrentUser UserPrincipal user) {
