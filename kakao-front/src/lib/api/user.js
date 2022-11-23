@@ -20,7 +20,8 @@ export const selectUserToEmail = (id) => {
 }
 
 export const updateUserToEmail = (data) => {
-    return client.put('/users', data);
+    return client.put('/users', data, {
+    });
 }
 
 export const remove = () => {

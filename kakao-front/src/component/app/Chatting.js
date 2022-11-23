@@ -1,10 +1,12 @@
 import React from "react";
 import style from "../../css/MainPage.module.css"
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import ChattingList from "../../containers/app/chatting/ChattingList";
 import SearchForm from "../../containers/app/chatting/SearchForm";
 
 const Chatting = ({header, onClick, isOpen, section, onScroll}) => {
+    const location = useLocation()
+
     return (<>
             <div className={`${style.container} ${style.rooms}`}>
                 <header ref={header}>
@@ -17,7 +19,7 @@ const Chatting = ({header, onClick, isOpen, section, onScroll}) => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to={"/app"}>
+                                <Link to={"/app/add-chatting"} state={location.state}>
                                     <i className="material-icons">add_comment</i>
                                 </Link>
                             </li>

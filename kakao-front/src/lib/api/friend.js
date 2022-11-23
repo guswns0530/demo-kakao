@@ -3,8 +3,13 @@ import client from "./client";
 export const selectFriendList = () => {
     return client.get('/friends', {});
 }
+
 export const selectRecommendFriendList = () => {
     return client.get('/friends/added-me', {});
+}
+
+export const selectBlockFriendList = () => {
+    return client.get("/friends/block-list")
 }
 
 export const insertFriendToId = (id) => {
@@ -24,3 +29,4 @@ export const updateFriendName = (email, name) => {
         nickname: name
     })
 }
+

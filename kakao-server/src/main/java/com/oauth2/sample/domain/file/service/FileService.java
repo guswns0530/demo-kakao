@@ -8,9 +8,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.external.com.google.gdata.util.common.base.UnicodeEscaper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +39,12 @@ public class FileService {
 
         Stream<String> stringStream = Arrays.stream(files).map(file -> {
             Long fileId = Long.parseLong(new Date().getTime() + "" + atomicInteger.getAndIncrement());
-            String path = insertFile(email, file, fileId);
+            String path = null;
+            try {
+                path = insertFile(email, file, fileId);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
             return path;
         });
@@ -43,9 +52,13 @@ public class FileService {
         return stringStream.collect(Collectors.toList());
     }
 
-    public String uploadFile(String email, MultipartFile file) throws IOException {
+    public String uploadFile(String email, MultipartFile file) throws Exception {
 
         File dir = new File(location + "\\" + email);
+
+        if(!dir.isDirectory()) {
+            dir.mkdir();
+        }
 
         Long fileId = new Date().getTime();
         String path = insertFile(email, file, fileId);
@@ -53,8 +66,9 @@ public class FileService {
         return path;
     }
 
-    private String insertFile(String email, MultipartFile file, Long fileId) {
+    private String insertFile(String email, MultipartFile file, Long fileId) throws Exception{
         File dest = new File(email + "/" + fileId);
+
 
         try {
             file.transferTo(dest);
@@ -80,6 +94,12 @@ public class FileService {
             throw new BadRequestException("데이터베이스 입력중 오류가 발생하였습니다.");
         }
 
-        return dest.getPath();
+//        String path = URLDecoder.decode(dest.getPath(), URLEncoder.encode(dest.getPath(), "UTF-8"));
+//        String path = new URL(dest.getPath()).toURI().toASCIIString();
+
+//        System.out.println("path = " + path);
+
+        String path = email + "/" + fileId;
+        return path;
     }
 }

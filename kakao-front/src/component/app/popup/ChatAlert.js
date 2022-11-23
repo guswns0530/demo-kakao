@@ -8,13 +8,14 @@ import {removeAlert} from "../../../modules/alert";
 import {useMutation, useQuery} from "react-query";
 import {selectRoom} from "../../../lib/api/room";
 import {useInsertChatText} from "../../../lib/query";
+import {Link} from "react-router-dom";
 
 const Item = styled.div`
-    width: 350px;    
-    background-color: #fff;
-    
-    border: 1px solid #ccc;
-    box-shadow: 0 0 3px 1px rgb(0, 0, 0, 0.1);
+  width: 350px;
+  background-color: #fff;
+
+  border: 1px solid #ccc;
+  box-shadow: 0 0 3px 1px rgb(0, 0, 0, 0.1);
 `
 const queryName = "selectRoom"
 
@@ -26,8 +27,7 @@ const ChatAlert = ({chat, user}) => {
     const time = useRef(0)
     const focus = useRef()
 
-    const {data, isLoading} = useQuery(queryName, async () => selectRoom(room_id), {
-    })
+    const {data, isLoading} = useQuery(queryName, async () => selectRoom(room_id), {})
     const {mutate} = useInsertChatText()
 
 
@@ -35,12 +35,12 @@ const ChatAlert = ({chat, user}) => {
         const interval = window.setInterval(() => {
             time.current += 50
 
-            if(document.activeElement.closest(".isFocus") === focus.current) {
+            if (document.activeElement.closest(".isFocus") === focus.current) {
                 time.current = 0;
                 return
             }
 
-            if(time.current >= 2000) {
+            if (time.current >= 2000) {
                 clearInterval(interval)
                 setAnimation("closeAnimation")
                 setTimeout(() => {
@@ -58,7 +58,7 @@ const ChatAlert = ({chat, user}) => {
         }
     }, []);
 
-    if(isLoading) return
+    if (isLoading) return
 
     const onChange = (e) => {
         setInput(e.target.value)
@@ -66,7 +66,7 @@ const ChatAlert = ({chat, user}) => {
     const onSubmit = (e) => {
         e.preventDefault()
 
-        if(input.trim() !== '') {
+        if (input.trim() !== '') {
             mutate({
                 roomId: room_id,
                 content: input
@@ -99,15 +99,17 @@ const ChatAlert = ({chat, user}) => {
             </div>
         </div>
         <header>{name}</header>
-        <div className={style.profile}>
-            <div className={style.image}>
-                <ProfileImage profile_image_url={sendUser.profile_image_url}/>
+        <Link to={"/app/chatting/" + room_id} onClick={onClose}>
+            <div className={style.profile}>
+                <div className={style.image}>
+                    <ProfileImage profile_image_url={sendUser.profile_image_url}/>
+                </div>
+                <div className={style.context}>
+                    <div className={style.name}>{sendUser.name}</div>
+                    <div className={style.msg}>{content}</div>
+                </div>
             </div>
-            <div className={style.context}>
-                <div className={style.name}>{sendUser.name}</div>
-                <div className={style.msg}>{content}</div>
-            </div>
-        </div>
+        </Link>
         <form onSubmit={onSubmit}>
             <input placeholder={"메시지 입력"} value={input} onChange={onChange}/>
             <button className={input ? style.able : style.disable}>전송</button>

@@ -17,6 +17,8 @@ import {CHECK_SUCCESS} from "../modules/user";
 import ErrorHandler from "../containers/handler/ErrorHandler";
 import ContextMenu from "../containers/handler/ContextMenu";
 import Socket from "../containers/socket/Socket";
+import SettingPopup from "../containers/app/popup/SettingPopup";
+import AddChatting from "../containers/app/popup/AddChatting";
 
 export const queryName = "selectUserInfo"
 
@@ -76,7 +78,7 @@ const MainPage = () => {
 
             <ul className={style.sub_nav}>
                 <li>
-                    <Link to={"./setting"}>
+                    <Link to={"./setting"} state={{...state}}>
                         <i className="material-icons"> settings </i>
                     </Link>
                 </li>
@@ -85,13 +87,13 @@ const MainPage = () => {
         {state?.page === 1 ? <Chatting/> : <Friend/>}
         <ContextMenu/>
         <Socket/>
-        <button style={{zIndex: 1, position: "absolute", top: "50%"}} onClick={() => dispatch(logout())}>로그아웃</button>
-
         <Routes>
             <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
             <Route path={"/chatting/:id"} element={<ChattingPopup/>}/>
             <Route path={"/add-friend"} element={<AddFriend/>}/>
             <Route path={"/add-friend/:type"} element={<AddFriend/>}/>
+            <Route path={"/add-chatting"} element={<AddChatting/>}/>
+            <Route path={"/setting/*"} element={<SettingPopup/>}/>
         </Routes>
     </>)
 }

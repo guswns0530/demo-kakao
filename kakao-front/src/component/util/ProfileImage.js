@@ -31,6 +31,10 @@ const ProfileImage = ({profile_image_url}) => {
             return profile_image_url
         }
 
+        if ((profile_image_url + "").match('data:')) {
+            return profile_image_url
+        }
+
         if(!isNaN(profile_image_url * 1)) {
             return ProfilePng
         }

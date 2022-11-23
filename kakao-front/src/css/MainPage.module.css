@@ -864,18 +864,19 @@ header img {
 }
 
 #setting_popup {
-    top: 100px;
-    left: 100px;
-
     width: 510px;
     height: 640px;
+
+    background-color: #fff;
 }
 
-#setting_popup header {
+#setting_popup > header {
     padding: 0px 20px;
     padding-top: 34px;
     padding-bottom: 12px;
     font-size: 16px;
+
+    font-weight: 900;
 
     color: #999999;
 
@@ -917,6 +918,7 @@ header img {
 #setting_popup section nav {
     border-right: 1px solid rgb(233, 230, 230);
     height: 100%;
+    position: relative;
 
     padding-top: 12px;
 }
@@ -941,6 +943,10 @@ header img {
     width: 100%;
 }
 
+#setting_popup section nav a:hover{
+    background-color: #fafafa;
+}
+
 #setting_popup section nav a.select{
     background-color: #f2f2f2;
     color: #000;
@@ -954,7 +960,7 @@ header img {
 }
 
 .page_profile .title {
-    font-weight: 500;
+    font-weight: 900;
 }
 
 .p_pro {
@@ -980,9 +986,18 @@ header img {
     overflow: hidden;
 }
 
-.p_profile .name {
+.p_profile .info {
     margin-left: 14px;
+}
+
+.p_profile .name {
     font-size: 13px;
+    font-weight: 900;
+}
+.p_profile .message {
+    margin-top: 3px;
+    font-size: 11px;
+    color: rgb(131, 128, 128);
 }
 .p_pro button {
     background-color: #fff;
@@ -1008,11 +1023,14 @@ header img {
 
 .p_info > div {
     margin-bottom: 12px;
+
+    display: flex;
 }
 
 .p_info > div > span:first-child {
     display: inline-block;
     width: 70px;
+    min-width: 70px;
 
     color: #4a4c4e;
 }
@@ -1020,7 +1038,9 @@ header img {
     font-size: 14px;
 
     display: inline-block;
-    width: 60px;
+    word-break: break-all;
+    white-space: break-spaces;
+
 }
 
 #setting_popup_profile {
@@ -1028,7 +1048,7 @@ header img {
     height: 510px;
 
     top: 0;
-    left: 0%;
+    right: -345px;
 }
 
 #setting_popup_profile .tab {
@@ -1132,6 +1152,7 @@ header img {
     border: none;
     border-bottom: 1px solid #e6e6e6;
     line-height: 38px;
+    padding-right: 40px;
 }
 
 .spp_input .counter {
@@ -1392,6 +1413,7 @@ header img {
     border-radius: 3px;
 
     margin-left: 7px;
+    min-width: 90px;
 
     padding: 12px 18px;
 
@@ -1936,3 +1958,267 @@ header img {
     right: 0;
     bottom: 0;
 }
+
+#setting_popup .logout {
+    position: absolute;
+    bottom: 8px;
+    font-size: 12px;
+    transition: 0.3s;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 100px;
+
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#setting_popup .logout:hover {
+    background-color: #f1f1f1;
+}
+
+#friend_page .disable_box {
+    margin-top: 5px ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgb(233, 230, 230);
+    padding-bottom: 8px !important;
+}
+
+#friend_page .content {
+    display: flex;
+    font-size: 12px;
+}
+
+#friend_page .content .name {
+    color: #4a4c4e;
+
+}
+
+#friend_page .content .for {
+    margin-left: 6px;
+    color: #4a4c4e;
+}
+
+#friend_page .content_more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#friend_page .content_more span{
+    cursor: pointer;
+    font-size: 20px;
+    color: #4a4c4e;
+}
+
+#friend_page .profile {
+    padding: 7px;
+    position: relative;
+}
+
+#friend_page .image {
+    width: 33px;
+    height: 33px;
+
+    min-width: 33px;
+    min-height: 33px;
+}
+#friend_page .context {
+    margin-left: 9px;
+}
+
+#friend_page .context .name{
+    font-size: 12px;
+}
+
+#friend_page .context .msg{
+    margin-top: 2px;
+    font-size: 11px;
+}
+#friend_page button{
+    position: absolute;
+    cursor: pointer;
+    color: rgb(131, 128, 128);
+    background-color: transparent;
+    border: none;
+    right: 7px;
+    font-size: 12px;
+}
+
+#friend_page ul {
+    margin-top: 8px;
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-bottom: 0 !important;
+}
+
+#friend_page ul::-webkit-scrollbar {
+    width: 14px;
+}
+#friend_page ul::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    background-color: #cccccc;
+}
+#friend_page ul::-webkit-scrollbar-thumb:hover {
+    background: #7f7f7f;
+    border-radius: 15px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+
+
+
+#profile_page .image {
+    width: 55px;
+    height: 55px;
+    min-width: 55px;
+    min-height: 55px;
+}
+
+#add_chatting_popup {
+    width: 330px;
+}
+
+#add_chatting_popup .tab {
+    position: absolute;
+
+    top: 8px;
+    right: 8px;
+
+    display: flex;
+    align-items: flex-end;
+
+    cursor: pointer;
+}
+
+#add_chatting_popup .exit {
+    position: relative;
+    width: 12px;
+    height: 12px;
+}
+
+#add_chatting_popup .exit div {
+    height: 1px;
+    background-color: #c3c3c3;
+}
+
+#add_chatting_popup {
+    padding: 20px;
+}
+
+#add_chatting_popup > header {
+    font-size: 17px;
+    font-weight: 600;
+    color: #999999;
+    padding: 20px 0 30px;
+}
+
+#add_chatting_popup > section {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    flex-direction: column;
+}
+
+#add_chatting_popup > section > nav {
+    width: calc(100% + 40px);
+
+    border-bottom: 1px solid #f1f1f1;
+}
+
+#add_chatting_popup form {
+    width: 100%;
+    height: 100%;
+}
+
+#add_chatting_popup ul {
+    margin-bottom: 20px;
+    max-height: 300px;
+    height: 300px;
+    overflow-y: scroll;
+    margin-right: -20px;
+}
+
+#add_chatting_popup ul::-webkit-scrollbar {
+    width: 14px;
+}
+#add_chatting_popup ul::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    background-color: #cccccc;
+}
+#add_chatting_popup ul::-webkit-scrollbar-thumb:hover {
+    background: #7f7f7f;
+    border-radius: 15px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+
+#add_chatting_popup .profile {
+    padding: 6px 0;
+    position: relative;
+    width: 290px;
+}
+#add_chatting_popup .profile .image {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+#add_chatting_popup .profile .context {
+    margin-left: 10px;
+}
+
+#add_chatting_popup .profile .msg {
+    margin-top: 3px;
+}
+
+#add_chatting_popup input[type=checkbox] {
+    display: none;
+}
+
+#add_chatting_popup input[type=checkbox] + .check .check_box{
+    width: 20px;
+    height: 20px;
+
+    border: 1px solid #ccc;
+    border-radius: 100px;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 0;
+}
+
+#add_chatting_popup input[type=checkbox] + .check .check_box > span {
+    color: transparent;
+    font-weight: 900;
+    font-size: 16px;
+}
+
+#add_chatting_popup input[type=checkbox]:checked + .check .check_box{
+    background-color: #ffd144;
+    border: none;
+}
+#add_chatting_popup input[type=checkbox]:checked + .check .check_box > span {
+    color: #fff;
+}
+
+

@@ -7,6 +7,7 @@ import {queryName as myInfoQueryName} from "../../pages/MainPage";
 import {queryName as friendInfoQueryName} from "../../containers/app/friend/FriendList";
 import {queryName as recommendFriendInfoQueryName} from "../../containers/app/friend/RecommendFriendList";
 import {queryName as selectToUserId} from "../../containers/app/popup/ProfilePopup";
+import {queryName as blockListQueryName} from "../../containers/app/setting/FriendSetting"
 import {updateUserToEmail} from "../api/user";
 import {insertChatText, readChat} from "../api/chat";
 
@@ -26,6 +27,7 @@ export const useInsertFriend = (onSuccess, onError) => {
             await queryClient.refetchQueries(selectToUserId)
             await queryClient.refetchQueries(friendInfoQueryName)
             await queryClient.refetchQueries(recommendFriendInfoQueryName)
+            await queryClient.refetchQueries(blockListQueryName)
         }),
         onError: (error) => {
             if (onError) {
@@ -128,3 +130,4 @@ export const useReadChat = (onSuccess, onError) => {
         }
     })
 }
+

@@ -12,7 +12,7 @@ const PopupStyled = styled.div`
 
     background-color: rgb(0, 0, 0, 0.2);
 
-    z-index: 6;
+    z-index: 20;
     
     & > div {
         position: absolute;

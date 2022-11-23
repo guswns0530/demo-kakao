@@ -64,7 +64,7 @@ const ProfilePopup = () => {
             </a>
         }
         if (isMe) {
-            return (<Link to={"/app"}>
+            return (<Link to={"/app/setting"}>
                 <i className="material-icons">edit</i>
                 <span>프로필 관리</span>
             </Link>)

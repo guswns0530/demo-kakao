@@ -6,7 +6,7 @@
         <include refid="common.CUTOFF_RS">
             <property name="email" value="${email}"/>
             <property name="target" value="from"/>
-            <property name="who" value="from"/>
+            <property name="who" value="to"/>
         </include>
 
         select C.room_id as ROOM_ID,
@@ -16,7 +16,7 @@
         ' "id" : "' || F.ID || '",' ||
         ' "email" : "' || D.EMAIL || '",' ||
         ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
-        ' "profileImageUrl" : "' || F.profile_image_url || '",' ||
+        ' "profileImageUrl" : "' || DECODE(E.CUTOFF_RS, 1, F.profile_image_url, null) || '",' ||
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
@@ -92,7 +92,7 @@
         <include refid="common.CUTOFF_RS">
             <property name="email" value="${email}"/>
             <property name="target" value="from"/>
-            <property name="who" value="from"/>
+            <property name="who" value="to"/>
         </include>
         select C.room_id as ROOM_ID,
         nvl(C.NAME, '') as ROOM_NAME,
@@ -104,7 +104,7 @@
         ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "profileImageUrl" : "' || F.profile_image_url || '",' ||
+        ' "profileImageUrl" : "' || DECODE(E.CUTOFF_RS, 1, F.profile_image_url, null) || '",' ||
         ' "status" : "' || NVL(E.status, 0) || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,

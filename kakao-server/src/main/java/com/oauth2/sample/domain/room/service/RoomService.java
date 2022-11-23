@@ -1,7 +1,10 @@
 package com.oauth2.sample.domain.room.service;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.oauth2.sample.domain.chat.dto.ChatType;
 import com.oauth2.sample.domain.chat.dto.Chat;
 import com.oauth2.sample.domain.chat.dto.ReadUser;
@@ -195,7 +198,10 @@ public class RoomService {
     private RoomInfoResponse getRoomInfoResponse(RoomInfo roomInfo) {
         List<JoinUser> arrayList = null;
         try {
-            arrayList = new ObjectMapper().readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {});
+            ObjectMapper mapper = JsonMapper.builder()
+                    .enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER)
+                    .build();
+            arrayList = mapper.readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {});
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new BadRequestException("서버 오류 발생 관리자에게 문의주세요");
