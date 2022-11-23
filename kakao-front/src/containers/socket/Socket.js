@@ -56,6 +56,7 @@ const Socket = () => {
         const data = JSON.parse(body.body)
         const {chat: {room}, user} = stateRef.current
 
+        // 룸에 들어와 있다면
         if (room) {
             if (room.room_id*1 === data.room_id*1) {
                 dispatch(addChat([data]))
@@ -66,8 +67,6 @@ const Socket = () => {
 
         if(user.email !== data.email) {
             dispatch(addAlert(data))
-        } else {
-            readChatMutate(data.room_id)
         }
     }
 

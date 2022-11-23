@@ -1,7 +1,7 @@
 import client from "./client";
 
 export const selectMe = (token) => {
-    if(token) {
+    if (token) {
         return client.get('/users', {
             headers: {
                 "Authorization": "Bearer " + token
@@ -20,11 +20,15 @@ export const selectUserToEmail = (id) => {
 }
 
 export const updateUserToEmail = (data) => {
-    return client.put('/users', data, {
-    });
+    return client.put('/users', data, {});
 }
 
-export const remove = () => {
-    return null;
+export const selectUsers = (list) => {
+    return client.post('/users/list/', { list})
 }
+
+
+    export const remove = () => {
+        return null;
+    }
 

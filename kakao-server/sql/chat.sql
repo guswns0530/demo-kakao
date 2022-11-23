@@ -313,3 +313,30 @@ values (KAKAO_CHATS_SEQ.nextval,
         1, -- 기본
         타입,
         sysdate);
+
+
+select *
+from (select a.chat_id,
+             a.room_id,
+             a.email,
+             DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+             a.status,
+             a.type,
+             a.createAt,
+             'true'                                 as sync
+      from (select A.chat_id,
+                   A.ROOM_ID,
+                   A.content,
+                   A.EMAIL,
+                   A.status,
+                   A.type,
+                   A.createAt --sub start
+            from kakao_chats A
+            where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+                                 from KAKAO_READ_USERS B
+                                 where B.EMAIL = 'ury0530@naver.com'
+                                   and B.ROOM_ID = A.ROOM_ID)
+              and A.room_id = '17'
+              and A.CHAT_ID < '999999999999') A
+      order by chat_id desc)
+where rownum <= 30

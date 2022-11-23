@@ -59,31 +59,32 @@
         #{roomId}
     </delete>
 
-    <select id="selectChatList" parameterType="com.oauth2.sample.domain.chat.request.SelectChatListRequest" resultMap="dto.chat">
+    <select id="selectChatList" parameterType="com.oauth2.sample.domain.chat.request.SelectChatListRequest"
+            resultMap="dto.chat">
         select *
         from (select a.chat_id,
-        a.room_id,
-        a.email,
-        DECODE(A.STATUS, '1', A.CONTENT, null) as content,
-        a.status,
-        a.type,
-        a.createAt,
-        'true'                                 as sync
-        from (select A.chat_id,
-        A.ROOM_ID,
-        A.content,
-        A.EMAIL,
-        A.status,
-        A.type,
-        A.createAt --sub start
-        from kakao_chats A
-        where A.createAt >= (select NVL(B.CREATEAT, sysdate)
-        from KAKAO_READ_USERS B
-        where B.EMAIL = #{email}
-        and B.ROOM_ID = A.ROOM_ID)
-        and A.room_id = #{roomId}
-        and A.CHAT_ID &lt; #{chatId}) A
-        order by chat_id desc)
+                     a.room_id,
+                     a.email,
+                     DECODE(A.STATUS, '1', A.CONTENT, null) as content,
+                     a.status,
+                     a.type,
+                     a.createAt,
+                     'true'                                 as sync
+              from (select A.chat_id,
+                           A.ROOM_ID,
+                           A.content,
+                           A.EMAIL,
+                           A.status,
+                           A.type,
+                           A.createAt --sub start
+                    from kakao_chats A
+                    where A.createAt >= (select NVL(B.CREATEAT, sysdate)
+                                         from KAKAO_READ_USERS B
+                                         where B.EMAIL = #{email}
+                                           and B.ROOM_ID = A.ROOM_ID)
+                      and A.room_id = #{roomId}
+                      and A.CHAT_ID &lt; #{chatId}) A
+              order by chat_id desc)
         where rownum &lt;= 30
     </select>
 

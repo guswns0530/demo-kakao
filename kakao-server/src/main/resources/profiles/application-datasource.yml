@@ -1,18 +1,18 @@
 # cms
-spring:
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@202.86.12.198:1521:orcl
-    username: EXPORTTESTUSER
-    password: EXPORTTESTUSER
-
-# house
 #spring:
 #  datasource:
 #    driver-class-name: oracle.jdbc.driver.OracleDriver
-#    url: jdbc:oracle:thin:@116.121.154.233:1521:orcl
-#    username: system
-#    password: 1234
+#    url: jdbc:oracle:thin:@202.86.12.198:1521:orcl
+#    username: EXPORTTESTUSER
+#    password: EXPORTTESTUSER
+
+# house
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@116.121.154.233:1521:orcl
+    username: system
+    password: 1234
 
 # school
 #spring:

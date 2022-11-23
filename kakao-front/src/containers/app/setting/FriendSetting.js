@@ -14,7 +14,7 @@ const FriendSetting = () => {
     const dispatch = useDispatch()
     const [isMore, setMore] = useState(false)
     const {data, isLoading, isError, error} = useQuery(queryName, async ()  => selectBlockFriendList())
-    const {mutate, isLoading: isLoading2} = useInsertFriend()
+    const {mutate} = useInsertFriend()
 
     if(isError) {
         return <ErrorHandler error={error} path={"/app"}/>

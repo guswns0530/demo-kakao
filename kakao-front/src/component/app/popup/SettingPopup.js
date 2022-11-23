@@ -22,9 +22,9 @@ const SettingPopup = ({onClose}) => {
             <section>
                 <nav>
                     <ul>
-                        <li><Link to={"/app/setting"} className={location.pathname === "/app/setting" ? style.select : ""}>일반</Link></li>
-                        <li><Link to={"/app/setting/profile"} className={location.pathname === "/app/setting/profile" ? style.select : ""}>프로필</Link></li>
-                        <li><Link to={"/app/setting/friend"} className={location.pathname === "/app/setting/friend" ? style.select : ""}>친구</Link></li>
+                        <li><Link state={location.state} to={"/app/setting"} className={location.pathname === "/app/setting" ? style.select : ""}>일반</Link></li>
+                        <li><Link state={location.state} to={"/app/setting/profile"} className={location.pathname === "/app/setting/profile" ? style.select : ""}>프로필</Link></li>
+                        <li><Link state={location.state} to={"/app/setting/friend"} className={location.pathname === "/app/setting/friend" ? style.select : ""}>친구</Link></li>
                         <li><Link to={"/logout"} className={style.logout}>로그아웃</Link></li>
                     </ul>
                 </nav>

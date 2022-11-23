@@ -15,9 +15,9 @@
         '{' ||
         ' "id" : "' || F.ID || '",' ||
         ' "email" : "' || D.EMAIL || '",' ||
-        ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
-        ' "profileImageUrl" : "' || DECODE(E.CUTOFF_RS, 1, F.profile_image_url, null) || '",' ||
-        ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+        ' "name" : "' || nvl(DECODE(NVL(E.CUTOFF_RS, 1), 1, E.nickname, null), F.NAME) || '",' ||
+        ' "profileImageUrl" : "' || DECODE(NVL(E.CUTOFF_RS, 1), 1, F.profile_image_url, null) || '",' ||
+        ' "message" : "' || DECODE(NVL(E.CUTOFF_RS, 1), 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
         ' "status" : "' || NVL(E.status, 0) || '"' ||
@@ -99,12 +99,12 @@
         '[' || LISTAGG(
         '{' ||
         ' "id" : "' || F.ID || '",' ||
-        ' "name" : "' || nvl(DECODE(E.CUTOFF_RS, 1, E.nickname, null), F.NAME) || '",' ||
+        ' "name" : "' || nvl(DECODE(NVL(E.CUTOFF_RS, 1), 1, E.nickname, null), F.NAME) || '",' ||
         ' "email" : "' || D.EMAIL || '",' ||
-        ' "message" : "' || DECODE(E.CUTOFF_RS, 1, F.MESSAGE, null) || '",' ||
+        ' "message" : "' || DECODE(NVL(E.CUTOFF_RS, 1), 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "profileImageUrl" : "' || DECODE(E.CUTOFF_RS, 1, F.profile_image_url, null) || '",' ||
+        ' "profileImageUrl" : "' || DECODE(NVL(E.CUTOFF_RS, 1), 1, F.profile_image_url, null) || '",' ||
         ' "status" : "' || NVL(E.status, 0) || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,

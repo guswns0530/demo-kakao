@@ -1,6 +1,5 @@
 import React from "react";
 import {useDispatch} from "react-redux";
-import {logout} from "../modules/auth";
 
 import style from '../css/MainPage.module.css'
 import {Link, useLocation} from "react-router-dom";

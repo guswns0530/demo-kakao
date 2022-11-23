@@ -48,7 +48,7 @@ const ChattingPopup = () => {
 
     useEffect(() => {
         mutate(id)
-    }, [])
+    }, [id])
 
     useEffect(() => {
         dispatch(initializeChat())

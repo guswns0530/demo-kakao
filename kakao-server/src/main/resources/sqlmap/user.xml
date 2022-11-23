@@ -94,9 +94,7 @@
         <if test="backgroundImage != '' and backgroundImage != null">
             background_image_url = #{backgroundImage, jdbcType=VARCHAR},
         </if>
-        <if test="message != '' and message != null">
             message = #{message, jdbcType=VARCHAR},
-        </if>
         updateAt = sysdate
         where
         email = #{email}

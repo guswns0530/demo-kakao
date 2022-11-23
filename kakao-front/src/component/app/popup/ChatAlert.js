@@ -5,7 +5,7 @@ import style from "../../../css/MainPage.module.css"
 import ProfileImage from "../../util/ProfileImage";
 import {useDispatch} from "react-redux";
 import {removeAlert} from "../../../modules/alert";
-import {useMutation, useQuery} from "react-query";
+import {useQuery} from "react-query";
 import {selectRoom} from "../../../lib/api/room";
 import {useInsertChatText} from "../../../lib/query";
 import {Link} from "react-router-dom";

@@ -1,7 +1,10 @@
 import React, {useMemo} from "react";
 import style from "../../../css/MainPage.module.css"
 import ProfileImage from "../../util/ProfileImage";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import {find} from "styled-components/test-utils";
+import {useQuery} from "react-query";
+import {selectUsers} from "../../../lib/api/user";
 
 const MyChat = ({children}) => {
     return <div className={`${style.chat} ${style.me}`}>
@@ -15,7 +18,7 @@ const YouChat = ({children, user}) => {
     return <div className={`${style.chat} ${style.you}`}>
         <div className={style.c_pro}>
             <div className={style.image}>
-                <Link to={"/app/profile/"+user.id} state={location.state}>
+                <Link to={"/app/profile/" + user.id} state={location.state}>
                     <ProfileImage profile_image_url={user.profile_image_url}/>
                 </Link>
             </div>
@@ -48,12 +51,53 @@ const ChatDate = ({createAt}) => {
     </div>)
 }
 
+const JoinBlock = ({user: {name, id}, chat: {content, chat_id}}) => {
+    const {data, isLoading} = useQuery("selectUsers", async () => selectUsers(JSON.parse(content)))
+    const location = useLocation()
+    const users = data?.data?.data
+    if (isLoading) {
+        return
+    }
+    return (
+        <div className={style.chat_notice} key={chat_id}>
+            <div className={style.chat_date}>
+                <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님이 <span> </span>
+                {!isLoading &&
+                    users.map(({name, id}, i) => {
+                            if (i === users.length - 1) {
+                                return <React.Fragment key={id}>
+                                    <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님<span> </span>
+                                </React.Fragment>
+                            }
+                            return <React.Fragment key={id}>
+                                <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님,<span> </span>
+                            </React.Fragment>
+                        }
+                    )
+                }
+                을 초대하였습니다.
+            </div>
+        </div>
+    )
+}
+
+const LeaveBlock = ({user, chat}) => {
+    return (
+        <div className={style.chat_notice} key={1}>
+            <div className={style.chat_date}>
+                떠남
+            </div>
+        </div>
+    )
+}
+
+
 
 const ChatLog = ({children, chats, reader, users, user, content, onScroll, onContextMenu}) => {
     const [list, child] = useMemo(() => {
         const list = []
         const child = []
-        chats.forEach((chat, i) => {
+        chats.forEach(async (chat, i) => {
             const {chat_id, chat_status, chat_type, content, create_at, email} = chat
             const createAt = new Date(create_at)
             const date = `${createAt.amPm()} ${createAt.getHours() > 12 ? createAt.getHours() - 12 : createAt.getHours()}:${createAt.getMinutes() < 10 ? "0" + createAt.getMinutes() : createAt.getMinutes()}`
@@ -64,8 +108,14 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             })
 
             const chatObj = {date, read, content, chat_id, email, chat_status, chat_type, createAt}
+            // if(chat_type === 3) {
+            //     const findUser = users.find(user => user.email === email)
+            //     list.push(findUser)
+            //     list.push([chatObj])
+            //     return
+            // }
 
-            if (i - 1 >= 0) {
+            if (i - 1 >= 0 && chat_type !== 3) {
                 const beforeChat = chats[i - 1]
 
                 if (chat.email === beforeChat.email) {
@@ -77,9 +127,20 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             }
 
             const findUser = users.find(user => user.email === email)
-
-            list.push(findUser)
-            child.push([chatObj])
+            if(findUser) {
+                list.push(findUser)
+                child.push([chatObj])
+            } else {
+                list.push({
+                    id: undefined,
+                    email: email,
+                    name: '알수 없음',
+                    profile_image_url: 1,
+                    // createAt:
+                })
+                child.push([chatObj])
+            }
+            
         })
 
         return [list, child]
@@ -89,8 +150,15 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
     const data = useMemo(() => {
         return list.map((userInfo, i) => {
             const data = []
+            const userChats = child[i]
 
-            if (userInfo.email === user.email) {
+            console.log(list)
+
+            if (userChats[0].chat_type === 3) {
+                data.push(<JoinBlock chat={userChats[0]} user={userInfo} key={i}/>)
+            } else if (userChats[0].chat_type === 4) {
+                data.push(<LeaveBlock chat={userChats[0]} user={userInfo} key={i}/>)
+            } else if (userInfo.email === user.email) {
                 data.push(<MyChat style={style} key={i}>
                     {child[i].sort((a, b) => {
                         return a.chat_id - b.chat_id
@@ -112,6 +180,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
                 </YouChat>)
             }
 
+            // chat date 넣어주기
             if (i + 1 < list.length && !child[i][0].createAt.isSameDate(child[i + 1][0].createAt)) {
                 data.push(<ChatDate key={child[i][0].createAt} createAt={child[i][0].createAt}/>)
             } else if (child[i][0].chat_id === chats[chats.length - 1].chat_id) {
@@ -120,7 +189,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
 
             return data
         })
-    }, [list, child]);
+    }, [list, child, chats]);
 
     return <div className={style.chat_log} ref={content} onScroll={onScroll}>
         {data}

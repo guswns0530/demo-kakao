@@ -11,24 +11,28 @@ const ChatForm = ({roomId, content}) => {
         inputRef.current.focus()
     }, [input]);
 
+    const updateInputScroll = () => {
+        const elem = inputRef.current
+        elem.style.height = '0px'
+        const {scrollHeight} = elem
+
+        let line = scrollHeight / 18
+
+        if (line > 5) {
+            elem.style.overflowY = 'scroll'
+            line = 5
+        } else {
+            elem.style.overflowY = 'hidden'
+        }
+
+        elem.style.height = line * 18 + 'px'
+    }
+
 
     const onChange = (e) => {
         setInput(e.target.value)
         if (inputRef.current) {
-            const elem = inputRef.current
-            elem.style.height = '0px'
-            const {scrollHeight} = elem
-
-            let line = scrollHeight / 18
-
-            if (line > 5) {
-                elem.style.overflowY = 'scroll'
-                line = 5
-            } else {
-                elem.style.overflowY = 'hidden'
-            }
-
-            elem.style.height = line * 18 + 'px'
+            updateInputScroll()
         }
     }
 
@@ -45,6 +49,7 @@ const ChatForm = ({roomId, content}) => {
         }
         mutate({roomId, content: input})
         setInput('')
+        inputRef.current.style.height = '54px'
         inputRef.current.focus()
         content.current.scrollTop = 0
     }

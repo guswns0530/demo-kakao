@@ -10,6 +10,7 @@ import {queryName as selectToUserId} from "../../containers/app/popup/ProfilePop
 import {queryName as blockListQueryName} from "../../containers/app/setting/FriendSetting"
 import {updateUserToEmail} from "../api/user";
 import {insertChatText, readChat} from "../api/chat";
+import {inviteOrCreateRoom, leaveRoom} from "../api/room";
 
 export const useInsertFriend = (onSuccess, onError) => {
     return useMutation(async ({id, type}) => {
@@ -131,3 +132,38 @@ export const useReadChat = (onSuccess, onError) => {
     })
 }
 
+export const useInviteOrCreateRoom = (onSuccess, onError) => {
+    return useMutation(async (data) => {
+        return inviteOrCreateRoom(data)
+    }, {
+        onSuccess: (async (data) => {
+            if (onSuccess) {
+                onSuccess(data)
+            }
+
+        }),
+        onError: (error) => {
+            if (onError) {
+                onError(error)
+            }
+        }
+    })
+}
+
+export const useLeaveRoom = (onSuccess, onError) => {
+    return useMutation(async (data) => {
+        return leaveRoom(data)
+    }, {
+        onSuccess: (async (data) => {
+            if (onSuccess) {
+                onSuccess(data)
+            }
+
+        }),
+        onError: (error) => {
+            if (onError) {
+                onError(error)
+            }
+        }
+    })
+}

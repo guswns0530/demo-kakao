@@ -1,11 +1,11 @@
 import React from "react";
 import style from "../../../css/MainPage.module.css"
 
-const ChattingList = ({data, onDoubleClick}) => {
+const ChattingList = ({data, onDoubleClick, handleContextMenu}) => {
     const list = data.map(room => {
         const {room_id, profileImageList, join_user_cnt, unread_cnt, chat_content, name, date} = room
 
-        return (<li key={room_id} onDoubleClick={(e) => onDoubleClick(e, room_id)}>
+        return (<li key={room_id} onDoubleClick={(e) => onDoubleClick(e, room_id)} onContextMenu={(e) => handleContextMenu(e, room)}>
             <div className={style.profile}>
                 <div className={style.image}>
                     {profileImageList}
