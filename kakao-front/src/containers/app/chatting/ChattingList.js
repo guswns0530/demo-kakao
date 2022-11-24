@@ -4,13 +4,11 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import searchServiceToFriend from "../../../services/searchService";
 import roomService from "../../../services/RoomInfo";
-import {useQuery} from "react-query";
-import {selectRoomList} from "../../../lib/api/room";
-import ErrorHandler from "../../handler/ErrorHandler";
-import {rooms as roomsAction} from "../../../modules/rooms";
+import {deleteRoom} from "../../../modules/rooms";
 import {Item, Menu, Separator, useContextMenu} from "react-contexify";
 import {useLeaveRoom} from "../../../lib/query";
 import {toast} from "react-toastify";
+import Room from "../../../constants/Room";
 
 export const roomQueryName = "selectChattingList"
 
@@ -18,17 +16,6 @@ const menuId= '시발'
 
 const ChattingList = () => {
     const dispatch = useDispatch()
-    const {isLoading, isError, error} = useQuery(
-        roomQueryName,
-        async () => selectRoomList()
-        , {
-            onSuccess: (data) => {
-                if (data) {
-                    dispatch(roomsAction(data.data.data))
-                }
-            }
-        }
-    )
     const {search, user, rooms} = useSelector(({form, user, rooms}) => ({
         search: form.chatting.search,
         user: user.user,
@@ -39,21 +26,23 @@ const ChattingList = () => {
     const {show} = useContextMenu({
         id: menuId
     })
-    const {mutate} = useLeaveRoom(() => {
+    const {mutate} = useLeaveRoom((data) => {
+        console.log(data.data.data)
+        dispatch(deleteRoom(data.data.data))
+        navigate("/app", {state: location.state})
     }, (error) => {
         toast.error(error.response.data["error_description"])
     })
-
-    if(isLoading) {
-        return <div></div>
-    }
-
-    if(isError) {
-        return <ErrorHandler path={"/logout"} error={error}/>
-    }
-
     const leaveRoom = (e) => {
         const {room_id} = e.props().room
+
+
+        const {room_type} = rooms.find((room) => room.room_id === room_id)
+
+        if(room_type == Room.type.PERSON) {
+            toast.error("개인채팅방은 삭제할 수 없습니다.")
+            return
+        }
 
         mutate(room_id)
     }
@@ -75,7 +64,7 @@ const ChattingList = () => {
         })
     }
 
-    const filterData = searchServiceToFriend(rooms.map(room => {
+    const filterData = searchServiceToFriend(rooms.filter(({chat_status}) => chat_status).map(room => {
         return roomService(user, room)
     }), search)
 

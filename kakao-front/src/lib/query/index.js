@@ -10,7 +10,7 @@ import {queryName as selectToUserId} from "../../containers/app/popup/ProfilePop
 import {queryName as blockListQueryName} from "../../containers/app/setting/FriendSetting"
 import {updateUserToEmail} from "../api/user";
 import {insertChatText, readChat} from "../api/chat";
-import {inviteOrCreateRoom, leaveRoom} from "../api/room";
+import {inviteOrCreateRoom, leaveRoom, updateRoom} from "../api/room";
 
 export const useInsertFriend = (onSuccess, onError) => {
     return useMutation(async ({id, type}) => {
@@ -50,6 +50,7 @@ export const useBlockFriend = (onSuccess, onError) => {
             await queryClient.refetchQueries(selectToUserId)
             await queryClient.refetchQueries(friendInfoQueryName)
             await queryClient.refetchQueries(recommendFriendInfoQueryName)
+            await queryClient.refetchQueries(blockListQueryName)
         }),
         onError: (error) => {
             if (onError) {
@@ -121,8 +122,8 @@ export const useReadChat = (onSuccess, onError) => {
         onSuccess: (async (data) => {
             if (onSuccess) {
                 onSuccess(data)
-            }
 
+            }
         }),
         onError: (error) => {
             if (onError) {
@@ -159,6 +160,23 @@ export const useLeaveRoom = (onSuccess, onError) => {
                 onSuccess(data)
             }
 
+        }),
+        onError: (error) => {
+            if (onError) {
+                onError(error)
+            }
+        }
+    })
+}
+
+export const useUpdateRoom = (onSuccess, onError) => {
+    return useMutation(async ({roomId, roomName}) => {
+        return updateRoom(roomId, roomName)
+    }, {
+        onSuccess: (async (data) => {
+            if (onSuccess) {
+                onSuccess(data)
+            }
         }),
         onError: (error) => {
             if (onError) {

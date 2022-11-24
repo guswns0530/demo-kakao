@@ -1,9 +1,10 @@
 import ProfileImage from "../component/util/ProfileImage";
 import React from "react";
 import Room from "../constants/Room";
+import Chat from "../constants/Chat";
 
 const roomService = (user, room) => {
-    const {
+    let {
         chat_content, chat_create_at, chat_status,
         chat_type,
         join_user_cnt, room_id, room_name, unread_cnt, users
@@ -37,7 +38,11 @@ const roomService = (user, room) => {
         return <ProfileImage key={email} profile_image_url={profile_image_url}/>
     })
 
+    if(chat_status == Chat.status.REMOVE) {
+        chat_content = '삭제된 메시지입니다.'
+    }
+
     return {profileImageList, name, date, chat_content, join_user_cnt, room_id, unread_cnt, chat_status, chat_type}
 }
 
-export default  roomService
+export default roomService

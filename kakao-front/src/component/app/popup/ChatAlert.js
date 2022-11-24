@@ -30,11 +30,9 @@ const ChatAlert = ({chat, user}) => {
     const {data, isLoading} = useQuery(queryName, async () => selectRoom(room_id), {})
     const {mutate} = useInsertChatText()
 
-
     useEffect(() => {
         const interval = window.setInterval(() => {
             time.current += 50
-
             if (document.activeElement.closest(".isFocus") === focus.current) {
                 time.current = 0;
                 return
@@ -81,6 +79,7 @@ const ChatAlert = ({chat, user}) => {
         }, 500)
     }
 
+    console.log(data)
     const room = data.data.data
     const filterUser = room.users.filter(u => u.email !== user.email)
     const name = room.name || filterUser.reduce((before, now) => {

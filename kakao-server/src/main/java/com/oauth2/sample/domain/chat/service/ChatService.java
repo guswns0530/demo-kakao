@@ -58,13 +58,11 @@ public class ChatService {
         }
 
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date createAt = sdf.parse(chat.getCreateAt());
             Date now = new Date();
 
-            double compare = (now.getTime() - createAt.getTime()) / 1000 / 60;
-
-            if (compare > 5) {
+            if (createAt.getTime() <= now.getTime() - 1000 * 60 * 5) {
                 throw new BadRequestException("5분이 지나 삭제할 수 없습니다.");
             }
         } catch (Exception ex) {
@@ -75,6 +73,10 @@ public class ChatService {
         if (!result) {
             throw new BadRequestException("삭제중 오류가 발생하였습니다.");
         }
+
+        roomRepository.selectJoinUser(removeChatRequest.getRoomId()).stream().forEach(email -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + email  + "/remove", removeChatRequest);
+        });
     }
 
     public void readChat(ReadChatRequest readChatRequest) {
@@ -83,8 +85,8 @@ public class ChatService {
             throw new BadRequestException("수신중 오류가 발생하였습니다.");
         }
 
-        roomService.selectRoom(readChatRequest.getEmail(), readChatRequest.getRoomId()).getUsers().forEach(joinUser -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + joinUser.getEmail() + "/read", 1);
+        roomRepository.selectJoinUser(readChatRequest.getRoomId()).stream().forEach(email -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + email + "/read", readChatRequest.getRoomId());
         });
     }
 

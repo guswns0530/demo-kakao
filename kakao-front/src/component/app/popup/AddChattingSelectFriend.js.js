@@ -4,7 +4,7 @@ import ProfileImage from "../../util/ProfileImage";
 import Svg from "../../util/Svg";
 import searchServiceToFriend from "../../../services/searchService";
 
-const AddChattingSelectFriendJs = ({onChange, search, isLoading, data, onClose, onChecked, list, onSubmit}) => {
+const AddChattingSelectFriendJs = ({onChange, search, data, onClose, onChecked, list, onSubmit}) => {
     return (
         <div id={style.add_chatting_popup} className={`${style.popup} ${style.focus}`}>
             <div className={style.tab}>
@@ -37,7 +37,7 @@ const AddChattingSelectFriendJs = ({onChange, search, isLoading, data, onClose, 
                     </div>
                 </div>
                 <ul>
-                    {!isLoading && searchServiceToFriend(data, {value: search}).map(user => <Profile
+                    {searchServiceToFriend(data, {value: search}).map(user => <Profile
                         key={user.email} user={user} onChecked={onChecked}
                         checked={list.find(data => data.email === user.email) ? true: false}/>)}
                 </ul>

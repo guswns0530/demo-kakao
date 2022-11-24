@@ -7,6 +7,8 @@ import ErrorHandler from "../../handler/ErrorHandler";
 import {useDispatch, useSelector} from "react-redux";
 import {initializeChat, setReader, setRoom} from "../../../modules/chat";
 import {useReadChat} from "../../../lib/query";
+import Room from "../../../constants/Room";
+import JoinUserList from "./chattingPopup/JoinUserList";
 
 export const checkRoomQuery = "checkRoom"
 export const readerQuery = "readerUser"
@@ -14,11 +16,11 @@ export const readerQuery = "readerUser"
 const ChattingPopup = () => {
     const {id} = useParams()
     const dispatch = useDispatch()
-    const [{isLoading: isLoading1, isError: isError1, error: error1 },
+    const [{isLoading: isLoading1, isError: isError1, error: error1},
         {isLoading: isLoading2, isError: isError2, error: error2}]
         = useQueries([
         {
-            queryKey: [checkRoomQuery,id] ,
+            queryKey: [checkRoomQuery, id],
             queryFn: async () => selectRoom(id),
             onSuccess: ({data: {data}}) => {
                 dispatch(setRoom(data))
@@ -32,9 +34,10 @@ const ChattingPopup = () => {
             }
         }
     ])
-    const {user, room} = useSelector(({user, chat}) => ({
+    const {user, room, blockFriends} = useSelector(({user, chat, friend}) => ({
         user: user.user,
-        room: chat.room
+        room: chat.room,
+        blockFriends: friend.blockFriends
     }))
     const navigate = useNavigate()
     const location = useLocation()
@@ -44,10 +47,29 @@ const ChattingPopup = () => {
     const isLoading = isLoading1 || isLoading2
     const {mutate} = useReadChat()
     const [isFullscreen, setScreen] = useState(false)
+    const [block, setBlock] = useState(false)
     const content = useRef();
 
+    //anotherPopup
+    const [popup, setPopup] = useState(false)
+
+
     useEffect(() => {
-        if(room) {
+        if (room && room.room_type == Room.type.PERSON) {
+            const selectUser = room.users.filter(({email}) => user.email !== email)[0]
+            if (blockFriends.find(({email}) => email === selectUser.email)) {
+                setBlock(true)
+            } else {
+                setBlock(false)
+            }
+        } else {
+            setBlock(false)
+        }
+    }, [blockFriends, room]);
+
+
+    useEffect(() => {
+        if (room) {
             mutate(id)
         }
     }, [id, room])
@@ -57,7 +79,7 @@ const ChattingPopup = () => {
     }, [id, dispatch]);
 
     useEffect(() => {
-        if(isFullscreen) {
+        if (isFullscreen) {
             setPosition({x: 0, y: 0})
         }
     }, [isFullscreen])
@@ -79,15 +101,22 @@ const ChattingPopup = () => {
     }
 
     const trackPos = (e, data) => {
-        if (x < 0 || y < 0) {
-            e.preventDefault()
-            return
-        }
         setPosition({x: data.x, y: data.y})
     }
 
-    return <ChattingPopupComponent x={x} y={y} room={room} isLoading={isLoading} trackPos={trackPos}
-                                   onClose={onClose} user={user} toggleScreen={toggleScreen} isFullscreen={isFullscreen} content={content}/>
+    const onPopup = () => {
+        setPopup(!popup)
+    }
+
+
+    return <>
+        <ChattingPopupComponent x={x} y={y} room={room} isLoading={isLoading} trackPos={trackPos}
+                                onClose={onClose} user={user} toggleScreen={toggleScreen} isFullscreen={isFullscreen}
+                                content={content} block={block} onPopup={onPopup}/>
+        {
+            popup && !isLoading && <JoinUserList x={x - 305} y={y} room={room} onPopup={onPopup} user={user}/>
+        }
+    </>
 }
 
 export default ChattingPopup

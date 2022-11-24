@@ -19,3 +19,7 @@ export const selectReaderChat = (id) => {
 export const leaveRoom = (id) => {
     return client.delete('/rooms/'+id)
 }
+
+export const updateRoom = (id, roomName) => {
+    return client.put('/rooms/' + id, {roomName})
+}

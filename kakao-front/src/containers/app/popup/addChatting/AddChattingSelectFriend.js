@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import produce from "immer";
 import AddChatingComponent from "../../../../component/app/popup/AddChattingSelectFriend.js";
-import {useQuery} from "react-query";
-import {selectFriendList} from "../../../../lib/api/friend";
-import {queryName} from "../AddChatting";
 import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
 
 const AddChattingSelectFriend = ({onClose, list, setList, setPage}) => {
     const [search, setSearch] = useState('')
-    const {data, isLoading} = useQuery(queryName, async () => selectFriendList())
+    const {friends} = useSelector(({friend}) => ({
+        friends: friend.friends
+    }))
 
     const onChange = (e) => {
         setSearch(e.target.value)
@@ -33,7 +33,7 @@ const AddChattingSelectFriend = ({onClose, list, setList, setPage}) => {
         setPage(1)
     }
 
-    return <AddChatingComponent onChange={onChange} search={search} isLoading={isLoading} data={data?.data?.data}
+    return <AddChatingComponent onChange={onChange} search={search} data={friends}
                                 onClose={onClose} onChecked={onChecked} list={list} onSubmit={onSubmit}/>
 }
 

@@ -69,7 +69,7 @@ public class RoomController {
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.ACCEPTED)
-                .data(true)
+                .data(roomId)
                 .build();
 
         return ResponseEntity.ok().body(apiResponse);

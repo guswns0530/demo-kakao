@@ -32,7 +32,6 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) {
         String oldAccessToken = map.get("oldAccessToken");
-        System.out.println("요청 토큰 oldAccessToken = " + oldAccessToken);
         if(StringUtils.hasText(oldAccessToken) && oldAccessToken.startsWith("Bearer ")) {
             oldAccessToken = oldAccessToken.substring(7);
         }

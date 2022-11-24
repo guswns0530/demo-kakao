@@ -14,5 +14,5 @@ app:
       - http://localhost:3000
       - http://202.86.12.230:3000
       - http://116.121.154.233:3000
-    domain: localhost
+    domain: 116.121.154.233
 

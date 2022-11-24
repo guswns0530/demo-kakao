@@ -2,9 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import ChatFormComponent from "../../../component/app/chatting/ChatForm";
 import {useInsertChatText} from "../../../lib/query";
 
-const ChatForm = ({roomId, content}) => {
+const ChatForm = ({roomId, content, block}) => {
     const inputRef = useRef()
     const [input, setInput] = useState('')
+
     const { mutate, isLoading } = useInsertChatText()
 
     useEffect(() => {
@@ -54,7 +55,7 @@ const ChatForm = ({roomId, content}) => {
         content.current.scrollTop = 0
     }
 
-    return <ChatFormComponent inputRef={inputRef} onChange={onChange} input={input} onSubmit={onSubmit} isLoading={isLoading} onKeyDown={onKeyDown}/>
+    return <ChatFormComponent inputRef={inputRef} onChange={onChange} input={input} onSubmit={onSubmit} isLoading={isLoading} onKeyDown={onKeyDown} block={block}/>
 }
 
 export default ChatForm

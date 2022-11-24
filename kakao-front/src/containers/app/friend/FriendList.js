@@ -20,12 +20,9 @@ const FriendList = () => {
     const dispatch = useDispatch()
     const inputRef = useRef()
     const location = useLocation()
-    const {data, isLoading, isError, error} = useQuery(queryName, async () => {
-        return selectFriendList()
-    }, {
-    });
-    const {search} = useSelector(({form}) => ({
-        search: form.friend.search
+    const {search, friends} = useSelector(({form, friend}) => ({
+        search: form.friend.search,
+        friends: friend.friends
     }))
     const [isMore, setMore] = useState(true)
     const {show} = useContextMenu({
@@ -34,15 +31,6 @@ const FriendList = () => {
     const navigate = useNavigate()
     const {mutate} = useBlockFriend();
     const {mutate: updateNickMutate} = useChangeNickname();
-
-    if (isLoading) {
-        return <LoadingFriendList/>
-    }
-
-    if (isError) {
-        return <ErrorHandler error={error} path={"/logout"}/>
-    }
-
 
     const onProfileClick = (e, room_id) => {
         const [x, y] = [e.pageX, e.pageY]
@@ -122,8 +110,7 @@ const FriendList = () => {
         navigate("/app/chatting/" + user.room_id, {state: {...location.state, locate: {x, y}}})
     }
 
-    const resource = data.data.data
-    const filterData = searchServiceToFriend(resource, search)
+    const filterData = searchServiceToFriend(friends, search)
 
     return (<>
         <FriendInfoComponent data={filterData} isMore={isMore} onClick={onClick} onContextMenu={handleContextMenu} onProfileClick={onProfileClick}/>

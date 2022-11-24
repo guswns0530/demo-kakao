@@ -15,15 +15,14 @@ const StyleImage = styled.div`
     ${styleLoading}
 `
 
-const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleScreen, isFullscreen, content}) => {
-
+const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleScreen, isFullscreen, content, block, onPopup}) => {
     if (isLoading) {
         return <>
             <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"} position={{x, y}}>
                 <div id={style.popup} className={style.popup}>
                     <header className="handle">
                         <div className={style.h}>
-                            <div className={style.image}>
+                            <div className={style.image} >
                                 <StyleImage/>
                             </div>
 
@@ -69,7 +68,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleSc
                 <div id={style.popup} className={`${style.popup} ${isFullscreen && style.fullscreen}`}>
                     <header className="handle">
                         <div className={style.h}>
-                            <div className={style.image}>
+                            <div className={style.image} onClick={onPopup}>
                                 {profileImageList}
                             </div>
 
@@ -97,9 +96,9 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleSc
                     </header>
 
                     <div className={style.content}>
-                        <ChatLog roomId={room_id} content={content}/>
+                        <ChatLog roomId={room_id} content={content} block={block}/>
                         <div className={style.form}>
-                            <ChatForm roomId={room_id} content={content}/>
+                            <ChatForm roomId={room_id} content={content} block={block}/>
                         </div>
                     </div>
                 </div>

@@ -12,9 +12,9 @@ const ChattingList = ({data, onDoubleClick, handleContextMenu}) => {
                 </div>
                 <div className={style.context}>
                     <div className={style.name}>{name}
-                        {join_user_cnt > 2 && <div className={style.count}>{ join_user_cnt - 1}</div>}
+                        {join_user_cnt > 2 && <div className={style.count}>{ join_user_cnt }</div>}
                     </div>
-                    <div className={style.msg}>
+                    <div className={style.msg} style={{marginTop: "4px"}}>
                         {chat_content}
                     </div>
                 </div>

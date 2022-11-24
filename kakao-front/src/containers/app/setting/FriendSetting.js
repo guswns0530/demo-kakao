@@ -1,28 +1,20 @@
 import React, {useState} from "react";
 import FriendSettingComponent from "../../../component/app/setting/FriendSetting";
-import {useQuery} from "react-query";
-import {selectBlockFriendList} from "../../../lib/api/friend";
-import ErrorHandler from "../../handler/ErrorHandler";
 import {useInsertFriend} from "../../../lib/query";
 import {openPopup} from "../../../modules/popup";
 import style from "../../../css/MainPage.module.css";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 export const queryName = "blockFriendList"
 
 const FriendSetting = () => {
     const dispatch = useDispatch()
     const [isMore, setMore] = useState(false)
-    const {data, isLoading, isError, error} = useQuery(queryName, async ()  => selectBlockFriendList())
     const {mutate} = useInsertFriend()
-
-    if(isError) {
-        return <ErrorHandler error={error} path={"/app"}/>
-    }
-
-    if(isLoading) {
-        return <div></div>
-    }
+    const {blockFriends} = useSelector(({friend}) => ({
+            blockFriends: friend.blockFriends
+        })
+    )
 
     const onClick = () => {
         setMore(!isMore)
@@ -48,7 +40,7 @@ const FriendSetting = () => {
         dispatch(action)
     }
 
-    return <FriendSettingComponent isMore={isMore} onClick={onClick} data={data.data.data} noneBlockFriend={noneBlockFriend}/>
+    return <FriendSettingComponent isMore={isMore} onClick={onClick} data={blockFriends} noneBlockFriend={noneBlockFriend}/>
 }
 
 export default FriendSetting

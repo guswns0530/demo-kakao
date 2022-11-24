@@ -7,6 +7,8 @@ export const ROOMS_DELETE = ROOMS + "_DELETE"
 export const INITIALIZE_ROOMS = ROOMS + "_INITIALIZE"
 
 export const rooms = createAction(ROOMS, (payload) => payload)
+export const roomsUpdate = createAction(ROOMS_UPDATE, (payload) => payload)
+export const deleteRoom = createAction(ROOMS_DELETE, (payload) => payload)
 export const initializeRooms = createAction(INITIALIZE_ROOMS)
 
 const initialState = {
@@ -24,7 +26,9 @@ export default handleActions(
             draft.rooms.push(room)
             draft.rooms.sort((a, b) => new Date(b.chat_create_at).getTime() - new Date(a.chat_create_at).getTime())
         }),
-        [ROOMS_DELETE]: (state, {payload: roomId}) => ({}),
+        [ROOMS_DELETE]: (state, {payload: roomId}) => produce(state, (draft) => {
+            draft.rooms = draft.rooms.filter(({room_id}) => room_id !== roomId)
+        }),
         [INITIALIZE_ROOMS]: (state) => ({
             ...initialState
         })

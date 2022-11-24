@@ -9,10 +9,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {addChat} from "../../../modules/chat";
 import { useContextMenu} from "react-contexify";
 
+import style from "../../../css/MainPage.module.css"
+import {useInsertFriend} from "../../../lib/query";
+import {useParams} from "react-router-dom";
+
 export const menuId = "ChatLogMenu"
 export const queryName = "ChatLog/selectChattingList"
 
-const ChatLog = ({roomId, content}) => {
+const ChatLog = ({roomId, content, block}) => {
     const dispatch = useDispatch()
     const [scrollTop, setScrollTop] = useState(0)
     const {
@@ -99,11 +103,12 @@ const ChatLog = ({roomId, content}) => {
         setScrollTop(content.current.scrollTop)
         hideAll()
     }
-    const handleContextMenu = (e, chat) => {
+    const handleContextMenu = (e, chat, roomId) => {
         e.preventDefault()
         show(e, {
             props: () => ({
-                chat
+                chat,
+                roomId
             })
         })
     }
@@ -111,10 +116,36 @@ const ChatLog = ({roomId, content}) => {
     return <>
         <ChatLogComponent chats={chats} users={users} user={user} reader={reader} content={content} onScroll={onScroll} onContextMenu={handleContextMenu}>
             <ObservationComponent/>
+            <Notice block={block}/>
         </ChatLogComponent>
     </>
 
     // return <ChatLog2Component chats={chats} users={users} user={user} reader={reader}/>
+}
+
+const Notice = ({block}) => {
+    const {mutate} = useInsertFriend()
+    const {room, user} = useSelector(({chat, user}) => ({
+        room: chat.room,
+        user: user.user
+    }))
+
+    const onUnBlock = () => {
+        const filterUser = room.users.filter(({email}) => email !== user.email)[0]
+
+        mutate({
+            id: filterUser.email,
+            type: 'email'
+        })
+    }
+    if(block) {
+        return <div className={style.block_popup}>
+            <button onClick={onUnBlock}>
+                <i className="material-icons">person_add</i>
+                추가
+            </button>
+        </div>
+    }
 }
 
 export default React.memo(ChatLog)

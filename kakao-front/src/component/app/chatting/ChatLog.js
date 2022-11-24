@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import style from "../../../css/MainPage.module.css"
 import ProfileImage from "../../util/ProfileImage";
-import {Link, useLocation,  useParams} from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 import Room from "../../../constants/Room";
 import {useInviteOrCreateRoom} from "../../../lib/query";
 import {toast} from "react-toastify";
@@ -31,10 +31,11 @@ const YouChat = ({children, user}) => {
 
 const Block = ({chat, isLast, onContextMenu}) => {
     const {chat_id, content, read, date} = chat
+    const {id} = useParams()
 
     return <div className={style.chat_block} key={chat_id}>
-        <div className={style.chat_content} onContextMenu={(e) => onContextMenu(e, chat)}>
-            <span>{content} </span>
+        <div className={style.chat_content} onContextMenu={(e) => onContextMenu(e, chat, id)}>
+            <span>{content}</span>
             <div className={style.chat_info}>
                 <div className={style.chat_read}>{read === 0 ? undefined : read}</div>
                 {isLast && <div className={style.chat_data}>{date}</div>}
@@ -55,32 +56,30 @@ const ChatDate = ({createAt}) => {
 const JoinBlock = ({user: {name, id}, chat: {content, chat_id}, users}) => {
     const location = useLocation()
     const joinUser = JSON.parse(content)
-    return (
-        <div className={style.chat_notice} key={chat_id}>
+    return (<div className={style.chat_notice} key={chat_id}>
             <div className={style.chat_date}>
                 <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님이 <span> </span>
                 {joinUser.map((email, i) => {
                     const {name, id} = users.find(user => user.email === email)
-                        if (i === joinUser.length - 1) {
-                            return <React.Fragment key={id}>
-                                <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님
-                            </React.Fragment>
-                        }
+                    if (i === joinUser.length - 1) {
                         return <React.Fragment key={id}>
-                            <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님,<span> </span>
+                            <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님
                         </React.Fragment>
                     }
-                )}
+                    return <React.Fragment key={id}>
+                        <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님,<span> </span>
+                    </React.Fragment>
+                })}
                 을 초대하였습니다.
             </div>
-        </div>
-    )
+        </div>)
 }
 
 const LeaveBlock = ({user: {id, name, email}, chat, users}) => {
     const location = useLocation()
     const {room_status} = users.find(user => user.email === email)
-    const {mutate} = useInviteOrCreateRoom(() => {}, (data) => {
+    const {mutate} = useInviteOrCreateRoom(() => {
+    }, (data) => {
         toast.error(data.response.data['error_description'])
         return true;
     })
@@ -89,21 +88,34 @@ const LeaveBlock = ({user: {id, name, email}, chat, users}) => {
     const onClick = (e) => {
         e.preventDefault()
         mutate({
-            roomId,
-            users: [email]
+            roomId, users: [email]
         })
     }
 
-    return (
-        <div className={style.chat_notice} key={1}>
+    return (<div className={style.chat_notice} key={1}>
             <div className={style.chat_date}>
                 <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님이 나갔습니다.<br/>
-                {
-                    room_status === Room.status.REMOVE && <Link onClick={onClick}>채팅방으로 초대하기</Link>
-                }
+                {room_status === Room.status.REMOVE && <Link onClick={onClick}>채팅방으로 초대하기</Link>}
+            </div>
+        </div>)
+}
+
+const RemoveBlock = ({chat, isLast}) => {
+    const {chat_id, read, date} = chat
+
+    return <div className={style.chat_block} key={chat_id}>
+        <div className={style.chat_content}>
+            <span className={style.chat_content_remove}>
+                <div className={style.chat_content_remove_icon}>
+                    <span className="material-symbols-outlined">priority_high</span>
+                </div>
+                삭제된 메시지입니다.</span>
+            <div className={style.chat_info}>
+                <div className={style.chat_read}>{read === 0 ? undefined : read}</div>
+                {isLast && <div className={style.chat_data}>{date}</div>}
             </div>
         </div>
-    )
+    </div>
 }
 
 
@@ -126,7 +138,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             if (i - 1 >= 0 && chat_type !== 3) {
                 const beforeChat = chats[i - 1]
 
-                if (chat.email === beforeChat.email && beforeChat.chat_type != Chat.type.LEAVE && beforeChat.chat_type != Chat.type.JOIN && beforeChat.chat_type != Chat.type.FILE ) {
+                if (chat.email === beforeChat.email && beforeChat.chat_type != Chat.type.LEAVE && beforeChat.chat_type != Chat.type.JOIN && beforeChat.chat_type != Chat.type.FILE) {
                     if (createAt.isSame(new Date(beforeChat['create_at']))) {
                         child[child.length - 1].push(chatObj)
                         return
@@ -140,11 +152,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
                 child.push([chatObj])
             } else {
                 list.push({
-                    id: undefined,
-                    email: email,
-                    name: '알수 없음',
-                    profile_image_url: 1,
-                    // createAt:
+                    id: undefined, email: email, name: '알수 없음', profile_image_url: 1, // createAt:
                 })
                 child.push([chatObj])
             }
@@ -169,6 +177,9 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
                         return a.chat_id - b.chat_id
                     }).map((chat, j) => {
                         chat.user = userInfo
+                        if (chat.chat_status == Chat.status.REMOVE) {
+                            return <RemoveBlock chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}/>
+                        }
                         return <Block chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}
                                       onContextMenu={onContextMenu}/>
                     })}
@@ -179,6 +190,9 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
                         return a.chat_id - b.chat_id
                     }).map((chat, j) => {
                         chat.user = userInfo
+                        if (chat.chat_status == Chat.status.REMOVE) {
+                            return <RemoveBlock chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}/>
+                        }
                         return <Block chat={chat} isLast={j === child[i].length - 1} key={chat.chat_id}
                                       onContextMenu={onContextMenu}/>
                     })}

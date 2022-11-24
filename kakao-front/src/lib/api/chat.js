@@ -17,3 +17,7 @@ export const insertChatText = (roomId, content) => {
 export const readChat = (roomId) => {
     return client.post("/chats/" + roomId + "/read")
 }
+
+export const removeChat = (roomId, chatId) => {
+    return client.delete(`/chats/${roomId}/${chatId}`)
+}

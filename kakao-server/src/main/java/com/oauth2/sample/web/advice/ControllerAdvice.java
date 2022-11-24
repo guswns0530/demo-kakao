@@ -25,8 +25,6 @@ public class ControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity defaultExceptionHandler(Exception exception) {
-        exception.printStackTrace();
-
         return ResponseEntity.badRequest().body(
                 ApiException.builder()
                         .errorCode(HttpStatus.BAD_REQUEST)

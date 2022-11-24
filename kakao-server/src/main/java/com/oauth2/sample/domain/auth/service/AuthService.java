@@ -57,9 +57,6 @@ public class AuthService {
         // 3. Match Refresh Token
         String savedToken = userRepository.getRefreshTokenByEmail(email);
 
-        System.out.println("client token: oldRefreshToken = " + oldRefreshToken);
-        System.out.println("db token: savedToken = " + savedToken);
-
         if (!savedToken.equals(oldRefreshToken)) {
 //            throw new OAuth2AuthenticationProcessingException("Refresh Token이 매칭되지 않습니다");
             throw new OAuth2AuthenticationProcessingException("Refresh Token이 매칭되지 않습니다.");

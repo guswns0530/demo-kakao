@@ -95,7 +95,7 @@ public class ChatController {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(HttpStatus.ACCEPTED)
-                .data(true)
+                .data(chatId)
                 .build();
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(apiResponse);

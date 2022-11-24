@@ -44,9 +44,11 @@ const MyInfo = () => {
             submit: () => {
                 const value = inputRef.current.value
 
-                if(value) {
 
-                    mutate({name: value})
+                if(value) {
+                    const formData = new FormData()
+                    formData.append("name", value)
+                    mutate(formData)
                     return true;
                 }
 
