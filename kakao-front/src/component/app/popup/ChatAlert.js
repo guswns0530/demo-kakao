@@ -79,7 +79,6 @@ const ChatAlert = ({chat, user}) => {
         }, 500)
     }
 
-    console.log(data)
     const room = data.data.data
     const filterUser = room.users.filter(u => u.email !== user.email)
     const name = room.name || filterUser.reduce((before, now) => {

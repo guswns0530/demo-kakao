@@ -27,7 +27,6 @@ const ChattingList = () => {
         id: menuId
     })
     const {mutate} = useLeaveRoom((data) => {
-        console.log(data.data.data)
         dispatch(deleteRoom(data.data.data))
         navigate("/app", {state: location.state})
     }, (error) => {
