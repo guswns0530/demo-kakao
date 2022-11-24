@@ -6,7 +6,7 @@ const queryClient = new QueryClient({
             useErrorBoundary: false, suspense: false, retry: false, cacheTime: 0, staleTime: 99999
         },
         mutations: {
-            useErrorBoundary: true, retry: false
+            useErrorBoundary: false, retry: false
         },
     },
 })

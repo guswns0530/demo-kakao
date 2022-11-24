@@ -1,6 +1,7 @@
 package com.oauth2.sample.domain.room.response;
 
 import com.oauth2.sample.domain.friend.dto.FriendStatus;
+import com.oauth2.sample.domain.room.dto.RoomStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,6 @@ public class JoinUser {
     private String message;
     private String provider;
     private String lastReadChat;
-    private FriendStatus status;
+    private String friendStatus;
+    private String roomStatus;
 }

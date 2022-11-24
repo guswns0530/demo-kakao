@@ -16,6 +16,7 @@ import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;

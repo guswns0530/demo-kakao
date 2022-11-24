@@ -23,12 +23,14 @@ import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
 
     public RoomInfoResponse selectRoom(String email, String roomId) {
@@ -183,6 +186,7 @@ public class RoomService {
                 .chatType(ChatType.LEAVE)
                 .build();
 
+
         boolean insertChatResult = chatRepository.insertChat(chat);
         // join_users status 삭제로 변경
         boolean removeJoinUserResult = roomRepository.removeJoinUser(roomId, email);
@@ -193,6 +197,9 @@ public class RoomService {
             throw new BadRequestException("방을 나가는데 실패하였습니다.");
         }
 
+        roomRepository.selectJoinUser(roomId).forEach(joinUserEmail -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/leave", chat);
+        });
     }
 
     private RoomInfoResponse getRoomInfoResponse(RoomInfo roomInfo) {
@@ -201,7 +208,8 @@ public class RoomService {
             ObjectMapper mapper = JsonMapper.builder()
                     .enable(JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER)
                     .build();
-            arrayList = mapper.readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {});
+            arrayList = mapper.readValue(roomInfo.getUsers(), new TypeReference<List<JoinUser>>() {
+            });
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new BadRequestException("서버 오류 발생 관리자에게 문의주세요");
@@ -223,6 +231,7 @@ public class RoomService {
     private void joinRoom(List<String> users, String roomId, String email) {
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         String nowStr = sdf.format(new Date());
+        Chat insertChat = null;
 
         try {
             users.stream().forEach(user -> {
@@ -237,7 +246,7 @@ public class RoomService {
                 }
             });
 
-            Chat insertChat = Chat.builder()
+             insertChat = Chat.builder()
                     .email(email)
                     .content(new ObjectMapper().writeValueAsString(users.stream().filter(user -> !user.equals(email)).collect(Collectors.toList())))
                     .createAt(nowStr)
@@ -269,6 +278,12 @@ public class RoomService {
         } catch (Exception ex) {
             throw new BadRequestException(ex.getMessage());
         }
+
+        Chat finalInsertChat = insertChat;
+
+        roomRepository.selectJoinUser(roomId).forEach(joinUserEmail -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/join", finalInsertChat);
+        });
     }
 
     public List<String> selectReader(String email, String roomId) {

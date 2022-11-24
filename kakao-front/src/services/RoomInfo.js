@@ -1,5 +1,6 @@
 import ProfileImage from "../component/util/ProfileImage";
 import React from "react";
+import Room from "../constants/Room";
 
 const roomService = (user, room) => {
     const {
@@ -24,7 +25,7 @@ const roomService = (user, room) => {
         date = `${createAt.getFullYear()}-${createAt.getMonth() + 1}-${createAt.getDate()}`
     }
 
-    const filterUser = users.filter(u => u.email !== user.email)
+    const filterUser = users.filter(u => u.email !== user.email && u.room_status !== Room.status.REMOVE)
     const name = room_name || filterUser.reduce((before, now) => {
         if (!before) {
             return now.name

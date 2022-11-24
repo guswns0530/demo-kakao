@@ -64,7 +64,7 @@ const ProfilePopup = () => {
             </a>
         }
         if (isMe) {
-            return (<Link to={"/app/setting"}>
+            return (<Link to={"/app/setting"} state={location.state}>
                 <i className="material-icons">edit</i>
                 <span>프로필 관리</span>
             </Link>)
@@ -77,7 +77,7 @@ const ProfilePopup = () => {
             </Link>)
         }
         if (!isFriend && !isMe) {
-            return (< Link onClick={onInsertFriend}>
+            return (< Link onClick={onInsertFriend} state={location.state}>
                 <i className="material-icons">person_add</i>
                 <span>친구 추가</span>
             </Link>)

@@ -1,10 +1,11 @@
 import React, {useMemo} from "react";
 import style from "../../../css/MainPage.module.css"
 import ProfileImage from "../../util/ProfileImage";
-import {Link, useLocation, useNavigate} from "react-router-dom";
-import {find} from "styled-components/test-utils";
-import {useQuery} from "react-query";
-import {selectUsers} from "../../../lib/api/user";
+import {Link, useLocation,  useParams} from "react-router-dom";
+import Room from "../../../constants/Room";
+import {useInviteOrCreateRoom} from "../../../lib/query";
+import {toast} from "react-toastify";
+import Chat from "../../../constants/Chat";
 
 const MyChat = ({children}) => {
     return <div className={`${style.chat} ${style.me}`}>
@@ -51,46 +52,59 @@ const ChatDate = ({createAt}) => {
     </div>)
 }
 
-const JoinBlock = ({user: {name, id}, chat: {content, chat_id}}) => {
-    const {data, isLoading} = useQuery("selectUsers", async () => selectUsers(JSON.parse(content)))
+const JoinBlock = ({user: {name, id}, chat: {content, chat_id}, users}) => {
     const location = useLocation()
-    const users = data?.data?.data
-    if (isLoading) {
-        return
-    }
+    const joinUser = JSON.parse(content)
     return (
         <div className={style.chat_notice} key={chat_id}>
             <div className={style.chat_date}>
                 <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님이 <span> </span>
-                {!isLoading &&
-                    users.map(({name, id}, i) => {
-                            if (i === users.length - 1) {
-                                return <React.Fragment key={id}>
-                                    <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님<span> </span>
-                                </React.Fragment>
-                            }
+                {joinUser.map((email, i) => {
+                    const {name, id} = users.find(user => user.email === email)
+                        if (i === joinUser.length - 1) {
                             return <React.Fragment key={id}>
-                                <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님,<span> </span>
+                                <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님
                             </React.Fragment>
                         }
-                    )
-                }
+                        return <React.Fragment key={id}>
+                            <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님,<span> </span>
+                        </React.Fragment>
+                    }
+                )}
                 을 초대하였습니다.
             </div>
         </div>
     )
 }
 
-const LeaveBlock = ({user, chat}) => {
+const LeaveBlock = ({user: {id, name, email}, chat, users}) => {
+    const location = useLocation()
+    const {room_status} = users.find(user => user.email === email)
+    const {mutate} = useInviteOrCreateRoom(() => {}, (data) => {
+        toast.error(data.response.data['error_description'])
+        return true;
+    })
+    const {id: roomId} = useParams()
+
+    const onClick = (e) => {
+        e.preventDefault()
+        mutate({
+            roomId,
+            users: [email]
+        })
+    }
+
     return (
         <div className={style.chat_notice} key={1}>
             <div className={style.chat_date}>
-                떠남
+                <Link to={"/app/profile/" + id} state={location.state}>{name}</Link>님이 나갔습니다.<br/>
+                {
+                    room_status === Room.status.REMOVE && <Link onClick={onClick}>채팅방으로 초대하기</Link>
+                }
             </div>
         </div>
     )
 }
-
 
 
 const ChatLog = ({children, chats, reader, users, user, content, onScroll, onContextMenu}) => {
@@ -108,17 +122,11 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             })
 
             const chatObj = {date, read, content, chat_id, email, chat_status, chat_type, createAt}
-            // if(chat_type === 3) {
-            //     const findUser = users.find(user => user.email === email)
-            //     list.push(findUser)
-            //     list.push([chatObj])
-            //     return
-            // }
 
             if (i - 1 >= 0 && chat_type !== 3) {
                 const beforeChat = chats[i - 1]
 
-                if (chat.email === beforeChat.email) {
+                if (chat.email === beforeChat.email && beforeChat.chat_type != Chat.type.LEAVE && beforeChat.chat_type != Chat.type.JOIN && beforeChat.chat_type != Chat.type.FILE ) {
                     if (createAt.isSame(new Date(beforeChat['create_at']))) {
                         child[child.length - 1].push(chatObj)
                         return
@@ -127,7 +135,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             }
 
             const findUser = users.find(user => user.email === email)
-            if(findUser) {
+            if (findUser) {
                 list.push(findUser)
                 child.push([chatObj])
             } else {
@@ -140,7 +148,6 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
                 })
                 child.push([chatObj])
             }
-            
         })
 
         return [list, child]
@@ -152,12 +159,10 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             const data = []
             const userChats = child[i]
 
-            console.log(list)
-
-            if (userChats[0].chat_type === 3) {
-                data.push(<JoinBlock chat={userChats[0]} user={userInfo} key={i}/>)
-            } else if (userChats[0].chat_type === 4) {
-                data.push(<LeaveBlock chat={userChats[0]} user={userInfo} key={i}/>)
+            if (userChats[0].chat_type == Chat.type.JOIN) {
+                data.push(<JoinBlock chat={userChats[0]} user={userInfo} key={i} users={users}/>)
+            } else if (userChats[0].chat_type == Chat.type.LEAVE) {
+                data.push(<LeaveBlock chat={userChats[0]} user={userInfo} key={i} users={users}/>)
             } else if (userInfo.email === user.email) {
                 data.push(<MyChat style={style} key={i}>
                     {child[i].sort((a, b) => {
@@ -189,7 +194,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
 
             return data
         })
-    }, [list, child, chats]);
+    }, [list, child, chats, users]);
 
     return <div className={style.chat_log} ref={content} onScroll={onScroll}>
         {data}

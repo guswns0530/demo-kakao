@@ -47,8 +47,10 @@ const ChattingPopup = () => {
     const content = useRef();
 
     useEffect(() => {
-        mutate(id)
-    }, [id])
+        if(room) {
+            mutate(id)
+        }
+    }, [id, room])
 
     useEffect(() => {
         dispatch(initializeChat())

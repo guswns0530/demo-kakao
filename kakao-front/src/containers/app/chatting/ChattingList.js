@@ -10,6 +10,7 @@ import ErrorHandler from "../../handler/ErrorHandler";
 import {rooms as roomsAction} from "../../../modules/rooms";
 import {Item, Menu, Separator, useContextMenu} from "react-contexify";
 import {useLeaveRoom} from "../../../lib/query";
+import {toast} from "react-toastify";
 
 export const roomQueryName = "selectChattingList"
 
@@ -39,7 +40,8 @@ const ChattingList = () => {
         id: menuId
     })
     const {mutate} = useLeaveRoom(() => {
-        console.log('success')
+    }, (error) => {
+        toast.error(error.response.data["error_description"])
     })
 
     if(isLoading) {

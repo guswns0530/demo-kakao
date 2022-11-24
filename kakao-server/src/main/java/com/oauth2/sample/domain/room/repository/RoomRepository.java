@@ -20,4 +20,7 @@ public interface RoomRepository {
     Integer selectFriendRoomId(String fromId, String toId);
 
     List<String> selectReaderChat(String email);
+
+    List<String> selectJoinUser(String roomId);
+
 }

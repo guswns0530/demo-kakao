@@ -8,7 +8,7 @@ import {removeAlert} from "../../../modules/alert";
 import {useQuery} from "react-query";
 import {selectRoom} from "../../../lib/api/room";
 import {useInsertChatText} from "../../../lib/query";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 const Item = styled.div`
   width: 350px;
@@ -26,7 +26,7 @@ const ChatAlert = ({chat, user}) => {
     const [input, setInput] = useState('')
     const time = useRef(0)
     const focus = useRef()
-
+    const location = useLocation()
     const {data, isLoading} = useQuery(queryName, async () => selectRoom(room_id), {})
     const {mutate} = useInsertChatText()
 
@@ -99,7 +99,7 @@ const ChatAlert = ({chat, user}) => {
             </div>
         </div>
         <header>{name}</header>
-        <Link to={"/app/chatting/" + room_id} onClick={onClose}>
+        <Link to={"/app/chatting/" + room_id} state={location.state} onClick={onClose} >
             <div className={style.profile}>
                 <div className={style.image}>
                     <ProfileImage profile_image_url={sendUser.profile_image_url}/>

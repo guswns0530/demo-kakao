@@ -1,4 +1,5 @@
 import {createAction, handleActions} from 'redux-actions';
+import produce from "immer";
 
 export const CHAT = 'chat/'
 export const CHAT_SET_READER = CHAT + "SET_READER"
@@ -26,19 +27,18 @@ export default handleActions({
             ...state,
             reader
         }),
-        [CHAT_ADD_CHAT]: (state, {payload: chats}) => {
-            const chatsArr = [...state.chats, ...chats]
+        [CHAT_ADD_CHAT]: (state, {payload: chats}) => produce(state, (draft) => {
 
-            return {
-                ...state,
-                chats: chatsArr.reduce(function (acc, current) {
-                    if (acc.findIndex(({chat_id}) => chat_id === current.chat_id) === -1) {
-                        acc.push(current);
-                    }
-                    return acc.sort((a,b) => b.chat_id - a.chat_id);
-                }, [])
-            }
-        },
+            draft.chats.push(...chats)
+            draft.chats = draft.chats.reduce(function (acc, current) {
+                if (acc.findIndex(({chat_id}) => chat_id === current.chat_id) === -1) {
+                    acc.push(current);
+                }
+
+                return acc
+            }, [])
+            draft.chats.sort((a, b) => b.chat_id - a.chat_id);
+        }),
         [INITIALIZE_CHAT]: (state) => ({
             ...initialState
         })

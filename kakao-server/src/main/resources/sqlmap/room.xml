@@ -20,7 +20,8 @@
         ' "message" : "' || DECODE(NVL(E.CUTOFF_RS, 1), 1, F.MESSAGE, null) || '",' ||
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
-        ' "status" : "' || NVL(E.status, 0) || '"' ||
+        ' "roomStatus" : "' || NVL(D.status, 0) || '",' ||
+        ' "friendStatus" : "' || NVL(E.status, 0) || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
         C.type as ROOM_TYPE,
@@ -105,16 +106,24 @@
         ' "provider" : "' || F.PROVIDER || '",' ||
         ' "lastReadChat" : "' || G.CHAT_ID || '",' ||
         ' "profileImageUrl" : "' || DECODE(NVL(E.CUTOFF_RS, 1), 1, F.profile_image_url, null) || '",' ||
-        ' "status" : "' || NVL(E.status, 0) || '"' ||
+        ' "roomStatus" : "' || NVL(D.status, 0) || '",' ||
+        ' "friendStatus" : "' || NVL(E.status, 0) || '"' ||
         '}', ', ')
         within group ( order by E.nickname, F.NAME) || ']' as USERS,
         C.type as ROOM_TYPE,
-        count(D.EMAIL) as JOIN_USER_CNT,
+        sum(case when D.STATUS = '1' then 1 else 0 end) as JOIN_USER_CNT,
         DECODE(G.CHAT_STATUS, 1, G.CHAT_CONTENT, null) as CHAT_CONTENT,
         NVL(G.CHAT_TYPE, null) AS CHAT_TYPE,
         NVL(G.CHAT_STATUS, null) AS CHAT_STATUS,
         NVL2(G.CHAT_CREATEAT, to_char(G.CHAT_CREATEAT, 'YYYY-MM-DD HH24:MI:SS'),null) as CHAT_CREATEAT,
-        to_char(C.CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as ROOM_CREATEAT
+        to_char(C.CREATEAT, 'YYYY-MM-DD HH24:MI:SS') as ROOM_CREATEAT,
+        (select count(*)
+        from kakao_chats G
+        where G.room_id = C.room_Id
+        and G.CHAT_ID > (select chat_id
+        from KAKAO_READ_USERS
+        where room_id = G.room_id
+        and EMAIL = #{email} and status in (1, 2))) as UNREAD_CNT
         from kakao_join_users B
         join kakao_rooms C
         on B.ROOM_ID = C.ROOM_ID
@@ -147,14 +156,14 @@
         where B.EMAIL = #{email}
         and B.ROOM_ID = E.ROOM_ID)
         group by E.ROOM_ID) G on C.ROOM_ID = G.ROOM_ID
-        join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
-        join KAKAO_READ_USERS G on G.ROOM_ID = D.ROOM_ID and G.EMAIL = D.EMAIL
+        left outer join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
+        left outer join KAKAO_READ_USERS G on G.ROOM_ID = D.ROOM_ID and G.EMAIL = D.EMAIL
         left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
         join KAKAO_USERS F on D.EMAIl = F.EMAIL
         where B.EMAIL = #{email}
         and C.ROOM_ID = #{roomId, jdbcType=VARCHAR}
         and B.STATUS = 1
-        and D.STATUS = 1
+--         and D.STATUS = 1
         group by C.ROOM_ID,
         C.NAME,
         C.TYPE,
@@ -248,5 +257,12 @@
         select chat_id
         from kakao_read_users
         where room_id = #{roomId}
+    </select>
+
+    <select id="selectJoinUser" parameterType="java.lang.String" resultType="java.lang.String">
+        select email
+        from kakao_join_users
+        where room_id = #{roomId}
+        and status = 1
     </select>
 </mapper>

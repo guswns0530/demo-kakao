@@ -37,8 +37,8 @@ public class ChatService {
             throw new BadRequestException("메시지 전달에 실패하였습니다.");
         }
 
-        roomService.selectRoom(email, request.getRoomId()).getUsers().forEach(joinUser -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + joinUser.getEmail() + "/chat", chat);
+        roomRepository.selectJoinUser(request.getRoomId()).forEach(joinUserEmail -> {
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/chat", chat);
         });
 
         return chat;

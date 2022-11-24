@@ -1840,6 +1840,11 @@ header img {
     font-size: 12px;
     font-weight: 600;
     padding: 8px 15px;
+    width: 90%;
+
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
 }
 
 #chat_alert .profile {

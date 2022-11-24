@@ -6,11 +6,11 @@ import storage from "redux-persist/lib/storage";
 import auth, {SET_ACCESS_TOKEN, authSaga, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE} from './auth';
 import loading from "./loading";
 import user, {userSaga} from './user'
-import rooms from "./rooms";
 import form from './form'
 import popup from "./popup";
 import chat from "./chat";
 import alert from "./alert";
+import rooms from "./rooms";
 
 
 
