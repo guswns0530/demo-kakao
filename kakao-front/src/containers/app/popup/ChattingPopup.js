@@ -53,6 +53,9 @@ const ChattingPopup = () => {
     //anotherPopup
     const [popup, setPopup] = useState(false)
 
+    useEffect(() => {
+        setPopup(false)
+    }, [room])
 
     useEffect(() => {
         if (room && room.room_type == Room.type.PERSON) {
