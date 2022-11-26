@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import produce from "immer";
-import AddChatingComponent from "../../../../component/app/popup/AddChattingSelectFriend.js";
+import AddChatingComponent from "../../../../component/app/popup/addChatting/AddChattingSelectFriend.js";
 import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 

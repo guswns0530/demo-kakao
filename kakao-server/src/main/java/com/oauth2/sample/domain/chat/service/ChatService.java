@@ -32,13 +32,17 @@ public class ChatService {
         String nowStr = sdf.format(new Date());
         Chat chat = Chat.builder().email(email).roomId(request.getRoomId()).content(request.getContent()).chatType(ChatType.TEXT).chatStatus(ChatStatus.EXIST).createAt(nowStr).build();
         boolean insertChatResult = chatRepository.insertChat(chat);
+        boolean readChat = chatRepository.readChat(ReadChatRequest.builder()
+                .email(email)
+                .roomId(request.getRoomId())
+                .build());
 
-        if (!insertChatResult) {
+        if (!insertChatResult || !readChat) {
             throw new BadRequestException("메시지 전달에 실패하였습니다.");
         }
 
         roomRepository.selectJoinUser(request.getRoomId()).forEach(joinUserEmail -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/chat", chat);
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail + "/chat", chat);
         });
 
         return chat;
@@ -75,7 +79,7 @@ public class ChatService {
         }
 
         roomRepository.selectJoinUser(removeChatRequest.getRoomId()).stream().forEach(email -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + email  + "/remove", removeChatRequest);
+            messagingTemplate.convertAndSend("/queue/chat/" + email + "/remove", removeChatRequest);
         });
     }
 

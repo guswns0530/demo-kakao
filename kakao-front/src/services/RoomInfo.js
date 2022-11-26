@@ -38,7 +38,7 @@ const roomService = (user, room) => {
         return <ProfileImage key={email} profile_image_url={profile_image_url}/>
     })
 
-    if(chat_status == Chat.status.REMOVE) {
+    if(chat_status * 1 === Chat.status.REMOVE * 1) {
         chat_content = '삭제된 메시지입니다.'
     }
 

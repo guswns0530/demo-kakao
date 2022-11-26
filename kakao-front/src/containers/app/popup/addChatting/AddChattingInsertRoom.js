@@ -1,5 +1,5 @@
 import React, { useState} from "react";
-import AddChattingInsertRoomComponent from "../../../../component/app/popup/AddChattingInsertRoom";
+import AddChattingInsertRoomComponent from "../../../../component/app/popup/addChatting/AddChattingInsertRoom";
 import ProfileImage from "../../../../component/util/ProfileImage";
 import {useInviteOrCreateRoom} from "../../../../lib/query";
 import {useLocation, useNavigate} from "react-router-dom";

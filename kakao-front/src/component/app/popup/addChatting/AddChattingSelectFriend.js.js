@@ -1,8 +1,8 @@
 import React from "react";
-import style from "../../../css/MainPage.module.css";
-import ProfileImage from "../../util/ProfileImage";
-import Svg from "../../util/Svg";
-import searchServiceToFriend from "../../../services/searchService";
+import style from "../../../../css/MainPage.module.css";
+import ProfileImage from "../../../util/ProfileImage";
+import Svg from "../../../util/Svg";
+import searchServiceToFriend from "../../../../services/searchService";
 
 const AddChattingSelectFriendJs = ({onChange, search, data, onClose, onChecked, list, onSubmit}) => {
     return (

@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 
-
 import Popup from "../../../component/util/Popup";
 import {selectFriendList} from "../../../lib/api/friend";
 import {useLocation, useNavigate} from "react-router-dom";

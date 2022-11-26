@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../../../css/MainPage.module.css";
+import style from "../../../../css/MainPage.module.css";
 
 const AddChattingInsertRoom = ({onClose, onSubmit, onChange, name, profileImageList, isLoading, roomNamePlaceholder}) => {
     return (
