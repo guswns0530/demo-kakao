@@ -42,7 +42,7 @@ const ChattingPopup = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const [initX, initY] = [location?.state?.locate ? location.state.locate.x : 0, location?.state?.locate ? location.state.locate.y : 0]
-    const [{x, y}, setPosition] = useState({x: initX, y: initY})
+    const [{x, y}, setPosition] = useState({x: initX || 0, y: initY || 0})
     const isError = isError1 || isError2
     const isLoading = isLoading1 || isLoading2
     const {mutate} = useReadChat()

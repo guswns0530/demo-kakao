@@ -26,7 +26,7 @@ const ProfilePopup = () => {
         location?.state?.locate ? location.state.locate.x : 0,
         location?.state?.locate ? location.state.locate.y : 0
     ]
-    const [{x, y}, setPosition] = useState({x: initX, y: initY})
+    const [{x, y}, setPosition] = useState({x: initX || 0, y: initY || 0})
 
 
     const onInsertFriend = () => mutate({id, type: 'id'});

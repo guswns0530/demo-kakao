@@ -58,8 +58,6 @@ create table kakao_rooms
     constraint kakao_rooms_pk primary key (room_id)
 );
 create sequence kakao_rooms_seq start with 1 increment by 1 nocycle nocache;
-
-
 ---------------- kakao_join_users ----------------
 drop table kakao_join_users;
 
@@ -79,7 +77,6 @@ create table kakao_join_users
 
 ---------------- kakao_chats ----------------
 drop table kakao_chats;
-drop sequence kakao_chats_seq;
 
 create table kakao_chats
 (
@@ -97,8 +94,6 @@ create table kakao_chats
     reserved3 VARCHAR2(300),
     constraint kakao_chats_pk primary key (room_id, email, chat_id)
 );
-create sequence kakao_chats_seq start with 1 increment by 1 nocycle nocache;
-
 
 ---------------- kakao_read_users ----------------
 drop table kakao_read_users;
@@ -141,13 +136,6 @@ create table kakao_files
 --     file_id   varchar2(300),
 --     content   varchar2(300),
 --     createAt  DATE,
-INSERT INTO kakao_chats(chat_id, email, room_id, status, type, content)
-values (kakao_chats_seq.nextval, 'y2010214@naver.com', 3, 1, 2, '');
-INSERT INTO kakao_chats(chat_id, email, room_id, status, type, content)
-values (kakao_chats_seq.nextval, 'y2010213@naver.com', 3, 1, 2, '');
-
-INSERT INTO kakao_chats(chat_id, email, room_id, status, type, content)
-values (kakao_chats_seq.nextval, 'y2010213@naver.com', 3, 1, 1, '�ȳ��ϼ���');
 commit;
 
 INSERT INTO KAKAO_JOIN_USERS(EMAIL, ROOM_ID, STATUS, CREATEAT)
@@ -172,27 +160,30 @@ WHERE type = '1'
 
 
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010212@naver.com', '', 'test1', '안녕', '박현준', 1, 'local', 1, sysdate);
-
-
+values ('test1@naver.com', '', 'test1', '안녕', '박현준', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010210@naver.com', '', 'test8', 'hello world', '김태현', 1, 'local', 1, sysdate);
+values ('test2@naver.com', '', 'test8', '', '김태현', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010211@naver.com', '', 'test2', 'fps game', '박인환', 1, 'local', 1, sysdate);
+values ('test3@naver.com', '', 'test2', '반가워', '박인환', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010213@naver.com', '', 'test3', 'byungsin', '박홍식', 1, 'local', 1, sysdate);
+values ('test4@naver.com', '', 'test3', 'Hello world', '박홍식', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010214@naver.com', '', 'test4', 'you', '송유신', 1, 'local', 1, sysdate);
+values ('test5@naver.com', '', 'test4', 'Good night', '송유신', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010215@naver.com', '', 'test7', '좋은 날', '이창연', 1, 'local', 1, sysdate);
+values ('test6@naver.com', '', 'test7', '동해물과 백두산이', '이창연', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010216@naver.com', '', 'test6', '이주성', '이주성', 1, 'local', 1, sysdate);
+values ('test7@naver.com', '', 'test6', '이주성', '이주성', 1, 'local', 1, sysdate);
 insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
-values ('y2010217@naver.com', '', 'test5', '친구1', '김우석', 1, 'local', 1, sysdate);
-
-insert into kakao_chats (chat_id, email, room_id, status, type, file_id, content, createAt)
-values (KAKAO_CHATS_SEQ.nextval, 'ury0530@naver.com', 1, 1, 1, null, '더미 데이터1', sysdate);
-insert into kakao_chats (chat_id, email, room_id, status, type, file_id, content, createAt)
-values (KAKAO_CHATS_SEQ.nextval, 'ury0530@naver.com', 1, 1, 1, null, '더미 데이터2', sysdate);
-insert into kakao_chats (chat_id, email, room_id, status, type, file_id, content, createAt)
-values (KAKAO_CHATS_SEQ.nextval, 'y2010212@naver.com', 1, 1, 1, null, '더미 데이터3', sysdate);
+values ('test8@naver.com', '', 'test5', '친구1', '김우석', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
+values ('test9@naver.com', '', 'test9', '친구2', '허효준', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
+values ('test10@naver.com', '', 'test10', '친구3', '전한비', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
+values ('test11@naver.com', '', 'test11', '친구4', '잔나비', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
+values ('test12@naver.com', '', 'test12', '친구5', '아이유', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
+values ('test13@naver.com', '', 'test13', '리오레', 'League of legends', 1, 'local', 1, sysdate);
+insert into kakao_users(email, password, id, message, name, profile_image_url, provider, status, createAt)
+values ('test14@naver.com', '', 'test14', '오버워치', 'Overwatch', 1, 'local', 1, sysdate);

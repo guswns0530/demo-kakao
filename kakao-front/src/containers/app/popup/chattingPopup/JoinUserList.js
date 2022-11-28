@@ -8,7 +8,7 @@ import {useDispatch} from "react-redux";
 import {useUpdateRoom} from "../../../../lib/query";
 
 const JoinUserList = ({x: initX, y:initY, room, user, onPopup}) => {
-    const [{x, y}, setPosition] = useState({x: initX, y: initY})
+    const [{x, y}, setPosition] = useState({x: initX || 0, y: initY || 0})
     const [list, setList] = useState([...(room.users).filter(({email}) => user.email !== email)])
     const [page, setPage] = useState(0)
     const inputRef = useRef()

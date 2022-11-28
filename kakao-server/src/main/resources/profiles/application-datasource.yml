@@ -7,17 +7,17 @@
 #    password: EXPORTTESTUSER
 
 # house
-spring:
-  datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@116.121.154.233:1521:orcl
-    username: system
-    password: 1234
-
-# school
 #spring:
 #  datasource:
 #    driver-class-name: oracle.jdbc.driver.OracleDriver
-#    url: jdbc:oracle:thin:@localhost:1521:orcl
+#    url: jdbc:oracle:thin:@116.121.154.233:1521:orcl
 #    username: system
 #    password: 1234
+
+# school
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: system
+    password: 1234

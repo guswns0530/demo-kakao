@@ -21,7 +21,7 @@ const StyledSvg = styled.svg`
 const Svg = ({children, backgroundColor}) => {
     return ( <StyledSvg color={backgroundColor}>
         <foreignObject>
-          <div>
+          <div style={{width: '100%', height: '100%'}}>
             {children}
           </div>
         </foreignObject>
