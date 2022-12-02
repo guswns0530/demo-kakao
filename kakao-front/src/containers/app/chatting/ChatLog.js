@@ -138,6 +138,7 @@ const Notice = ({block}) => {
             type: 'email'
         })
     }
+    
     if(block) {
         return <div className={style.block_popup}>
             <button onClick={onUnBlock}>

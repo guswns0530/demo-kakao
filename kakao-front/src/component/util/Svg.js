@@ -6,7 +6,7 @@ const StyledSvg = styled.svg`
   height: 100%;
 
   & > foreignObject {
-    display: inline;
+    display: block;
     width: 100%;
     height: 100%;
   }

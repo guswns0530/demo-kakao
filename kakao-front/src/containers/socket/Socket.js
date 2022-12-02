@@ -59,6 +59,8 @@ const Socket = () => {
         client.current.subscribe("/queue/chat/" + user.email + "/leave", onLeave)
 
         client.current.subscribe("/queue/chat/" + user.email + "/remove", onRemove)
+
+        client.current.subscribe("/queue/room/" + user.email + "/update", onUpdateRoom)
     }
 
     const onRemove = async (body) => {
@@ -135,6 +137,25 @@ const Socket = () => {
         const response = await selectRoom(roomId)
         dispatch(roomsUpdate(response.data.data))
     }
+
+    const onUpdateRoom = async (body) => {
+        const {chat: {room}} = stateRef.current
+
+
+        const roomId = body.body
+        const response = await selectRoom(roomId)
+        const data = response.data.data
+
+        dispatch(roomsUpdate(data))
+
+        if (room) {
+            if (room.room_id * 1 === data.room_id * 1) {
+                dispatch(setRoom(data))
+            }
+        }
+
+    }
+
 
     useEffect(() => {
         connect()

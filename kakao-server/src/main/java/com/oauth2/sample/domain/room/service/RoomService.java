@@ -85,7 +85,7 @@ public class RoomService {
         boolean result = roomRepository.updateRoom(request);
 
         roomRepository.selectJoinUser(request.getRoomId()).forEach(joinUserEmail -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/read", request.getRoomId());
+            messagingTemplate.convertAndSend("/queue/room/" + joinUserEmail  + "/update", request.getRoomId());
         });
     }
 
