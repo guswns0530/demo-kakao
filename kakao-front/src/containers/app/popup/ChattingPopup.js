@@ -34,10 +34,11 @@ const ChattingPopup = () => {
             }
         }
     ])
-    const {user, room, blockFriends} = useSelector(({user, chat, friend}) => ({
+    const {user, room, blockFriends, friends} = useSelector(({user, chat, friend}) => ({
         user: user.user,
         room: chat.room,
-        blockFriends: friend.blockFriends
+        blockFriends: friend.blockFriends,
+        friends: friend.friends
     }))
     const navigate = useNavigate()
     const location = useLocation()
@@ -48,6 +49,7 @@ const ChattingPopup = () => {
     const {mutate} = useReadChat()
     const [isFullscreen, setScreen] = useState(false)
     const [block, setBlock] = useState(false)
+    const [isFriend, setFriend] = useState(false)
     const content = useRef();
 
     //anotherPopup
@@ -62,13 +64,17 @@ const ChattingPopup = () => {
             const selectUser = room.users.filter(({email}) => user.email !== email)[0]
             if (blockFriends.find(({email}) => email === selectUser.email)) {
                 setBlock(true)
+            } else if (!friends.find(({email}) => email === selectUser.email) ) {
+                setFriend(true)
             } else {
                 setBlock(false)
+                setFriend(false)
             }
         } else {
             setBlock(false)
+            setFriend(false)
         }
-    }, [blockFriends, room]);
+    }, [friends, blockFriends, room]);
 
 
     useEffect(() => {
@@ -115,7 +121,7 @@ const ChattingPopup = () => {
     return <>
         <ChattingPopupComponent x={x} y={y} room={room} isLoading={isLoading} trackPos={trackPos}
                                 onClose={onClose} user={user} toggleScreen={toggleScreen} isFullscreen={isFullscreen}
-                                content={content} block={block} onPopup={onPopup}/>
+                                content={content} block={block} onPopup={onPopup} isFriend={isFriend} />
         {
             popup && !isLoading && <JoinUserList x={x - 305} y={y} room={room} onPopup={onPopup} user={user}/>
         }

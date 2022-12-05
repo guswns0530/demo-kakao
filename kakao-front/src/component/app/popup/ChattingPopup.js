@@ -15,7 +15,7 @@ const StyleImage = styled.div`
     ${styleLoading}
 `
 
-const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleScreen, isFullscreen, content, block, onPopup}) => {
+const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleScreen, isFullscreen, content, block, onPopup, isFriend}) => {
     if (isLoading) {
         return <>
             <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"} position={{x, y}}>
@@ -96,7 +96,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleSc
                     </header>
 
                     <div className={style.content}>
-                        <ChatLog roomId={room_id} content={content} block={block}/>
+                        <ChatLog roomId={room_id} content={content} block={block} isFriend={isFriend}/>
                         <div className={style.form}>
                             <ChatForm roomId={room_id} content={content} block={block}/>
                         </div>

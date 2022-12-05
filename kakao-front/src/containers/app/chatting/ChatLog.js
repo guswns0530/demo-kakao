@@ -11,12 +11,11 @@ import { useContextMenu} from "react-contexify";
 
 import style from "../../../css/MainPage.module.css"
 import {useInsertFriend} from "../../../lib/query";
-import {useParams} from "react-router-dom";
 
 export const menuId = "ChatLogMenu"
 export const queryName = "ChatLog/selectChattingList"
 
-const ChatLog = ({roomId, content, block}) => {
+const ChatLog = ({roomId, content, block, isFriend}) => {
     const dispatch = useDispatch()
     const [scrollTop, setScrollTop] = useState(0)
     const {
@@ -116,14 +115,14 @@ const ChatLog = ({roomId, content, block}) => {
     return <>
         <ChatLogComponent chats={chats} users={users} user={user} reader={reader} content={content} onScroll={onScroll} onContextMenu={handleContextMenu}>
             <ObservationComponent/>
-            <Notice block={block}/>
+            <Notice block={block} isFriend={isFriend}/>
         </ChatLogComponent>
     </>
 
     // return <ChatLog2Component chats={chats} users={users} user={user} reader={reader}/>
 }
 
-const Notice = ({block}) => {
+const Notice = ({block, isFriend}) => {
     const {mutate} = useInsertFriend()
     const {room, user} = useSelector(({chat, user}) => ({
         room: chat.room,
@@ -139,7 +138,7 @@ const Notice = ({block}) => {
         })
     }
     
-    if(block) {
+    if(block || isFriend) {
         return <div className={style.block_popup}>
             <button onClick={onUnBlock}>
                 <i className="material-icons">person_add</i>
