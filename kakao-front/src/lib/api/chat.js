@@ -9,7 +9,7 @@ export const selectChatList = (roomId, id) => {
 
 export const insertChatText = (roomId, content) => {
     return client.post("/chats", {
-        roomId,
+        'room_id': roomId,
         content
     })
 }

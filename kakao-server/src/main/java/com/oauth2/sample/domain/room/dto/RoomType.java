@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum RoomType {
+
+    SOLO(0),
     PERSON(1),
     GROUP(2);
 

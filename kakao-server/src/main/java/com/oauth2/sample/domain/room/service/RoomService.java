@@ -1,6 +1,5 @@
 package com.oauth2.sample.domain.room.service;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +47,7 @@ public class RoomService {
 
 
     public RoomInfoResponse selectRoom(String email, String roomId) {
+
         try {
             Optional<RoomInfo> roomInfoOf = roomRepository.selectRoom(email, roomId);
 
@@ -175,34 +173,68 @@ public class RoomService {
 
     @Transactional
     public void leaveRoom(String roomId, String email) {
-        if (!roomRepository.existUser(roomId, email)) {
+        Optional<RoomInfo> roomInfoOptional = roomRepository.selectRoom(email, roomId);
+
+        roomInfoOptional.ifPresentOrElse(roomInfo -> {
+            SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+            String nowStr = sdf.format(new Date());
+
+            // chat 메시지 전달
+            Chat chat = Chat.builder()
+                    .roomId(roomId)
+                    .email(email)
+                    .createAt(nowStr)
+                    .chatType(ChatType.LEAVE)
+                    .build();
+
+
+
+            // join_users status 삭제로 변경
+            boolean removeJoinUserResult = roomRepository.removeJoinUser(roomId, email);
+            // read_users 삭제
+            boolean removeReadUserResult = chatRepository.removeReadUser(roomId, email);
+
+            if (!removeJoinUserResult || !removeReadUserResult) {
+                throw new BadRequestException("방을 나가는데 실패하였습니다.");
+            }
+
+            if(roomInfo.getRoomType() == RoomType.PERSON || roomInfo.getRoomType() == RoomType.SOLO) {
+                InviteUserToRoom inviteUserToRoom = InviteUserToRoom.builder()
+                        .roomId(roomId)
+                        .email(email)
+                        .createAt(nowStr)
+                        .build();
+
+                boolean insertResult = roomRepository.inviteUserToRoom(inviteUserToRoom);
+                if (!insertResult) {
+                    throw new BadRequestException("방 인원 추가에 실패하였습니다.");
+                }
+
+                ReadUser readUser = ReadUser.builder()
+                        .roomId(roomId)
+                        .chatId("0")
+                        .email(email)
+                        .createAt(nowStr)
+                        .build();
+                boolean insertReadUser = chatRepository.insertReadUser(readUser);
+                if(!insertReadUser) {
+                    throw new BadRequestException("방 인원 추가에 실패하였습니다.");
+                }
+
+                return;
+            }
+
+            boolean insertChatResult = chatRepository.insertChat(chat);
+
+            if (! insertChatResult) {
+                throw new BadRequestException("방을 나가는데 실패하였습니다.");
+            }
+
+            roomRepository.selectJoinUser(roomId).forEach(joinUserEmail -> {
+                messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/leave", chat);
+            });
+        }, () -> {
             throw new BadRequestException("방에 존재하지 않습니다.");
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-        String nowStr = sdf.format(new Date());
-
-        // chat 메시지 전달
-        Chat chat = Chat.builder()
-                .roomId(roomId)
-                .email(email)
-                .createAt(nowStr)
-                .chatType(ChatType.LEAVE)
-                .build();
-
-
-        boolean insertChatResult = chatRepository.insertChat(chat);
-        // join_users status 삭제로 변경
-        boolean removeJoinUserResult = roomRepository.removeJoinUser(roomId, email);
-        // read_users 삭제
-        boolean removeReadUserResult = chatRepository.removeReadUser(roomId, email);
-
-        if (!insertChatResult || !removeJoinUserResult || !removeReadUserResult) {
-            throw new BadRequestException("방을 나가는데 실패하였습니다.");
-        }
-
-        roomRepository.selectJoinUser(roomId).forEach(joinUserEmail -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/leave", chat);
         });
     }
 
@@ -296,5 +328,31 @@ public class RoomService {
         });
 
         return roomRepository.selectReaderChat(roomId);
+    }
+
+    public RoomInfo createSoloRoom(String email) {
+        InsertRoom insertRoom = InsertRoom.builder()
+                .type(RoomType.SOLO)
+                .build();
+        boolean isInsert = roomRepository.insertRoom(insertRoom);
+        if (!isInsert) {
+            throw new BadRequestException("개인 방 생성중 오류가 발생하였습니다. 관리자에게 문의주세요.");
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String nowStr = sdf.format(new Date());
+
+        InviteUserToRoom inviteUserToRoom = InviteUserToRoom.builder()
+                .roomId(insertRoom.getRoomId())
+                .email(email)
+                .createAt(nowStr)
+                .build();
+        boolean insertResult = roomRepository.inviteUserToRoom(inviteUserToRoom);
+
+        if (!insertResult) {
+            throw new BadRequestException("개인 방 생성중 오류가 발생하였습니다. 관리자에게 문의주세요.");
+        }
+
+        return roomRepository.selectRoom(email, insertRoom.getRoomId()).get();
     }
 }

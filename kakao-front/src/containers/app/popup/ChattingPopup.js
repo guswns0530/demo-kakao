@@ -21,14 +21,14 @@ const ChattingPopup = () => {
         = useQueries([
         {
             queryKey: [checkRoomQuery, id],
-            queryFn: async () => selectRoom(id),
+            queryFn: async () => selectRoom(id || ''),
             onSuccess: ({data: {data}}) => {
                 dispatch(setRoom(data))
             }
         },
         {
             queryKey: [readerQuery, id],
-            queryFn: async () => selectReaderChat(id),
+            queryFn: async () => selectReaderChat(id || ''),
             onSuccess: ({data: {data}}) => {
                 dispatch(setReader(data))
             }

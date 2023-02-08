@@ -3,6 +3,11 @@ package com.oauth2.sample.domain.auth.service;
 import com.oauth2.sample.domain.auth.request.LoginRequest;
 import com.oauth2.sample.domain.auth.request.SignUpRequest;
 import com.oauth2.sample.domain.email.dto.EmailConfirmToken;
+import com.oauth2.sample.domain.room.dto.InsertRoom;
+import com.oauth2.sample.domain.room.dto.InviteUserToRoom;
+import com.oauth2.sample.domain.room.dto.RoomType;
+import com.oauth2.sample.domain.room.repository.RoomRepository;
+import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.domain.user.repository.UserRepository;
 import com.oauth2.sample.web.config.AppProperties;
 import com.oauth2.sample.web.security.exception.OAuth2AuthenticationProcessingException;
@@ -28,6 +33,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Slf4j
 @Service

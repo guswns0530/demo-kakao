@@ -15,7 +15,7 @@ const Profile = ({user}) => {
     }
 
     return (<>
-        <div className={style.profile} >
+        <div className={style.profile}>
             <div className={style.image}>
                 <Link to={"/app/profile/" + id} onClick={onClick}>
                     <ProfileImage profile_image_url={profile_image_url}/>

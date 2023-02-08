@@ -3,7 +3,7 @@ import React, {useRef, useState} from "react";
 import MyInfoComponent from "../../../component/app/friend/Profile";
 import {useDispatch, useSelector} from "react-redux";
 import {Item, Menu,  useContextMenu} from "react-contexify";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import style from "../../../css/MainPage.module.css";
 import {openPopup} from "../../../modules/popup";
 import {toast} from "react-toastify";
@@ -15,6 +15,7 @@ const MyInfo = () => {
     const dispatch = useDispatch()
     const navigate =useNavigate()
     const inputRef = useRef()
+    const location = useLocation()
     const {user} = useSelector(({user}) => ({
         user: user.user
     }))
@@ -59,9 +60,14 @@ const MyInfo = () => {
         dispatch(action)
     }
 
+    const onProfileClick = (e) => {
+        const [x, y] = [e.pageX, e.pageY]
+        navigate("/app/chatting", {state: {...location.state, locate: {x, y}}})
+    }
+
     return (
         <>
-            <div onContextMenu={(e) => handleContextMenu(e, user)}>
+            <div onContextMenu={(e) => handleContextMenu(e, user)} onClick={onProfileClick}>
                 <MyInfoComponent user={user}/>
             </div>
             <Menu id={menuId} animation={false}>

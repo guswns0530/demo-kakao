@@ -8,7 +8,6 @@ import {deleteRoom} from "../../../modules/rooms";
 import {Item, Menu, Separator, useContextMenu} from "react-contexify";
 import {useLeaveRoom} from "../../../lib/query";
 import {toast} from "react-toastify";
-import Room from "../../../constants/Room";
 
 export const roomQueryName = "selectChattingList"
 
@@ -34,14 +33,6 @@ const ChattingList = () => {
     })
     const leaveRoom = (e) => {
         const {room_id} = e.props().room
-
-
-        const {room_type} = rooms.find((room) => room.room_id === room_id)
-
-        if(room_type == Room.type.PERSON) {
-            toast.error("개인채팅방은 삭제할 수 없습니다.")
-            return
-        }
 
         mutate(room_id)
     }

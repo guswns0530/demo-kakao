@@ -134,6 +134,7 @@ const MainPage = () => {
         <Routes>
             <Route path={"/profile/:id"} element={<ProfilePopup/>}/>
             <Route path={"/chatting/:id"} element={<ChattingPopup/>}/>
+            <Route path={"/chatting"} element={<ChattingPopup/>}/>
             <Route path={"/add-friend"} element={<AddFriend/>}/>
             <Route path={"/add-friend/:type"} element={<AddFriend/>}/>
             <Route path={"/add-chatting"} element={<AddChatting/>}/>

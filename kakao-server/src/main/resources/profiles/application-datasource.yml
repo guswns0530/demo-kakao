@@ -2,9 +2,9 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@202.86.12.198:1521:orcl
-    username: EXPORTTESTUSER
-    password: EXPORTTESTUSER
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: system
+    password: 1234
 
 # house
 #spring:
