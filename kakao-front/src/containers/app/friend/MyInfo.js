@@ -62,7 +62,7 @@ const MyInfo = () => {
 
     const onProfileClick = (e) => {
         const [x, y] = [e.pageX, e.pageY]
-        navigate("/app/chatting", {state: {...location.state, locate: {x, y}}})
+        navigate("/app/chatting/" + user.email, {state: {...location.state, locate: {x, y}}})
     }
 
     return (

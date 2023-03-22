@@ -38,7 +38,13 @@ public class RoomController {
 
     @GetMapping("/{roomId}")
     public ResponseEntity<?> selectRoom(@CurrentUser UserPrincipal user, @PathVariable String roomId) {
-        RoomInfoResponse roomInfoResponse = roomService.selectRoom(user.getEmail(), roomId);
+        String email = user.getEmail();
+
+        if(email.equals(roomId)) {
+
+        }
+
+        RoomInfoResponse roomInfoResponse = roomService.selectRoom(email, roomId);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
                 .code(HttpStatus.OK)
