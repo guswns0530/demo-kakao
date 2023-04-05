@@ -265,4 +265,49 @@
         where room_id = #{roomId}
         and status = 1
     </select>
+
+    <select id="selectSoloRoomToEmail" parameterType="java.lang.String" resultMap="dto.roomInfo">
+        select A.ROOM_ID       as ROOM_ID,
+               nvl(A.NAME, '') as ROOM_NAME,
+               A.TYPE          as ROOM_TYPE,
+               A.CREATEAT      as ROOM_CREATE_AT,
+               C.CHAT_CONTENT  as CHAT_CONTENT,
+               C.CHAT_TYPE     as CHAT_TYPE,
+               C.CHAT_STATUS   as CHAT_STATUS,
+               1               as JOIN_USER_CNT,
+               C.CHAT_CREATEAT as CHAT_CREATE_AT
+        from KAKAO_ROOMS A
+                 join KAKAO_JOIN_USERS B on A.ROOM_ID = B.ROOM_ID
+                 left outer join (select E.ROOM_ID,
+                              max(E.CONTENT) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_CONTENT,
+                               max(E.type) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_TYPE,
+                               max(E.STATUS) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_STATUS,
+                               max(E.CREATEAT) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_CREATEAT
+                       from KAKAO_CHATS E
+                       where E.TYPE in (1, 2)
+                       group by E.ROOM_ID) C on A.ROOM_ID = C.ROOM_ID
+        where A.TYPE = 0
+          and A.STATUS = 1
+          and B.EMAIL = #{email}
+    </select>
 </mapper>

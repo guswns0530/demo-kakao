@@ -3,13 +3,14 @@ import {Client} from "@stomp/stompjs"
 import {useEffect, useRef} from "react";
 import {SOCKET_BASE_URL} from "../../constants";
 import {useDispatch, useSelector} from "react-redux";
-import {addChat, removeChat, setRoom} from "../../modules/chat";
+import {addChat, removeChat, setReader, setRoom} from "../../modules/chat";
 import {useReadChat} from "../../lib/query";
 import queryClient from "../../services/queryClient";
-import {readerQuery} from "../app/popup/ChattingPopup";
+import {checkRoomQuery, readerQuery} from "../app/popup/ChattingPopup";
 import {addAlert} from "../../modules/alert";
-import {selectRoom} from "../../lib/api/room";
+import {selectReaderChat, selectRoom} from "../../lib/api/room";
 import {roomsUpdate} from "../../modules/rooms";
+import {readChat} from "../../lib/api/chat";
 
 const Socket = () => {
     const client = useRef({})
@@ -133,9 +134,13 @@ const Socket = () => {
 
     const onRead = async (body) => {
         const roomId = body.body
-        await queryClient.refetchQueries(readerQuery)
-        const response = await selectRoom(roomId)
-        dispatch(roomsUpdate(response.data.data))
+
+        queryClient.refetchQueries(checkRoomQuery, readerQuery)
+        // const {data: {data: room}} = await selectRoom(roomId)
+        // const {data: {data: chatId}} = await selectReaderChat(roomId);
+        //
+        // dispatch(setReader(chatId))
+        // dispatch(roomsUpdate(room))
     }
 
     const onUpdateRoom = async (body) => {

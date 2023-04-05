@@ -5,6 +5,7 @@ import com.oauth2.sample.domain.chat.dto.ChatStatus;
 import com.oauth2.sample.domain.chat.dto.ChatType;
 import com.oauth2.sample.domain.chat.repository.ChatRepository;
 import com.oauth2.sample.domain.chat.request.*;
+import com.oauth2.sample.domain.room.dto.RoomInfo;
 import com.oauth2.sample.domain.room.repository.RoomRepository;
 import com.oauth2.sample.domain.room.service.RoomService;
 import com.oauth2.sample.web.security.exception.BadRequestException;
@@ -84,8 +85,17 @@ public class ChatService {
     }
 
     public void readChat(ReadChatRequest readChatRequest) {
+        boolean isSolo = readChatRequest.getEmail().equals(readChatRequest.getRoomId());
+        if (isSolo) {
+            RoomInfo roomInfo = Optional.ofNullable(roomRepository.selectSoloRoomToEmail(readChatRequest.getEmail())).orElseThrow(() -> {
+                throw new BadRequestException("권한이 없습니다.");
+            });
+
+            readChatRequest.setRoomId(roomInfo.getRoomId());
+        }
+
         boolean result = chatRepository.readChat(readChatRequest);
-        if (!result) {
+        if (!result && !isSolo) {
             throw new BadRequestException("수신중 오류가 발생하였습니다.");
         }
 

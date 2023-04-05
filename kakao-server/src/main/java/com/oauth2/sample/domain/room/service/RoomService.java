@@ -18,6 +18,7 @@ import com.oauth2.sample.domain.room.request.UpdateRoomRequest;
 import com.oauth2.sample.domain.room.response.RoomInfoResponse;
 import com.oauth2.sample.domain.room.response.JoinUser;
 import com.oauth2.sample.domain.user.repository.UserRepository;
+import com.oauth2.sample.web.security.dto.User;
 import com.oauth2.sample.web.security.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -83,7 +85,7 @@ public class RoomService {
         boolean result = roomRepository.updateRoom(request);
 
         roomRepository.selectJoinUser(request.getRoomId()).forEach(joinUserEmail -> {
-            messagingTemplate.convertAndSend("/queue/room/" + joinUserEmail  + "/update", request.getRoomId());
+            messagingTemplate.convertAndSend("/queue/room/" + joinUserEmail + "/update", request.getRoomId());
         });
     }
 
@@ -110,14 +112,13 @@ public class RoomService {
                 throw new BadRequestException("잘못된 경로입니다.");
             }
 
-            InsertRoom insertRoom = null;
-
-            insertRoom = InsertRoom.builder()
+            InsertRoom insertRoom = InsertRoom.builder()
                     .roomName(inviteRoomRequest.getRoomName())
                     .type(RoomType.GROUP)
                     .build();
 
             boolean isInsert = roomRepository.insertRoom(insertRoom);
+
             if (!isInsert) {
                 throw new BadRequestException("방 생성중 오류가 발생하였습니다.");
             }
@@ -188,7 +189,6 @@ public class RoomService {
                     .build();
 
 
-
             // join_users status 삭제로 변경
             boolean removeJoinUserResult = roomRepository.removeJoinUser(roomId, email);
             // read_users 삭제
@@ -198,7 +198,7 @@ public class RoomService {
                 throw new BadRequestException("방을 나가는데 실패하였습니다.");
             }
 
-            if(roomInfo.getRoomType() == RoomType.PERSON || roomInfo.getRoomType() == RoomType.SOLO) {
+            if (roomInfo.getRoomType() == RoomType.PERSON || roomInfo.getRoomType() == RoomType.SOLO) {
                 InviteUserToRoom inviteUserToRoom = InviteUserToRoom.builder()
                         .roomId(roomId)
                         .email(email)
@@ -217,7 +217,7 @@ public class RoomService {
                         .createAt(nowStr)
                         .build();
                 boolean insertReadUser = chatRepository.insertReadUser(readUser);
-                if(!insertReadUser) {
+                if (!insertReadUser) {
                     throw new BadRequestException("방 인원 추가에 실패하였습니다.");
                 }
 
@@ -226,12 +226,12 @@ public class RoomService {
 
             boolean insertChatResult = chatRepository.insertChat(chat);
 
-            if (! insertChatResult) {
+            if (!insertChatResult) {
                 throw new BadRequestException("방을 나가는데 실패하였습니다.");
             }
 
             roomRepository.selectJoinUser(roomId).forEach(joinUserEmail -> {
-                messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/leave", chat);
+                messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail + "/leave", chat);
             });
         }, () -> {
             throw new BadRequestException("방에 존재하지 않습니다.");
@@ -282,7 +282,7 @@ public class RoomService {
                 }
             });
 
-             insertChat = Chat.builder()
+            insertChat = Chat.builder()
                     .email(email)
                     .content(new ObjectMapper().writeValueAsString(users.stream().filter(user -> !user.equals(email)).collect(Collectors.toList())))
                     .createAt(nowStr)
@@ -312,20 +312,28 @@ public class RoomService {
         } catch (DuplicateKeyException ex) {
             throw new BadRequestException("이미 추가된 유저가 존재합니다. 다시 시도해 주세요.");
         } catch (Exception ex) {
-            throw new BadRequestException(ex.getMessage());
+            throw new BadRequestException("오류가 발생하였습니다.");
         }
 
         Chat finalInsertChat = insertChat;
 
         roomRepository.selectJoinUser(roomId).forEach(joinUserEmail -> {
-            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail  + "/join", finalInsertChat);
+            messagingTemplate.convertAndSend("/queue/chat/" + joinUserEmail + "/join", finalInsertChat);
         });
     }
 
     public List<String> selectReader(String email, String roomId) {
-        roomRepository.selectRoom(email, roomId).orElseThrow(() -> {
-            throw new BadRequestException("권한이 없습니다.");
-        });
+        if (email.equals(roomId)) {
+            RoomInfo roomInfo = Optional.ofNullable(roomRepository.selectSoloRoomToEmail(email)).orElseThrow(() -> {
+                throw new BadRequestException("권한이 없습니다.");
+            });
+
+            roomId = roomInfo.getRoomId();
+        } else {
+            roomRepository.selectRoom(email, roomId).orElseThrow(() -> {
+                throw new BadRequestException("권한이 없습니다.");
+            });
+        }
 
         return roomRepository.selectReaderChat(roomId);
     }
@@ -339,20 +347,72 @@ public class RoomService {
             throw new BadRequestException("개인 방 생성중 오류가 발생하였습니다. 관리자에게 문의주세요.");
         }
 
+        String roomId = insertRoom.getRoomId();
+        List<String> users = new ArrayList<>();
+        users.add(email);
+
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         String nowStr = sdf.format(new Date());
 
-        InviteUserToRoom inviteUserToRoom = InviteUserToRoom.builder()
-                .roomId(insertRoom.getRoomId())
-                .email(email)
-                .createAt(nowStr)
-                .build();
-        boolean insertResult = roomRepository.inviteUserToRoom(inviteUserToRoom);
+        users.forEach(user -> {
+            InviteUserToRoom inviteUserToRoom = InviteUserToRoom.builder()
+                    .roomId(roomId)
+                    .email(user)
+                    .createAt(nowStr)
+                    .build();
 
-        if (!insertResult) {
-            throw new BadRequestException("개인 방 생성중 오류가 발생하였습니다. 관리자에게 문의주세요.");
+            boolean insertResult = roomRepository.inviteUserToRoom(inviteUserToRoom);
+            if (!insertResult) {
+                throw new BadRequestException("방 인원 추가에 실패하였습니다.");
+            }
+
+            ReadUser readUser = ReadUser.builder()
+                    .roomId(roomId)
+                    .chatId("0")
+                    .email(user)
+                    .createAt(nowStr)
+                    .build();
+            boolean insertReadUser = chatRepository.insertReadUser(readUser);
+            if(!insertReadUser) {
+                throw new BadRequestException("방 인원 추가에 실패하였습니다.");
+            }
+        });
+
+        return roomRepository.selectSoloRoomToEmail(email);
+    }
+
+    public RoomInfoResponse selectMyRoom(String email) {
+        RoomInfo room = roomRepository.selectSoloRoomToEmail(email);
+
+        if (room == null) {
+            room = createSoloRoom(email);
         }
 
-        return roomRepository.selectRoom(email, insertRoom.getRoomId()).get();
+        List<JoinUser> list = new ArrayList<>();
+        User user = userRepository.findByEmail(email).get();
+
+        list.add(JoinUser.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .message(user.getMessage())
+                .lastReadChat(Integer.MAX_VALUE + "")
+                .profileImageUrl(user.getProfileImageUrl())
+                .build());
+
+        RoomInfoResponse roomInfoResponse = RoomInfoResponse.builder()
+                .roomId(room.getRoomId())
+                .roomName(room.getRoomName())
+                .roomType(room.getRoomType())
+                .roomCreateAt(room.getRoomCreateAt())
+                .chatContent(room.getChatContent())
+                .chatType(room.getChatType())
+                .chatStatus(room.getChatStatus())
+                .joinUserCnt(room.getJoinUserCnt())
+                .chatCreateAt(room.getChatCreateAt())
+                .users(list)
+                .build();
+
+        return roomInfoResponse;
     }
 }

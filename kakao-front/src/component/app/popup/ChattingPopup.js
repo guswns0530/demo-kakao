@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import style from "../../../css/MainPage.module.css"
 import Draggable from "react-draggable";
 import roomService from "../../../services/RoomInfo";
@@ -8,21 +8,37 @@ import styleLoading from "../../styled/styleLoading";
 import ChatForm from "../../../containers/app/chatting/ChatForm";
 
 const StyleImage = styled.div`
-    background-color: #ddd;
-    width: 100%;
-    height: 100%;
-    border-radius: 46%;
-    ${styleLoading}
+  background-color: #ddd;
+  width: 100%;
+  height: 100%;
+  border-radius: 46%;
+  ${styleLoading}
 `
 
-const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleScreen, isFullscreen, content, block, onPopup, isFriend}) => {
-    if (isLoading) {
+const ChattingPopup = ({
+                           room,
+                           user,
+                           isLoading,
+                           trackPos,
+                           onClose,
+                           x,
+                           y,
+                           toggleScreen,
+                           isFullscreen,
+                           content,
+                           block,
+                           onPopup,
+                           isFriend
+                       }) => {
+    const roomInfo = useMemo(() => { return user && room ? roomService(user, room) : null}, [user, room]);
+
+    if (isLoading || !roomInfo) {
         return <>
             <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"} position={{x, y}}>
                 <div id={style.popup} className={style.popup}>
                     <header className="handle">
                         <div className={style.h}>
-                            <div className={style.image} >
+                            <div className={style.image}>
                                 <StyleImage/>
                             </div>
 
@@ -61,8 +77,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleSc
             </Draggable>
         </>
     } else {
-        const {profileImageList, name, join_user_cnt, room_id} = roomService(user, room)
-
+        const {profileImageList, name, join_user_cnt, room_id} = roomInfo;
         return <>
             <Draggable onDrag={trackPos} bounds={"parent"} handle={".handle"} disabled={isFullscreen} position={{x, y}}>
                 <div id={style.popup} className={`${style.popup} ${isFullscreen && style.fullscreen}`}>
@@ -80,7 +95,7 @@ const ChattingPopup = ({room, user, isLoading, trackPos, onClose, x, y, toggleSc
 
                             <div className={style.tab}>
                                 {!isFullscreen ?
-                                    <div className={style.full_screen} onClick={toggleScreen} />
+                                    <div className={style.full_screen} onClick={toggleScreen}/>
                                     :
                                     <div className={style.min_screen} onClick={toggleScreen}>
                                         <div></div>

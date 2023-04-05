@@ -248,7 +248,7 @@ from kakao_join_users B
          join kakao_join_users D on C.ROOM_ID = D.ROOM_ID
          left outer join CUTOFF_RS E on D.EMAIL = E.TO_ID
          join KAKAO_USERS F on D.EMAIl = F.EMAIL
-where B.EMAIL = 'y2010214@naver.com'
+where B.EMAIL = 'y2010212@naver.com'
   and D.EMAIL != B.EMAIL
   and G.room_id is not null
 group by C.ROOM_ID,
@@ -1129,3 +1129,76 @@ select B.ROOM_ID,
                       B.NAME,
                       B.TYPE,
                       B.CREATEAT;
+
+
+select A.ROOM_ID       as ROOM_ID,
+       A.ROOM_ID       as ROOM_NAME,
+       A.TYPE          as ROOM_TYPE,
+       A.CREATEAT      as ROOM_CREATE_AT,
+       C.CHAT_CONTENT  as CHAT_CONTENT,
+       C.CHAT_TYPE     as CHAT_TYPE,
+       C.CHAT_STATUS   as CHAT_STATUS,
+       1               as JOIN_USER_CNT,
+       C.CHAT_CREATEAT as CHAT_CREATE_AT
+from KAKAO_ROOMS A
+         join KAKAO_JOIN_USERS B on A.ROOM_ID = B.ROOM_ID
+         join (select E.ROOM_ID,
+                      max(E.CONTENT) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_CONTENT,
+                      max(E.type) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_TYPE,
+                      max(E.STATUS) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_STATUS,
+                      max(E.CREATEAT) keep (
+                          DENSE_RANK last
+                          order by
+                              E.CREATEAT,
+                              E.CHAT_ID
+                          ) CHAT_CREATEAT
+               from KAKAO_CHATS E
+               where E.TYPE in (1, 2)
+               group by E.ROOM_ID) C on A.ROOM_ID = C.ROOM_ID
+where A.TYPE = 0
+  and A.STATUS = 1
+  and B.EMAIL = 'y2010212@naver.com';
+
+(select E.ROOM_ID,
+        max(E.CONTENT) keep (
+            DENSE_RANK last
+            order by
+                E.CREATEAT,
+                E.CHAT_ID
+            ) CHAT_CONTENT,
+        max(E.type) keep (
+            DENSE_RANK last
+            order by
+                E.CREATEAT,
+                E.CHAT_ID
+            ) CHAT_TYPE,
+        max(E.STATUS) keep (
+            DENSE_RANK last
+            order by
+                E.CREATEAT,
+                E.CHAT_ID
+            ) CHAT_STATUS,
+        max(E.CREATEAT) keep (
+            DENSE_RANK last
+            order by
+                E.CREATEAT,
+                E.CHAT_ID
+            ) CHAT_CREATEAT
+ from KAKAO_CHATS E
+ where E.TYPE in (1, 2)
+ group by E.ROOM_ID);

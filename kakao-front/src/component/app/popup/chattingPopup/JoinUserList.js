@@ -7,7 +7,8 @@ import roomService from "../../../../services/RoomInfo";
 import {Link, useLocation} from "react-router-dom";
 
 const JoinUserList = ({trackPos, x, y, onClose, room, user, onClickInviteFriend, onClickEdit}) => {
-    const {profileImageList, name} = roomService(user, room)
+    const roomInfo = useMemo(() => { return user && room ? roomService(user, room) : null}, [user, room]);
+    const {profileImageList, name} = roomInfo
     const location = useLocation()
 
     return <Draggable onDrag={trackPos} position={{x, y}} bounds={"parent"}>

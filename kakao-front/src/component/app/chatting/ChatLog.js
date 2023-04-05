@@ -167,11 +167,11 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
             const data = []
             const userChats = child[i]
 
-            if (userChats[0].chat_type == Chat.type.JOIN) {
+            if (userChats[0].chat_type == Chat.type.JOIN) { // 접속
                 data.push(<JoinBlock chat={userChats[0]} user={userInfo} key={i} users={users}/>)
-            } else if (userChats[0].chat_type == Chat.type.LEAVE) {
+            } else if (userChats[0].chat_type == Chat.type.LEAVE) { // 나감
                 data.push(<LeaveBlock chat={userChats[0]} user={userInfo} key={i} users={users}/>)
-            } else if (userInfo.email === user.email) {
+            } else if (userInfo.email === user.email) { // 내가 보낸 메시지
                 data.push(<MyChat style={style} key={i}>
                     {child[i].sort((a, b) => {
                         return a.chat_id - b.chat_id
@@ -184,7 +184,7 @@ const ChatLog = ({children, chats, reader, users, user, content, onScroll, onCon
                                       onContextMenu={onContextMenu}/>
                     })}
                 </MyChat>)
-            } else {
+            } else { // 상대가 보낸 메시지
                 data.push(<YouChat user={userInfo} style={style} key={i}>
                     {child[i].sort((a, b) => {
                         return a.chat_id - b.chat_id

@@ -20,15 +20,15 @@ const ProfileSettingPopup = ({onClick}) => {
         const name = e.target.name
         const value = e.target.value
 
-        if(name === "name") {
-            if(value.length > 20) {
+        if (name === "name") {
+            if (value.length > 20) {
                 return
             }
             return setName(e.target.value)
         }
 
-        if(name === "msg") {
-            if(value.length > 60) {
+        if (name === "msg") {
+            if (value.length > 60) {
                 return
             }
             return setMsg(e.target.value)
@@ -38,7 +38,7 @@ const ProfileSettingPopup = ({onClick}) => {
     const onUploadImage = (e) => {
         const file = e.target.files[0]
 
-        if(e.target.value.match(fileForm)) {
+        if (e.target.value.match(fileForm)) {
             setFile(file)
             const reader = new FileReader()
 
@@ -56,7 +56,7 @@ const ProfileSettingPopup = ({onClick}) => {
         const formData = new FormData()
         formData.append("name", name)
         formData.append("message", msg)
-        if(file) {
+        if (file) {
             formData.append("profileImageFile", file)
         }
 
@@ -64,7 +64,8 @@ const ProfileSettingPopup = ({onClick}) => {
         onClick()
     }
 
-    return <ProfileSettingPopupComponent onClose={onClick} onChange={onChange} name={name} msg={msg} profileImage={profileImage} onSubmit={onSubmit} onUploadImage={onUploadImage}/>
+    return <ProfileSettingPopupComponent onClose={onClick} onChange={onChange} name={name} msg={msg}
+                                         profileImage={profileImage} onSubmit={onSubmit} onUploadImage={onUploadImage}/>
 }
 
-export default  ProfileSettingPopup
+export default ProfileSettingPopup

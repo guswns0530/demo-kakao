@@ -23,4 +23,5 @@ public interface RoomRepository {
 
     List<String> selectJoinUser(String roomId);
 
+    RoomInfo selectSoloRoomToEmail(String email);
 }

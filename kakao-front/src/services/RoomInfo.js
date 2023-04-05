@@ -26,23 +26,34 @@ const roomService = (user, room) => {
         date = `${createAt.getFullYear()}-${createAt.getMonth() + 1}-${createAt.getDate()}`
     }
 
-    const filterUser = users.filter(u => u.email !== user.email && u.room_status !== Room.status.REMOVE)
-    const name = room_name || filterUser.reduce((before, now) => {
-        if (!before) {
-            return now.name
+    if (room.room_type == Room.type.SOLO) {
+        const name = user.name;
+        const profileImageList = [<ProfileImage key={user.email} profile_image_url={user.profile_image_url}/>]
+
+        if (chat_status * 1 === Chat.status.REMOVE * 1) {
+            chat_content = '삭제된 메시지입니다.'
         }
-        return now.name + ', ' + before
-    }, '')
 
-    const profileImageList = filterUser.slice(0, 4).map(({email, profile_image_url}) => {
-        return <ProfileImage key={email} profile_image_url={profile_image_url}/>
-    })
+        return {profileImageList, name, date, chat_content, join_user_cnt, room_id, unread_cnt, chat_status, chat_type}
+    } else {
+        const filterUser = users.filter(u => u.email !== user.email && u.room_status != Room.status.REMOVE)
+        const name = room_name || filterUser.reduce((before, now) => {
+            if (!before) {
+                return now.name
+            }
+            return now.name + ', ' + before
+        }, '')
 
-    if(chat_status * 1 === Chat.status.REMOVE * 1) {
-        chat_content = '삭제된 메시지입니다.'
+        const profileImageList = filterUser.slice(0, 4).map(({email, profile_image_url}) => {
+            return <ProfileImage key={email} profile_image_url={profile_image_url}/>
+        })
+
+        if (chat_status * 1 === Chat.status.REMOVE * 1) {
+            chat_content = '삭제된 메시지입니다.'
+        }
+
+        return {profileImageList, name, date, chat_content, join_user_cnt, room_id, unread_cnt, chat_status, chat_type}
     }
-
-    return {profileImageList, name, date, chat_content, join_user_cnt, room_id, unread_cnt, chat_status, chat_type}
 }
 
 export default roomService

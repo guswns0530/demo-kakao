@@ -513,4 +513,5 @@ group by C.ROOM_ID,
          G.CHAT_CONTENT,
          G.CHAT_TYPE,
          G.CHAT_STATUS,
-         G.CHAT_CREATEAT
+         G.CHAT_CREATEAT;
+

@@ -105,4 +105,9 @@ public class RoomRepositoryImpl implements RoomRepository {
     public List<String> selectJoinUser(String roomId) {
         return sqlSession.selectList("selectJoinUser", roomId);
     }
+
+    @Override
+    public RoomInfo selectSoloRoomToEmail(String email) {
+        return sqlSession.selectOne("selectSoloRoomToEmail", email);
+    }
 }
