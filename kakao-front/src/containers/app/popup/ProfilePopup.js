@@ -22,10 +22,7 @@ const ProfilePopup = () => {
         user: user.user
     }))
     const {mutate, isLoading: isInsertLoading, isError: isInsertError, error: insertError} = useInsertFriend()
-    const [initX, initY] = [
-        location?.state?.locate ? location.state.locate.x : 0,
-        location?.state?.locate ? location.state.locate.y : 0
-    ]
+    const [initX, initY] = [location?.state?.locate ? location.state.locate.x : 0, location?.state?.locate ? location.state.locate.y : 0]
     const [{x, y}, setPosition] = useState({x: initX || 0, y: initY || 0})
 
 
@@ -55,32 +52,50 @@ const ProfilePopup = () => {
     const isMe = user?.id === resource?.id
     const isFriend = resource?.friend_status === "FRIEND";
 
+
     const button = ((isMe, isFriend) => {
         if (isLoading || isInsertLoading) {
             // eslint-disable-next-line jsx-a11y/anchor-is-valid
-            return <a>
+            return <li><a>
                 <i className="material-icons">refresh</i>
                 <span>로딩중..</span>
             </a>
+            </li>
         }
         if (isMe) {
-            return (<Link to={"/app/setting"} state={location.state}>
-                <i className="material-icons">edit</i>
-                <span>프로필 관리</span>
-            </Link>)
+            return (<>
+                <li>
+                    <Link to={"/app/chatting/" + resource.email} state={{...location.state, locate: {x, y}}}>
+                        <i className="material-icons">chat_bubble</i>
+                        <span>나와의 채팅</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link to={"/app/setting"} state={location.state}>
+                        <i className="material-icons">edit</i>
+                        <span>프로필 관리</span>
+                    </Link>
+                </li>
+            </>)
         }
 
         if (isFriend) {
-            return (<Link to={"/app/chatting/" + resource.room_id} state={{...location.state, locate: {x, y}}}>
-                <i className="material-icons">chat_bubble</i>
-                <span>1:1 채팅</span>
-            </Link>)
+            return (
+                <li>
+                    <Link to={"/app/chatting/" + resource.room_id} state={{...location.state, locate: {x, y}}}>
+                        <i className="material-icons">chat_bubble</i>
+                        <span>1:1 채팅</span>
+                    </Link>
+                </li>)
         }
         if (!isFriend && !isMe) {
-            return (< Link onClick={onInsertFriend} state={location.state}>
-                <i className="material-icons">person_add</i>
-                <span>친구 추가</span>
-            </Link>)
+            return (
+                <li>
+                    < Link onClick={onInsertFriend} state={location.state}>
+                        <i className="material-icons">person_add</i>
+                        <span>친구 추가</span>
+                    </Link>
+                </li>)
         }
     })(isMe, isFriend)
 

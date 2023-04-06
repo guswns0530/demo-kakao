@@ -7,20 +7,20 @@ import styled from "styled-components";
 import styleLoading from "../../styled/styleLoading";
 
 const StyleImage = styled.div`
-    background-color: #ddd;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    ${styleLoading}
+  background-color: #ddd;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  ${styleLoading}
 `
 const StyleDiv = styled.div`
-    background-color: #ddd;
-    width: 100%;
-    height: 100%;
-    border-radius: 2px;
-    position: relative;
+  background-color: #ddd;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  position: relative;
 
-    ${styleLoading}
+  ${styleLoading}
 `
 
 const ProfilePopup = ({resource, onClose, button, trackPos, isLoading, x, y}) => {
@@ -42,14 +42,12 @@ const ProfilePopup = ({resource, onClose, button, trackPos, isLoading, x, y}) =>
                         {isLoading ? <StyleImage/> : <ProfileImage profile_image_url={resource.profile_image_url}/>}
                     </div>
                     <div className={style.name}>{isLoading ? <StyleDiv/> : resource.name}</div>
-                    <div className={style.msg} >{isLoading ? <StyleDiv/> :resource.message}</div>
+                    <div className={style.msg}>{isLoading ? <StyleDiv/> : resource.message}</div>
                 </div>
 
                 <nav className={style.pfile_nav}>
                     <ul>
-                        <li>
-                            {button}
-                        </li>
+                        {button}
                     </ul>
                 </nav>
             </div>
