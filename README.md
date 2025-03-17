@@ -40,6 +40,9 @@
 ## Auth
 
 ### i . Login
+![image](https://github.com/user-attachments/assets/720d13ed-c03a-4945-a21a-04c557521583)
+![image](https://github.com/user-attachments/assets/75c8b505-6883-48c5-aee0-9ac801eb2063)
+
 ### ii . Sign Up
 
 
