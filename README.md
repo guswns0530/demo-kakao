@@ -43,7 +43,15 @@
 ![image](https://github.com/user-attachments/assets/720d13ed-c03a-4945-a21a-04c557521583)
 ![image](https://github.com/user-attachments/assets/75c8b505-6883-48c5-aee0-9ac801eb2063)
 
+소셜 로그인
+![image](https://github.com/user-attachments/assets/3c2cf05f-4f81-428e-adfc-a3b0b5bd8756)
+
+
 ### ii . Sign Up
+![image](https://github.com/user-attachments/assets/1ca96e3d-ee95-4112-8fa1-0fab7e40d0a9)
+![image](https://github.com/user-attachments/assets/9d686854-4878-427b-aade-487318bc6149)
+![image](https://github.com/user-attachments/assets/6158ba34-e8e9-4db1-ab2d-5cbd8a13fcba)
+![image](https://github.com/user-attachments/assets/9447cbbe-4bd0-446e-90e1-893245f0769f)
 
 
 ## FriendPage
